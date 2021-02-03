@@ -31,7 +31,7 @@ public:
 	void setServingCount(int& count);
 	void setYield(int& yield);
 	void setYieldUnit(string& unit);
-	void setMealType(string& type);
+//	void setMealType(string& type);
 	void setMealType(string& type, list<pair<string, int>>& list);
 	void addIngredientInRecipe(string& ingred, float& quantity, string& unit, list<Ingredient>& list);
 	void addIngredientInRecipe(Ingredient& ingred, float& quantity, string& unit);

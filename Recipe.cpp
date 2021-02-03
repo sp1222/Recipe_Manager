@@ -44,6 +44,13 @@ Recipe::Recipe(string& name, string& desc, string& direct, int& count, int& y, s
 			s = ' ';
 	}
 
+	for (auto& s : type)
+	{
+		if (s == ',')
+			s = ' ';
+		s = toupper(s);
+	}
+
 	recipeName = name;
 	recipeDescription = desc;
 	recipeDirections = direct;
@@ -52,9 +59,11 @@ Recipe::Recipe(string& name, string& desc, string& direct, int& count, int& y, s
 	string u = unit;
 	Units un(u);
 	yieldUnit = un;
-	mealType = type;
-	if (type != mealType)
+	if (type != mealType && doesMealTypeExist(type, list))
+	{
+		mealType = type;
 		incrementRecipeUsingMealTypeCount(mealType, list);
+	}
 	recipeIngredients.empty();
 }
 
@@ -106,22 +115,20 @@ void Recipe::setYieldUnit(string& unit)
 	yieldUnit = un;
 }
 
-void Recipe::setMealType(string& type)
+void Recipe::setMealType(string& type, list<pair<string, int>>& list)
 {
 	for (auto& s : type)
 	{
 		if (s == ',')
 			s = ' ';
+		s = toupper(s);
 	}
-	mealType = type;
-}
-
-void Recipe::setMealType(string& type, list<pair<string, int>>& list)
-{
-	if (mealType != "")
+	if (type != mealType && doesMealTypeExist(type, list))
+	{
 		decrementRecipeUsingMealTypeCount(mealType, list);
-	mealType = type;
-	incrementRecipeUsingMealTypeCount(mealType, list);
+		mealType = type;
+		incrementRecipeUsingMealTypeCount(mealType, list);
+	}
 }
 
 void Recipe::addIngredientInRecipe(string& ingred, float& quantity, string& unit, list<Ingredient>& list)

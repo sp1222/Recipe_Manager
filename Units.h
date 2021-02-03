@@ -93,7 +93,7 @@ const float QUART_TO_GALLON = 0.25;
 const float EACH_TO_DOZEN = .0833;
 */
 
-// index zero represents converting from NONE to something
+// index zero represents converting from Unit a to Unit b.
 // in this case, NONE is unconvertible, so we give it a value of -1.
 // this includes mismatch type conversions, such as from KILOGRAM to MILLILITER
 
@@ -101,7 +101,7 @@ const float EACH_TO_DOZEN = .0833;
 // ounce to pounds, get index 2, which is OUNCEWEIGHT's enum, and MULTIPLY the value to be converted by the value at index
 // to convert decrementally, match the start Unit enum - 1 with its respective index value.
 // pounds to ounce, get index 3 - 1, which is POUND's enum - 1, and DIVIDE the value to be converted by the value at index
-const float UNIT_CONVERSION_VALUES[] = { -1, 0.035274, 0.0625, 0.453592, -1, 0.202884, 0.3333333, 0.5, 0.125, 0.5, 0.5, 0.9463534, 0.264172, -1, 0.0833 };
+const float UNIT_CONVERSION_VALUES[] = { -1, 0.035274, 0.0625, 0.453592, -1, 0.202884, 0.3333333, 0.5, 0.125, 0.5, 0.5, 0.9463534, 0.264172, -1, 0.0833333 };
 
 
 #endif
