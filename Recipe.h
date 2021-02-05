@@ -45,6 +45,7 @@ public:
 	string getMealType();
 	int getIngredientCount();
 	IngredientInRecipe& getIngredientInRecipe(string& name);
+	IngredientInRecipe& getIngredientInRecipe(int& index);
 	void removeIngredient(string& ingred);
 };
 

@@ -3,6 +3,9 @@
 #define MEALTYPE_H
 #include<list>
 #include<string>
+#include<fstream>
+#include<sstream>
+#include<iostream>
 using namespace std;
 
 void addMealType(string& type, list<pair<string, int>>& list);

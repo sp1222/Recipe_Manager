@@ -6,7 +6,7 @@
 #include "CategoryList.h"
 
 void addIngredient(string& name, string& description, Category& category, list<Ingredient>& list);
-//void addIngredient(Ingredient& name);
+//void addIngredient(Ingredient& ingred, list<Ingredient>& list);
 void removeIngredient(string& name, list<Ingredient>& list);
 void saveIngredientList(string& ingredientListFile, list<Ingredient>& list);
 void loadIngredientList(string& ingredientListFile, list<Ingredient>& ilist, list<Category>& clist);

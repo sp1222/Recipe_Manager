@@ -207,6 +207,18 @@ IngredientInRecipe& Recipe::getIngredientInRecipe(string& name)
 	return recipeIngredients.front();
 }
 
+IngredientInRecipe& Recipe::getIngredientInRecipe(int& index)
+{
+	int counter = 0;
+	for (auto& r : recipeIngredients)
+	{
+		if (counter == index)
+			return r;
+		counter++;
+	}
+	return recipeIngredients.front();
+}
+
 void Recipe::removeIngredient(string& ingred)
 {
 	for (auto& r : recipeIngredients)
