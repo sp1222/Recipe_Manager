@@ -28,7 +28,6 @@ void addIngredient(string& name, string& description, Category& category, list<I
 	{
 		Ingredient ingred(n, description, category);
 		list.push_back(ingred);
-		category.incrementIngredientsUsingCategoryCount();
 	}
 }
 /*

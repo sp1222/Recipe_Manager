@@ -29,6 +29,34 @@ void ListCtrl::InsertItemInRecipeListReportDisplay(Recipe& r, int& i)
 
     str = wxString(r.getMealType());
     SetItem(temp, 1, str);
+
+    str = wxString(to_string(r.getServingCount()));
+    SetItem(temp, 2, str);
+}
+
+void ListCtrl::InsertItemInIngredientListReportDisplay(Ingredient& n, int& i)
+{
+    wxString str;
+    str = wxString(n.getName());
+    long temp = InsertItem(i, str);
+    SetItemData(temp, i);
+
+    str = wxString(n.getCategoryStr());
+    SetItem(temp, 1, str);
+
+    str = wxString(to_string(n.getRecipesUsingIngredientCount()));
+    SetItem(temp, 2, str);
+}
+
+void ListCtrl::InsertItemInCategoryListReportDisplay(Category& c, int& i)
+{
+    wxString str;
+    str = wxString(c.getCategory());
+    long temp = InsertItem(i, str);
+    SetItemData(temp, i);
+
+    str = wxString(to_string(c.getIngredientsUsingCategoryCount()));
+    SetItem(temp, 1, str);
 }
 
 //*************************************************************************************************
@@ -39,8 +67,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(EXIT, MainFrame::OnExit)
 
     EVT_MENU(RECIPE_LIST_REPORT_DISPLAY, MainFrame::OnRecipeListReportDisplay)
-    EVT_MENU(INGREDIENT_LIST_DISPLAY, MainFrame::OnIngredientListDisplay)
-    EVT_MENU(CATEGORY_LIST_DISPLAY, MainFrame::OnCategoryListDisplay)
+    EVT_MENU(INGREDIENT_LIST_REPORT_DISPLAY, MainFrame::OnIngredientListReportDisplay)
+    EVT_MENU(CATEGORY_LIST_REPORT_DISPLAY, MainFrame::OnCategoryListReportDisplay)
 
 //    EVT_MENU(LIST_TOGGLE_BELL, MainFrame::OnToggleBell)
 //    EVT_MENU(LIST_ROW_LINES, MainFrame::OnSetRowLines)
@@ -70,8 +98,8 @@ MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDe
     // List menu
     wxMenu* menuList = new wxMenu;
     menuList->Append(RECIPE_LIST_REPORT_DISPLAY, "Display &Recipe List\tAlt-R");
-    menuList->Append(INGREDIENT_LIST_DISPLAY, "Display &Ingredient List\tAlt-I");
-    menuList->Append(CATEGORY_LIST_DISPLAY, "Display &Category List\tAlt-C");
+    menuList->Append(INGREDIENT_LIST_REPORT_DISPLAY, "Display &Ingredient List\tAlt-I");
+    menuList->Append(CATEGORY_LIST_REPORT_DISPLAY, "Display &Category List\tAlt-C");
     menuList->AppendSeparator();
 
     // Define menu bar
@@ -112,14 +140,16 @@ void MainFrame::OnRecipeListReportDisplay(wxCommandEvent& WXUNUSED(e))
     RebuildList(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
 }
 
-void MainFrame::OnIngredientListDisplay(wxCommandEvent& e)
+void MainFrame::OnIngredientListReportDisplay(wxCommandEvent& e)
 {
     // here we clear the current listController and display the ingredient list.
+    RebuildList(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
 }
 
-void MainFrame::OnCategoryListDisplay(wxCommandEvent& e)
+void MainFrame::OnCategoryListReportDisplay(wxCommandEvent& e)
 {
     // here we clear the current listController and display the category list.
+    RebuildList(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
 }
 
 void MainFrame::RebuildList(long custFlags, long wxFlags, bool withText)
@@ -147,6 +177,12 @@ void MainFrame::RebuildList(long custFlags, long wxFlags, bool withText)
                     case RECIPE_LIST_REPORT_DISPLAY:
                         BuildRecipeListReportDisplay();
                         break;
+                    case INGREDIENT_LIST_REPORT_DISPLAY:
+                        BuildIngredientListReportDisplay();
+                        break;
+                    case CATEGORY_LIST_REPORT_DISPLAY:
+                        BuildCategoryListReportDisplay();
+                        break;
                     default:
                         wxFAIL_MSG("Unknown Display Request");
                         break;
@@ -173,6 +209,9 @@ void MainFrame::BuildRecipeListReportDisplay()
     col.SetText("Meal Type");
     listController->InsertColumn(1, col);
 
+    col.SetText("Servings");
+    listController->InsertColumn(2, col);
+
     // servings, keywords, etc..
 
     listController->Hide();                 // speeds up the processes of adding items to the list.
@@ -187,12 +226,13 @@ void MainFrame::BuildRecipeListReportDisplay()
     }
     listController->Show();
 
-    listController->SetColumnWidth(0, wxLIST_AUTOSIZE);
-    listController->SetColumnWidth(1, wxLIST_AUTOSIZE);
+    listController->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+    listController->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+    listController->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
 }
 
-/*
-void MainFrame::BuildIngredientListDisplay()
+
+void MainFrame::BuildIngredientListReportDisplay()
 {
     wxListItem col;
     col.SetText("Ingredient Name");
@@ -202,18 +242,29 @@ void MainFrame::BuildIngredientListDisplay()
     col.SetText("Ingredient Type");
     listController->InsertColumn(1, col);
 
+    col.SetText("Recipe Count");
+    listController->InsertColumn(2, col);
+
     listController->Hide();                 // speeds up the processes of adding items to the list.
 
-    wxStopWatch sw;
+    // populate the list with the recipe information.
+    int i = -1;
+    for (auto& ingredient : ingredients)
+    {
+        i++;
+        listController->InsertItemInIngredientListReportDisplay(ingredient, i);
 
-    // populate the list with the ingredient information.
-//    for(int i = 0; i < )
+    }
+    listController->Show();
 
+    listController->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+    listController->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+    listController->SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
 
     listController->Show();
 }
 
-void MainFrame::BuildCategoryListDisplay()
+void MainFrame::BuildCategoryListReportDisplay()
 {
     wxListItem col;
     col.SetText("Category");
@@ -227,12 +278,21 @@ void MainFrame::BuildCategoryListDisplay()
 
     wxStopWatch sw;
 
-    // populate the list with the category information.
-//    for(int i = 0; i < )
+    // populate the list with the recipe information.
+    int i = -1;
+    for (auto& category : categories)
+    {
+        i++;
+        listController->InsertItemInCategoryListReportDisplay(category, i);
 
+    }
+    listController->Show();
+
+    listController->SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+    listController->SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
 
     listController->Show();
-}*/
+}
 
 /*
 * 

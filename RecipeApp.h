@@ -34,6 +34,8 @@ public:
     }
 
     void InsertItemInRecipeListReportDisplay(Recipe& r, int& i);
+    void InsertItemInIngredientListReportDisplay(Ingredient& ingred, int& i);
+    void InsertItemInCategoryListReportDisplay(Category& n, int& i);
 private:
     long updated;
 };
@@ -53,8 +55,8 @@ protected:
     void OnExit(wxCommandEvent& e);
 
     void OnRecipeListReportDisplay(wxCommandEvent& e);
-    void OnIngredientListDisplay(wxCommandEvent& e);
-    void OnCategoryListDisplay(wxCommandEvent& e);
+    void OnIngredientListReportDisplay(wxCommandEvent& e);
+    void OnCategoryListReportDisplay(wxCommandEvent& e);
 
 //    void OnToggleBell(wxCommandEvent& e);
 //    void OnSetRowLines(wxCommandEvent& e);
@@ -79,8 +81,8 @@ private:
     // functions that redefine the list controller object.
     void RebuildList(long custFlags, long wxFlags = wxLC_REPORT, bool withText = true);
     void BuildRecipeListReportDisplay();
-    void BuildIngredientListDisplay();
-    void BuildCategoryListDisplay();
+    void BuildIngredientListReportDisplay();
+    void BuildCategoryListReportDisplay();
 
     wxDECLARE_NO_COPY_CLASS(MainFrame);
     wxDECLARE_EVENT_TABLE();
@@ -97,12 +99,12 @@ enum
     EXIT = wxID_EXIT,
 
     RECIPE_LIST_REPORT_DISPLAY = wxID_HIGHEST + 1,
-    INGREDIENT_LIST_DISPLAY,
-    CATEGORY_LIST_DISPLAY,
+    INGREDIENT_LIST_REPORT_DISPLAY,
+    CATEGORY_LIST_REPORT_DISPLAY,
 
 
-    LIST_TOGGLE_BELL,
-    LIST_ROW_LINES,
+//    LIST_TOGGLE_BELL,
+//    LIST_ROW_LINES,
 
 
 
