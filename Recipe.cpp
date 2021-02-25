@@ -59,11 +59,7 @@ Recipe::Recipe(string& name, string& desc, string& direct, int& count, int& y, s
 	string u = unit;
 	Units un(u);
 	yieldUnit = un;
-	if (type != mealType && doesMealTypeExist(type, list))
-	{
-		mealType = type;
-		incrementRecipeUsingMealTypeCount(mealType, list);
-	}
+	setMealType(type, list);
 	recipeIngredients.empty();
 }
 
@@ -126,6 +122,12 @@ void Recipe::setMealType(string& type, list<pair<string, int>>& list)
 	if (type != mealType && doesMealTypeExist(type, list))
 	{
 		decrementRecipeUsingMealTypeCount(mealType, list);
+		mealType = type;
+		incrementRecipeUsingMealTypeCount(mealType, list);
+	}
+	else
+	{
+		addMealType(type, list);
 		mealType = type;
 		incrementRecipeUsingMealTypeCount(mealType, list);
 	}
