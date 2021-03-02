@@ -104,6 +104,40 @@ void loadCategoryList(string& categoryListFile, list<Category>& list)
 	fin.close();
 }
 
+void sortCategories(int byCol, list<Category>& list)
+{
+	switch (byCol)
+	{
+	case 0:
+		list.sort(compareCategoryNames);
+		break;
+	case 1:
+		list.sort(compareCategoryIngredientCount);
+		break;
+	default:
+		break;
+	}
+}
+
+bool compareCategoryNames(const Category& first, const Category& second)
+{
+	unsigned  i = 0;
+	while ((i < first.getCategory().length()) && (i < second.getCategory().length()))
+	{
+		if (tolower(first.getCategory()[i]) < tolower(second.getCategory()[i]))
+			return true;
+		else if (tolower(first.getCategory()[i]) > tolower(second.getCategory()[i]))
+			return false;
+		i++;
+	}
+	return (first.getCategory().length() < second.getCategory().length());
+}
+
+bool compareCategoryIngredientCount(const Category& first, const Category& second)
+{
+	return (first.getIngredientsUsingCategoryCount() < second.getIngredientsUsingCategoryCount());
+}
+
 Category& getCategoryInList(string& cat, list<Category>& list)
 {
 	// decrement the current category's ingredientsUsingCategoryCount value that the ingredient is categorized as.

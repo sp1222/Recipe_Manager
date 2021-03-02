@@ -8,8 +8,9 @@ void addRecipe(Recipe& recipe, list<Recipe>& list);
 void removeRecipe(string& name, list<Recipe>& list);
 void saveRecipeList(string& file, list<Recipe>& list);
 void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, list<pair<string, int>>& mlist);
-void sortByMealType();
-void sortByNameRecipe();
+void sortRecipes(int byCol, list<Recipe>& list);
+bool compareRecipeNames(const Recipe& first, const Recipe& second);
+bool compareMealTypes(const Recipe& first, const Recipe& second);
 bool doesRecipeExist(string& name, list<Recipe>& list);
 Recipe& getRecipeInList(string& name, list<Recipe>& list);
 

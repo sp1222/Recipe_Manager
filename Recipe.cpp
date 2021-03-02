@@ -151,7 +151,7 @@ void Recipe::addIngredientInRecipe(Ingredient& ingred, float& quantity, string& 
 	recipeIngredients.push_back(recipeIngred);
 }
 
-string Recipe::getName()
+string Recipe::getName() const
 {
 	return recipeName;
 }
@@ -186,7 +186,7 @@ Units Recipe::getYieldUnit()
 	return yieldUnit;
 }
 
-string Recipe::getMealType()
+string Recipe::getMealType() const
 {
 	return mealType;
 }

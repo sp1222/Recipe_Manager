@@ -10,8 +10,10 @@ void addIngredient(string& name, string& description, Category& category, list<I
 void removeIngredient(string& name, list<Ingredient>& list);
 void saveIngredientList(string& ingredientListFile, list<Ingredient>& list);
 void loadIngredientList(string& ingredientListFile, list<Ingredient>& ilist, list<Category>& clist);
-void sortByCategory();
-void sortByName();
+void sortIngredients(int byCol, list<Ingredient>& list);
+bool compareIngredientNames(const Ingredient& first, const Ingredient& second);
+bool compareCategories(const Ingredient& first, const Ingredient& second);
+bool compareIngredientRecipeCount(const Ingredient& first, const Ingredient& second);
 bool doesIngredientExist(string& name, list<Ingredient>& list);
 Ingredient& getIngredientInList(string& name, list<Ingredient>& list);
 

@@ -24,11 +24,11 @@ public:
 	void setName(string& name);
 	void setDescription(string& description);
 	void setCategory(Category& category);
-	string getName();
+	string getName() const;
 	string getDescription();
 	Category& getCategoryObj();
-	string getCategoryStr();
-	int getRecipesUsingIngredientCount();
+	string getCategoryStr() const;
+	int getRecipesUsingIngredientCount() const;
 	void incrementRecipesUsingIngredientCount();
 	void decrementRecipesUsingIngredientCount();
 };

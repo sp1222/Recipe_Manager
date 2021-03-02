@@ -78,7 +78,7 @@ void Ingredient::setCategory(Category& category)//, CategoryList& curList)
 //	ingredientCategory->addIngredientUsingCategory(*this);
 }
 
-string Ingredient::getName()
+string Ingredient::getName() const
 {
 	return ingredientName;
 }
@@ -88,7 +88,7 @@ string Ingredient::getDescription()
 	return ingredientDescription;
 }
 
-string Ingredient::getCategoryStr()
+string Ingredient::getCategoryStr() const
 {
 	return ingredientCategory->getCategory();
 }
@@ -98,7 +98,7 @@ Category& Ingredient::getCategoryObj()
 	return *ingredientCategory;
 }
 
-int Ingredient::getRecipesUsingIngredientCount()
+int Ingredient::getRecipesUsingIngredientCount() const
 {
 	return recipesUsingIngredientCount;
 }

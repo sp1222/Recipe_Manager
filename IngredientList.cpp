@@ -107,14 +107,57 @@ void loadIngredientList(string& ingredientListFile, list<Ingredient>& ilist, lis
 	fin.close();
 }
 
-void sortByCategory()
+void sortIngredients(int byCol, list<Ingredient>& list)
 {
+	switch (byCol)
+	{
+	case 0:
+		list.sort(compareIngredientNames);
+		break;
+	case 1:
+		list.sort(compareCategories);
+		break;
+	case 2:
+		list.sort(compareIngredientRecipeCount);
+		break;
 
+	default:
+
+		break;
+	}
 }
 
-void sortByName()
+bool compareIngredientNames(const Ingredient& first, const Ingredient& second)
 {
+	unsigned int i = 0;
+	while ((i < first.getName().length()) && (i < second.getName().length()))
+	{
+		if (tolower(first.getName()[i]) < tolower(second.getName()[i]))
+			return true;
+		else if (tolower(first.getName()[i]) > tolower(second.getName()[i]))
+			return false;
+		i++;
+	}
+	return (first.getName().length() < second.getName().length());
+}
 
+bool compareCategories(const Ingredient& first, const Ingredient& second)
+{
+	unsigned int i = 0;
+	while ((i < first.getCategoryStr().length()) && (i < second.getCategoryStr().length()))
+	{
+		if (tolower(first.getCategoryStr()[i]) < tolower(second.getCategoryStr()[i]))
+			return true;
+		else if (tolower(first.getCategoryStr()[i]) > tolower(second.getCategoryStr()[i]))
+			return false;
+		i++;
+	}
+	return (first.getCategoryStr().length() < second.getCategoryStr().length());
+}
+
+bool compareIngredientRecipeCount(const Ingredient& first, const Ingredient& second)
+{
+	return (first.getRecipesUsingIngredientCount() < second.getRecipesUsingIngredientCount());
 }
 
 bool doesIngredientExist(string& name, list<Ingredient>& list)

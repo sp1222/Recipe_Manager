@@ -23,7 +23,7 @@ Category::Category(string& cat)
 	ingredientsUsingCategoryCount = 0;
 }
 
-string Category::getCategory()
+string Category::getCategory() const
 {
 	return category;
 }
@@ -38,7 +38,7 @@ void Category::decrementIngredientsUsingCategoryCount()
 	ingredientsUsingCategoryCount--;
 }
 
-int Category::getIngredientsUsingCategoryCount()
+int Category::getIngredientsUsingCategoryCount() const
 {
 	return ingredientsUsingCategoryCount;
 }

@@ -35,18 +35,17 @@ public:
 	void setMealType(string& type, list<pair<string, int>>& list);
 	void addIngredientInRecipe(string& ingred, float& quantity, string& unit, list<Ingredient>& list);
 	void addIngredientInRecipe(Ingredient& ingred, float& quantity, string& unit);
-	string getName();
+	string getName() const;
 	string getDescription();
 	string getDirection();
 	int getServingCount();
 	int getYield();
 	string getYieldUnitStr();
 	Units getYieldUnit();
-	string getMealType();
+	string getMealType() const;
 	int getIngredientCount();
 	IngredientInRecipe& getIngredientInRecipe(string& name);
 	IngredientInRecipe& getIngredientInRecipe(int& index);
 	void removeIngredient(string& ingred);
 };
-
 #endif // !RECIPE_H

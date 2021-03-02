@@ -2,9 +2,7 @@
 #ifndef CATEGORY_H
 #define CATEGORY_H
 #include<string>
-//#include<functional>
 #include<list>
-//#include "Ingredient.h"
 using namespace std;
 
 /*
@@ -25,10 +23,10 @@ public:
 	bool operator != (const Category& c) const;
 	Category();
 	Category(string& cat);
-	string getCategory();
+	string getCategory() const;
 	void incrementIngredientsUsingCategoryCount();
 	void decrementIngredientsUsingCategoryCount();
-	int getIngredientsUsingCategoryCount();
+	int getIngredientsUsingCategoryCount() const;
 //	void addIngredientUsingCategory(void* ingred);
 //	void removeIngredientUsingCategory(void* ingred);
 //	void* getIngredient(string& name);

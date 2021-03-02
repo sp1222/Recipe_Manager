@@ -125,14 +125,54 @@ void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, 
 	fin.close();
 }
 
-void sortByMealType()
+void sortRecipes(int byCol, list<Recipe>& list)
 {
+	switch (byCol)
+	{
+	case 0:
+		list.sort(compareRecipeNames);
+		break;
+	case 1:
+		list.sort(compareMealTypes);
+		break;
+	case 2:
 
+		break;
+
+	default:
+
+		break;
+	}
 }
 
-void sortByNameRecipe()
+// sort the list alphabetized by names, disregarding case sensitivity
+bool compareRecipeNames(const Recipe& first, const Recipe& second)
 {
+	unsigned int i = 0;
+	while ((i < first.getName().length()) && (i < second.getName().length()))
+	{
+		if (tolower(first.getName()[i]) < tolower(second.getName()[i]))
+			return true;
+		else if (tolower(first.getName()[i]) > tolower(second.getName()[i]))
+			return false;
+		i++;
+	}
+	return (first.getName().length() < second.getName().length());
+}
 
+// sort the list alphabetized by names, disregarding case sensitivity
+bool compareMealTypes(const Recipe& first, const Recipe& second)
+{
+	unsigned int i = 0;
+	while ((i < first.getMealType().length()) && (i < second.getMealType().length()))
+	{
+		if (tolower(first.getMealType()[i]) < tolower(second.getMealType()[i]))
+			return true;
+		else if (tolower(first.getMealType()[i]) > tolower(second.getMealType()[i]))
+			return false;
+		i++;
+	}
+	return (first.getMealType().length() < second.getMealType().length());
 }
 
 bool doesRecipeExist(string& name, list<Recipe>& list)
