@@ -23,6 +23,11 @@ Category::Category(string& cat)
 	ingredientsUsingCategoryCount = 0;
 }
 
+void Category::setCategoryName(string& cat)
+{
+	category = cat;
+}
+
 string Category::getCategory() const
 {
 	return category;

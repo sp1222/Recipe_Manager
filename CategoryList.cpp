@@ -5,7 +5,7 @@
 #include<vector>
 
 
-void addCategory(string& str, list<Category>& list)
+bool addCategory(string& str, list<Category>& list)
 {
 	for (auto& s : str)
 	{
@@ -17,7 +17,9 @@ void addCategory(string& str, list<Category>& list)
 	{
 		Category category(str);
 		list.push_back(category);
+		return true;
 	}
+	return false;
 }
 
 // FOR LOADING, IS THIS NECESSARY?
@@ -36,7 +38,9 @@ void addCategory(string& str, int& ct, list<Category>& list)
 	}
 }
 
-void removeCategory(string& category, list<Category>& list)
+// Change to using indices to quickly locate and remove the category from the list.
+// now that the lists will now be sorted to match MainListCtrl.
+bool removeCategory(string& category, list<Category>& list)
 {
 	// check that there are no ingredients utilizing this category object first.
 	// and chech that the category being removed is not NONE.
@@ -49,13 +53,11 @@ void removeCategory(string& category, list<Category>& list)
 			if (c.getCategory() == category && c.getCategory() != "NONE" && c.getIngredientsUsingCategoryCount() == 0)
 			{
 				list.remove(c);
-				break;
+				return true;
 			}
 		}
 	}
-//	else
-//		cout << "There are ingredients using this category, cannot remove " << category << " from the category list." << endl;
-
+	return false;
 }
 
 bool doesCategoryExist(string& category, list<Category>& list)

@@ -16,13 +16,13 @@ class Category
 {
 private:
 	string category;
-//	list<void*> ingredientUsingCategory;	// used to keep track of ingredients using this category.
 	int ingredientsUsingCategoryCount;
 public:
 	bool operator == (const Category& c) const;
 	bool operator != (const Category& c) const;
 	Category();
 	Category(string& cat);
+	void setCategoryName(string& cat);
 	string getCategory() const;
 	void incrementIngredientsUsingCategoryCount();
 	void decrementIngredientsUsingCategoryCount();

@@ -18,40 +18,464 @@ bool RecipeApp::OnInit()
 
 //*************************************************************************************************
 
-// RecipeFrame definition
+// AddCategoryFrame Event Table
 
 //*************************************************************************************************
 
-RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 500))
+wxBEGIN_EVENT_TABLE(AddCategoryFrame, wxFrame)
+EVT_MENU(FINALIZE, AddCategoryFrame::OnFinalize)
+EVT_MENU(EXIT, AddCategoryFrame::OnExit)
+wxEND_EVENT_TABLE()
+
+
+//*************************************************************************************************
+
+// AddCategoryFrame definition
+
+//*************************************************************************************************
+
+AddCategoryFrame::AddCategoryFrame() : wxFrame(NULL, wxID_ANY, wxString("New Category"), wxDefaultPosition, wxSize(400, 300))
 {
     // need to get currentRecipe here.
 
     // Menu Bar
-    // File menu 
-    wxMenu* menuFile = new wxMenu;
-    menuFile->Append(ABOUT, "&About\tAlt-A");
-    menuFile->AppendSeparator();
-    menuFile->Append(EXIT, "&Quit\tAlt-Q");
-
-    // Define menu bar
+    // File menu
+    wxMenu* menuOptions = new wxMenu;
+    menuOptions->Append(FINALIZE, "&Add Category\tAlt-A");
     wxMenuBar* menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "&File");
+    menuBar->Append(menuOptions, "&Options");
     SetMenuBar(menuBar);
 
-    panel = new wxPanel(this, wxID_ANY);
+    mainPanel = new wxPanel(this, wxID_ANY);
+    
+    namePanel = new wxPanel(mainPanel, wxID_ANY);
 
-    // display recipe information here.
-    // void DisplayRecipe();
+    nameLabel = new wxStaticText(namePanel, LABEL, wxString("Category Name:"), wxDefaultPosition, wxSize(100, 20));
+    nameText = new wxTextCtrl(namePanel, CATEGORY_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(100, 20));
 
-    wxBoxSizer* const sizer = new wxBoxSizer(wxVERTICAL);
-    sizer->Add(this, wxSizerFlags(2).Expand().Border());
-    panel->SetSizer(sizer);
+    wxBoxSizer* const nameSizer = new wxBoxSizer(wxHORIZONTAL);
+    nameSizer->Add(nameLabel, wxSizerFlags().Expand().Border(wxALL));
+    nameSizer->Add(nameText, wxSizerFlags().Expand().Border(wxALL));
+    namePanel->SetSizer(nameSizer);
 
-    SetClientSize(panel->GetMaxSize());
+    wxBoxSizer* const mainSizer = new wxBoxSizer(wxVERTICAL);
+    mainSizer->Add(namePanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainPanel->SetSizer(mainSizer);
+
+    SetClientSize(mainPanel->GetMaxSize());
+}
+
+
+//*************************************************************************************************
+
+// CategoryFrame function definition
+
+//*************************************************************************************************
+
+/*
+void CategoryFrame::RebuildTextFields()
+{
+    nameText->SetValue(currentCategory->getCategory());
+    ingredientCountText->SetValue(currentCategory->getIngredientsUsingCategoryCount());
+}
+*/
+
+void AddCategoryFrame::SetParent(MainFrame* p)
+{
+    parent = p;
+}
+
+/*
+void CategoryFrame::OnUpdateRecipe(wxCommandEvent& WXUNUSED(e))
+{
+    string val = string(nameText->GetValue());
+    currentCategory->setCategoryName(val);
+    val = string(mealtypeText->GetValue());
+    currentCategory->setMealType(val, *typeList);
+    val = string(descriptionText->GetValue());
+    currentCategory->setDescription(val);
+    val = string(directionText->GetValue());
+    currentCategory->setDirection(val);
+    parent->SaveAllLists();
+}
+*/
+
+void AddCategoryFrame::OnFinalize(wxCommandEvent& WXUNUSED(e))
+{
+    string val = string(nameText->GetValue());
+    parent->AddCategory(val);
+}
+
+void AddCategoryFrame::OnExit(wxCommandEvent& WXUNUSED(e))
+{
+    //    parent->SaveAllLists();
+    Close(TRUE);
 }
 
 
 
+//*************************************************************************************************
+
+// CategoryFrame Event Table
+
+//*************************************************************************************************
+
+wxBEGIN_EVENT_TABLE(CategoryFrame, wxFrame)
+//    EVT_MENU(UPDATE, CategoryFrame::OnUpdateRecipe)
+EVT_MENU(EXIT, CategoryFrame::OnExit)
+wxEND_EVENT_TABLE()
+
+
+//*************************************************************************************************
+
+// CategoryFrame definition
+
+//*************************************************************************************************
+
+CategoryFrame::CategoryFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(400, 200))
+{
+    // need to get currentRecipe here.
+
+    // Menu Bar
+    // File menu
+    wxMenu* menuOptions = new wxMenu;
+    menuOptions->Append(UPDATE, "&Update\tAlt-U");
+    wxMenuBar* menuBar = new wxMenuBar;
+    menuBar->Append(menuOptions, "&Options");
+    SetMenuBar(menuBar);
+
+    mainPanel = new wxPanel(this, wxID_ANY);
+
+    namePanel = new wxPanel(mainPanel, wxID_ANY);
+    ingredientCountPanel = new wxPanel(mainPanel, wxID_ANY);
+
+    nameLabel = new wxStaticText(namePanel, LABEL, wxString("Category Name:"), wxDefaultPosition, wxSize(200, 20));
+    nameText = new wxStaticText(namePanel, CATEGORY_NAME_TEXT_CTRL, wxString(currentCategory->getCategory()), wxDefaultPosition, wxSize(100, 20));
+
+    wxBoxSizer* const nameSizer = new wxBoxSizer(wxHORIZONTAL);
+    nameSizer->Add(nameLabel, wxSizerFlags().Expand().Border(wxALL));
+    nameSizer->Add(nameText, wxSizerFlags().Expand().Border(wxALL));
+    namePanel->SetSizer(nameSizer);
+
+    ingredientCountLabel = new wxStaticText(ingredientCountPanel, LABEL, wxString("Ingredients in Category Count:"), wxDefaultPosition, wxSize(200, 20));
+    ingredientCountDisplay = new wxStaticText(ingredientCountPanel, CATEGORY_INGREDIENT_COUNT_TEXT_CTRL, wxString(to_string(currentCategory->getIngredientsUsingCategoryCount())), wxDefaultPosition, wxSize(100, 20));
+
+    wxBoxSizer* const ingredientCountSizer = new wxBoxSizer(wxHORIZONTAL);
+    ingredientCountSizer->Add(ingredientCountLabel, wxSizerFlags().Expand().Border(wxALL));
+    ingredientCountSizer->Add(ingredientCountDisplay, wxSizerFlags().Expand().Border(wxALL));
+    ingredientCountPanel->SetSizer(ingredientCountSizer);
+
+    wxBoxSizer* const mainSizer = new wxBoxSizer(wxVERTICAL);
+    mainSizer->Add(namePanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(ingredientCountPanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainPanel->SetSizer(mainSizer);
+
+    SetClientSize(mainPanel->GetMaxSize());
+}
+
+
+//*************************************************************************************************
+
+// CategoryFrame function definition
+
+//*************************************************************************************************
+
+void CategoryFrame::SetCategory(Category& c)
+{
+    currentCategory = &c;
+}
+
+
+void CategoryFrame::RebuildTextFields()
+{
+    nameText->SetLabel(currentCategory->getCategory());
+    ingredientCountDisplay->SetLabel(wxString(to_string(currentCategory->getIngredientsUsingCategoryCount())));
+}
+
+
+void CategoryFrame::SetParent(MainListCtrl* p)
+{
+    parent = p;
+}
+
+/*
+void CategoryFrame::OnUpdateRecipe(wxCommandEvent& WXUNUSED(e))
+{
+    string val = string(nameText->GetValue());
+    currentCategory->setCategoryName(val);
+    val = string(mealtypeText->GetValue());
+    currentCategory->setMealType(val, *typeList);
+    val = string(descriptionText->GetValue());
+    currentCategory->setDescription(val);
+    val = string(directionText->GetValue());
+    currentCategory->setDirection(val);
+    parent->SaveAllLists();
+}
+*/
+
+void CategoryFrame::OnExit(wxCommandEvent& WXUNUSED(e))
+{
+    //    parent->SaveAllLists();
+    Close(TRUE);
+}
+
+
+//*************************************************************************************************
+
+// IngredientsInRecipeListCtrl Event Table
+
+//*************************************************************************************************
+
+wxBEGIN_EVENT_TABLE(IngredientsInRecipeListCtrl, wxListCtrl)
+    EVT_LIST_ITEM_ACTIVATED(RECIPE_INGREDIENTS_LIST_CTRL, IngredientsInRecipeListCtrl::OnActivated)
+    EVT_LIST_ITEM_SELECTED(RECIPE_INGREDIENTS_LIST_CTRL, IngredientsInRecipeListCtrl::OnSelected)
+    EVT_LIST_COL_CLICK(RECIPE_INGREDIENTS_LIST_CTRL, IngredientsInRecipeListCtrl::OnColumnHeaderClick)
+wxEND_EVENT_TABLE()
+
+
+//*************************************************************************************************
+
+// IngredientsInRecipeListCtrl definition
+
+//*************************************************************************************************
+
+
+//*************************************************************************************************
+
+// IngredientsInRecipeListCtrl function definitions
+
+//*************************************************************************************************
+void IngredientsInRecipeListCtrl::InsertIngredientsInRecipeListReportDisplay()
+{
+
+}
+
+void IngredientsInRecipeListCtrl::SetIngredientsInRecipeList(list<IngredientInRecipe>& list)
+{
+    ingredients = &list;
+}
+
+void IngredientsInRecipeListCtrl::SetSelectedItem(string name)
+{
+ //   selectedIngredient = getIngredientInRecipe(name);
+}
+
+void IngredientsInRecipeListCtrl::OnActivated(wxListEvent& e)
+{
+    wxListItem info;
+    info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
+    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
+                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.
+    info.m_mask = wxLIST_MASK_TEXT;
+    if (GetItem(info))
+    {
+        SetSelectedItem(string(info.m_text));
+    }
+
+}
+
+void IngredientsInRecipeListCtrl::OnSelected(wxListEvent& e)
+{
+    wxListItem info;
+    info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
+    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
+                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.
+    info.m_mask = wxLIST_MASK_TEXT;
+    if (GetItem(info))
+    {
+        SetSelectedItem(string(info.m_text));
+    }
+    else
+        wxFAIL_MSG("wxListCtrl::GetItem() failed");
+}
+
+void IngredientsInRecipeListCtrl::OnColumnHeaderClick(wxListEvent& e)
+{
+    // this is where we sort the lists by the column clicked.
+    // first, we need to determine which list we are sorting.
+    int col = e.GetColumn();
+
+}
+
+void IngredientsInRecipeListCtrl::ResetListView(long wxFlags, bool withText)
+{
+#if 0
+    if (!this || ((flags & wxLC_VIRTUAL) 1 = (this->GetWindowStyleFlag() & wxLC_VIRTUAL)))
+#endif
+    Hide();
+    ClearAll();
+    SetSingleStyle(wxFlags | wxLC_SINGLE_SEL);
+    switch (wxFlags & wxLC_MASK_TYPE)
+    {
+    case wxLC_REPORT:
+
+        break;
+    default:
+        wxFAIL_MSG("Unknown wxLC_STYLE Request");
+        break;
+    }
+    Show();
+}
+/*
+void IngredientsInRecipeListCtrl::BuildIngredientsInListReportDisplay()
+{
+    wxListItem col;
+    col.SetText("Ingredient Name");
+    col.SetImage(-1);
+    InsertColumn(0, col);
+
+    col.SetText("Quantity");
+    InsertColumn(1, col);
+
+    col.SetText("Units");
+    InsertColumn(2, col);
+
+    // populate the list with the recipe information.
+    int i = -1;
+    for (auto& ingred : ingredients)
+    {
+        i++;
+        InsertIngredientsInRecipeListReportDisplay(ingred, i);
+    }
+
+    SetColumnWidth(0, wxLIST_AUTOSIZE_USEHEADER);
+    SetColumnWidth(1, wxLIST_AUTOSIZE_USEHEADER);
+    SetColumnWidth(2, wxLIST_AUTOSIZE_USEHEADER);
+}
+*/
+
+//*************************************************************************************************
+
+// RecipeFrame Event Table
+
+//*************************************************************************************************
+
+wxBEGIN_EVENT_TABLE(RecipeFrame, wxFrame)
+    EVT_MENU(UPDATE, RecipeFrame::OnUpdateRecipe)
+    EVT_MENU(EXIT, RecipeFrame::OnExit)
+wxEND_EVENT_TABLE()
+
+
+//*************************************************************************************************
+
+// RecipeFrame definition
+
+//*************************************************************************************************
+
+RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(1000, 800))
+{
+    // need to get currentRecipe here.
+
+    // Menu Bar
+    // File menu
+    wxMenu* menuOptions = new wxMenu;
+    menuOptions->Append(UPDATE, "&Update\tAlt-A");
+    wxMenuBar* menuBar = new wxMenuBar;
+    menuBar->Append(menuOptions, "&Options");
+    SetMenuBar(menuBar);
+
+
+    mainPanel = new wxPanel(this, wxID_ANY);
+    
+    namePanel = new wxPanel(mainPanel, wxID_ANY);
+    mealTypePanel = new wxPanel(mainPanel, wxID_ANY);
+    descriptionPanel = new wxPanel(mainPanel, wxID_ANY);
+    directionPanel = new wxPanel(mainPanel, wxID_ANY);
+
+    nameLabel = new wxStaticText(namePanel, LABEL, wxString("Recipe Name:"), wxDefaultPosition, wxSize(100, 20));
+    nameText = new wxTextCtrl(namePanel, RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(600, 20));
+
+    wxBoxSizer* const nameSizer = new wxBoxSizer(wxHORIZONTAL);
+    nameSizer->Add(nameLabel, wxSizerFlags().Expand().Border(wxALL));
+    nameSizer->Add(nameText, wxSizerFlags().Expand().Border(wxALL));
+    namePanel->SetSizer(nameSizer);
+
+
+    mealtypeLabel = new wxStaticText(mealTypePanel, LABEL, wxString("Meal Type:"), wxDefaultPosition, wxSize(100, 20));
+    mealtypeText = new wxTextCtrl(mealTypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(600, 20));
+
+    wxBoxSizer* const mealtypeSizer = new wxBoxSizer(wxHORIZONTAL);
+    mealtypeSizer->Add(mealtypeLabel, wxSizerFlags().Expand().Border(wxALL));
+    mealtypeSizer->Add(mealtypeText, wxSizerFlags().Expand().Border(wxALL));
+    mealTypePanel->SetSizer(mealtypeSizer);
+
+
+    descriptionLabel = new wxStaticText(descriptionPanel, LABEL, wxString("Description:"), wxDefaultPosition, wxSize(100, 20));
+    descriptionText = new wxTextCtrl(descriptionPanel, RECIPE_DESCRIPTION_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(600, 100));
+
+    wxBoxSizer* const descriptionSizer = new wxBoxSizer(wxHORIZONTAL);
+    descriptionSizer->Add(descriptionLabel, wxSizerFlags().Expand().Border(wxALL));
+    descriptionSizer->Add(descriptionText, wxSizerFlags().Expand().Border(wxALL));
+    descriptionPanel->SetSizer(descriptionSizer);
+
+
+    directionLabel = new wxStaticText(directionPanel, LABEL, wxString("Directions:"), wxDefaultPosition, wxSize(100, 20));
+    directionText = new wxTextCtrl(directionPanel, RECIPE_DIRECTIONS_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(600, 300));
+
+    wxBoxSizer* const directionSizer = new wxBoxSizer(wxHORIZONTAL);
+    directionSizer->Add(directionLabel, wxSizerFlags().Expand().Border(wxALL));
+    directionSizer->Add(directionText, wxSizerFlags().Expand().Border(wxALL));
+    directionPanel->SetSizer(directionSizer);
+
+    listIngredientsInRecipe = new IngredientsInRecipeListCtrl(mainPanel, RECIPE_INGREDIENTS_LIST_CTRL, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxBORDER_THEME | wxLC_SINGLE_SEL);
+    listIngredientsInRecipe->SetIngredientsInRecipeList(currentRecipe->getAllIngredientsInRecipe());
+    listIngredientsInRecipe->ResetListView(wxLC_REPORT);
+
+    wxBoxSizer* const mainSizer = new wxBoxSizer(wxVERTICAL);
+    mainSizer->Add(namePanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(mealTypePanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(descriptionPanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(directionPanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(listIngredientsInRecipe, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainPanel->SetSizer(mainSizer);
+
+
+    SetClientSize(mainPanel->GetMaxSize());
+}
+
+//*************************************************************************************************
+
+// RecipeFrame function definition
+
+//*************************************************************************************************
+
+void RecipeFrame::SetRecipe(Recipe& r, list<pair<string, int>>& tList)
+{
+    currentRecipe = &r;
+    typeList = &tList;
+}
+
+void RecipeFrame::RebuildTextFields()
+{
+    nameText->SetValue(currentRecipe->getName());
+    mealtypeText->SetValue(currentRecipe->getMealType());
+    descriptionText->SetValue(currentRecipe->getDescription());
+    directionText->SetValue(currentRecipe->getDirection());
+}
+
+void RecipeFrame::SetParent(MainListCtrl* p)
+{
+    parent = p;
+}
+
+void RecipeFrame::OnUpdateRecipe(wxCommandEvent& WXUNUSED(e))
+{
+    string val = string(nameText->GetValue());
+    currentRecipe->setName(val);
+    val = string(mealtypeText->GetValue());
+    currentRecipe->setMealType(val, *typeList);
+    val = string(descriptionText->GetValue());
+    currentRecipe->setDescription(val);
+    val = string(directionText->GetValue());
+    currentRecipe->setDirection(val);
+    parent->SaveAllLists();
+}
+
+void RecipeFrame::OnExit(wxCommandEvent& WXUNUSED(e))
+{
+    parent->SaveAllLists();
+    Close(TRUE);
+}
 
 //*************************************************************************************************
 
@@ -60,9 +484,9 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
 //*************************************************************************************************
 
 wxBEGIN_EVENT_TABLE(MainListCtrl, wxListCtrl)
-    EVT_LIST_ITEM_ACTIVATED(LIST_CTRL, MainListCtrl::OnActivated)
-    EVT_LIST_ITEM_SELECTED(LIST_CTRL, MainListCtrl::OnSelected)
-    EVT_LIST_COL_CLICK(LIST_CTRL, MainListCtrl::OnColumnHeaderClick)
+    EVT_LIST_ITEM_ACTIVATED(MAIN_LIST_CTRL, MainListCtrl::OnActivated)
+    EVT_LIST_ITEM_SELECTED(MAIN_LIST_CTRL, MainListCtrl::OnSelected)
+    EVT_LIST_COL_CLICK(MAIN_LIST_CTRL, MainListCtrl::OnColumnHeaderClick)
 wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
@@ -112,32 +536,48 @@ void MainListCtrl::InsertItemsInCategoryListReportDisplay(Category& c, int& i)
     str = wxString(c.getCategory());
     long temp = InsertItem(i, str);
     SetItemData(temp, i);
-
     str = wxString(to_string(c.getIngredientsUsingCategoryCount()));
     SetItem(temp, 1, str);
+}    
+
+void MainListCtrl::SaveAllLists()
+{
+    saveCategoryList(categoryFile, categories);
+    saveIngredientList(ingredFile, ingredients);
+    saveRecipeList(recipeFile, recipes);
+
 }
 
 void MainListCtrl::LoadLists()
 {
     // load lists.
-    loadCategoryList(catFile, categories);
+    loadCategoryList(categoryFile, categories);
     loadIngredientList(ingredFile, ingredients, categories);
     loadRecipeList(recipeFile, recipes, ingredients, mealTypes);
 }
 
-list<Recipe> MainListCtrl::GetRecipes()
+void MainListCtrl::AddNewCategory(string& c)
 {
-    return recipes;
+    if (addCategory(c, categories))
+    {
+        SaveAllLists();
+        ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
+    }
 }
 
-list<Ingredient> MainListCtrl::GetIngredients()
+void MainListCtrl::RemoveCategory()
 {
-    return ingredients;
+    string cat = selectedCategory->getCategory();
+    if (removeCategory(cat, categories))
+    {
+        SaveAllLists();
+        ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
+    }
 }
 
-list<Category> MainListCtrl::GetCategories()
+string MainListCtrl::GetSelectedCategoryName()
 {
-    return categories;
+    return selectedCategory->getCategory();
 }
 
 void MainListCtrl::SetCurrentList(long c)
@@ -172,22 +612,48 @@ void MainListCtrl::SetSelectedItem(string name)
 
 void MainListCtrl::OnActivated(wxListEvent& e)
 {
+    wxListItem info;
+    info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
+    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
+                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.
+                                    // 
+    // NOTE LATEST 4.26.21: lists in the backend will be sorted and reflect the displayed list
+    // thus, it is now safe to use indices to reference an item in the list.
+    // this is to make the project more efficient!
+
+    selectedItem = info;
+
+    info.m_mask = wxLIST_MASK_TEXT;
+    if (GetItem(info))
+    {
+        SetSelectedItem(string(info.m_text));
+    }
+
     // here we open a window to the activated item, depending on the currentList we are in.
     switch (GetCurrentList())
     {
     case RECIPE_LIST_REPORT_DISPLAY:
         // here we open a recipe Frame, make it the primary window, and populate fields with the recipe we have clicked on.
-        // use GetSelectedItem to get the name of the recipe being displayed in RecipeFrame
 
-//        recipeFrame = new RecipeFrame(selectedRecipe->getName());
-//        recipeFrame->Show(true);
-                                                   
+        recipeFrame = new RecipeFrame(selectedRecipe->getName());
+        recipeFrame->SetRecipe(*selectedRecipe, mealTypes);
+        recipeFrame->SetParent(this);
+        recipeFrame->RebuildTextFields();
+        recipeFrame->Show(true);
+
         break;
     case INGREDIENT_LIST_REPORT_DISPLAY:
         // here we open an ingredient Frame, make it the primary window, and populate fields with the ingredient information we have clicked on.
         break;
     case CATEGORY_LIST_REPORT_DISPLAY:
         // here we open a category Frame, make it the primary window, and populate fields with the category we have clicked on.
+
+        categoryFrame = new CategoryFrame(selectedCategory->getCategory());
+        categoryFrame->SetCategory(*selectedCategory);
+        categoryFrame->SetParent(this);
+        categoryFrame->RebuildTextFields();
+        categoryFrame->Show(true);
+
         break;
     default:
         wxFAIL_MSG("Currently not in an updatable list.");
@@ -366,6 +832,9 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(INGREDIENT_LIST_REPORT_DISPLAY, MainFrame::OnIngredientListReportDisplay)
     EVT_MENU(CATEGORY_LIST_REPORT_DISPLAY, MainFrame::OnCategoryListReportDisplay)
 
+    EVT_MENU(CATEGORY_ADD_NEW, MainFrame::OnAddCategory)
+    EVT_MENU(CATEGORY_REMOVE_SELECTED, MainFrame::OnRemoveCategory)
+
 //    EVT_MENU(LIST_TOGGLE_BELL, MainFrame::OnToggleBell)
 //    EVT_MENU(LIST_ROW_LINES, MainFrame::OnSetRowLines)
 
@@ -385,33 +854,52 @@ MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDe
 
     // Menu Bar
     // File menu
-    wxMenu* menuFile = new wxMenu;
+    menuFile = new wxMenu;
     menuFile->Append(ABOUT, "&About\tAlt-A");
     menuFile->AppendSeparator();
     menuFile->Append(EXIT, "&Quit\tAlt-Q");
 
     // List menu
-    wxMenu* menuList = new wxMenu;
+    menuList = new wxMenu;
     menuList->Append(RECIPE_LIST_REPORT_DISPLAY, "Display &Recipe List\tAlt-R");
     menuList->Append(INGREDIENT_LIST_REPORT_DISPLAY, "Display &Ingredient List\tAlt-I");
     menuList->Append(CATEGORY_LIST_REPORT_DISPLAY, "Display &Category List\tAlt-C");
     menuList->AppendSeparator();
 
+    // Category List Editor menu
+    menuCategoryListEditor = new wxMenu;
+    menuCategoryListEditor->Append(CATEGORY_ADD_NEW, "Create Category");
+    menuCategoryListEditor->Append(CATEGORY_REMOVE_SELECTED, "Remove Selected Category");
+     
+    // Ingredient List Editor menu
+    menuIngredientListEditor = new wxMenu;
+    menuIngredientListEditor->Append(INGREDIENT_ADD_NEW, "Create Ingredient");
+    menuIngredientListEditor->Append(INGREDIENT_REMOVE_SELECTED, "Remove Selected Ingredient");
+     
+    
+    // Recipe List Editor menu
+    menuRecipeListEditor = new wxMenu;
+    menuRecipeListEditor->Append(RECIPE_ADD_NEW, "Create Recipe");
+    menuRecipeListEditor->Append(RECIPE_REMOVE_SELECTED, "Remove Selected Recipe");
+
+
+
     // Define menu bar
-    wxMenuBar* menuBar = new wxMenuBar;
+    menuBar = new wxMenuBar;
     menuBar->Append(menuFile, "&File");
     menuBar->Append(menuList, "&Lists");
+    menuBar->Append(menuRecipeListEditor, "Recipe List Options");
     SetMenuBar(menuBar);
 
     panel = new wxPanel(this, wxID_ANY);
 
     // default startup of list display to 
-    listController = new MainListCtrl(panel, LIST_CTRL, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxBORDER_THEME | wxLC_SINGLE_SEL);
+    listController = new MainListCtrl(panel, MAIN_LIST_CTRL, wxDefaultPosition, wxDefaultSize, wxLC_REPORT | wxBORDER_THEME | wxLC_SINGLE_SEL);
     listController->LoadLists();
     listController->ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
 
     wxBoxSizer* const sizer = new wxBoxSizer(wxVERTICAL);
-    sizer->Add(listController, wxSizerFlags(2).Expand().Border());
+    sizer->Add(listController, wxSizerFlags(2).Expand().Border(wxALL, 10));
     panel->SetSizer(sizer);
 
     SetClientSize(panel->GetBestSize());
@@ -423,6 +911,11 @@ MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDe
 
 //*************************************************************************************************
 
+void MainFrame::AddCategory(string& c)
+{
+    listController->AddNewCategory(c);
+}
+
 void MainFrame::OnAbout(wxCommandEvent& WXUNUSED(e))
 {
     wxMessageDialog dialog(this, "Recipe Manager System\nStephen Polozoff (c) 2021", "About Recipe Manager");
@@ -431,6 +924,7 @@ void MainFrame::OnAbout(wxCommandEvent& WXUNUSED(e))
 
 void MainFrame::OnExit(wxCommandEvent& WXUNUSED(e))
 {
+    listController->SaveAllLists();
     Close(TRUE);
 }
 
@@ -438,16 +932,45 @@ void MainFrame::OnRecipeListReportDisplay(wxCommandEvent& WXUNUSED(e))
 {
     // here we clear the current listController and display the recipe list.
     listController->ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
+    menuBar->Replace(2, menuRecipeListEditor, "Recipe List Options");
 }
 
-void MainFrame::OnIngredientListReportDisplay(wxCommandEvent& e)
+void MainFrame::OnIngredientListReportDisplay(wxCommandEvent& WXUNUSED(e))
 {
     // here we clear the current listController and display the ingredient list.
     listController->ResetListView(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
+    menuBar->Replace(2, menuIngredientListEditor, "Ingredient List Options");
 }
 
-void MainFrame::OnCategoryListReportDisplay(wxCommandEvent& e)
+void MainFrame::OnCategoryListReportDisplay(wxCommandEvent& WXUNUSED(e))
 {
     // here we clear the current listController and display the category list.
     listController->ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
+    menuBar->Replace(2, menuCategoryListEditor, "Category List Options");
+}
+
+void MainFrame::OnAddCategory(wxCommandEvent& WXUNUSED(e))
+{
+    AddCategoryFrame* addCategoryFrame = new AddCategoryFrame();
+    addCategoryFrame->SetParent(this);
+    addCategoryFrame->Show();
+}
+
+void MainFrame::OnRemoveCategory(wxCommandEvent& e)
+{
+    // confirmation message.
+    int choiceValue = wxNO;
+    string cat = listController->GetSelectedCategoryName();
+    wxMessageDialog* d = new wxMessageDialog(NULL, _("You are about to remove a category!\n" + cat + "  will not be removed if there are ingredients categorized as " + cat + "\n\nAre you sure you want to remove " + cat + "?"), _("Remove " + cat), wxYES_NO|wxCENTRE);
+    choiceValue = d->ShowModal();
+    switch (choiceValue)
+    {
+    case wxYES:
+    case wxID_YES:
+        listController->RemoveCategory();
+        Close(true);
+    default:
+        Close(false);
+        break;
+    }
 }
