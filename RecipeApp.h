@@ -4,7 +4,7 @@
 
 #include "RecipeList.h"
 #include<wx/listctrl.h>
-#include<wx/notebook.h>
+#include<wx/combo.h>
 #include<wx/wxprec.h>
 #ifndef WX_PRECOMP
 #include<wx/wx.h>
@@ -75,8 +75,6 @@ protected:
     wxPanel* mainPanel;
     wxPanel* namePanel;
     wxPanel* ingredientCountPanel;
-    wxPanel* labelPanel;
-    wxPanel* textPanel;
     wxStaticText* nameLabel;
     wxStaticText* ingredientCountLabel;
     wxStaticText* nameText;
@@ -86,6 +84,52 @@ private:
     Category* currentCategory = new Category();
     MainListCtrl* parent;
     wxDECLARE_NO_COPY_CLASS(CategoryFrame);
+    wxDECLARE_EVENT_TABLE();
+};
+
+//*************************************************************************************************
+
+// IngredientFrame
+
+//*************************************************************************************************
+
+class MainListCtrl;     // forward
+class IngredientFrame : public wxFrame
+{
+public:
+    IngredientFrame(const wxString& title);
+    void SetIngredient(Ingredient& i);
+    void SetCategoryList(list<Category>& c, const wxString cstr[], const int size);
+    void SetParent(MainListCtrl* p);
+    void RebuildTextFields();
+protected:
+
+    // edit drop down menu
+//    void OnUpdateRecipe(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
+    void OnExit(wxCommandEvent& e);
+
+    wxPanel* mainPanel;
+    wxPanel* namePanel;
+    wxPanel* descriptionPanel;
+    wxPanel* categoryPanel;
+    wxPanel* recipeUsingIngredientCountPanel;
+    wxStaticText* nameLabel;
+    wxStaticText* descriptionLabel;
+    wxStaticText* categoryLabel;
+    wxStaticText* recipeUsingIngredientCountLabel;
+    wxTextCtrl* nameText;
+    wxTextCtrl* descriptionText;
+    wxComboBox* categoryComboBox;   // make this a dropdown box
+    
+    wxStaticText* recipeUsingIngredientCountText;
+
+private:
+    Ingredient* currentIngredient = new Ingredient();
+    list<Category>* catList = nullptr;
+    wxArrayString* catStringList;
+    MainListCtrl* parent;
+    wxDECLARE_NO_COPY_CLASS(IngredientFrame);
     wxDECLARE_EVENT_TABLE();
 };
 
@@ -154,8 +198,6 @@ protected:
     wxPanel* mealTypePanel;
     wxPanel* descriptionPanel;
     wxPanel* directionPanel;
-    wxPanel* labelPanel;
-    wxPanel* textPanel;
     wxStaticText* nameLabel;
     wxStaticText* mealtypeLabel;
     wxStaticText* descriptionLabel;
@@ -194,10 +236,9 @@ public:
     void InsertItemsInCategoryListReportDisplay(Category& n, int& i);
 
     void SaveAllLists();
-    // build these
     void SaveCategories();
-    void SaveRecipes();
     void SaveIngredients();
+    void SaveRecipes();
 
     void LoadLists();
     void AddNewCategory(string& c);
@@ -221,9 +262,9 @@ public:
 
 
 protected:
-    RecipeFrame* recipeFrame;
     CategoryFrame* categoryFrame;
-
+    IngredientFrame* ingredientFrame;
+    RecipeFrame* recipeFrame;
 private:
     // data.
     list<Category> categories;
@@ -329,6 +370,12 @@ enum
 
     INGREDIENT_ADD_NEW,
     INGREDIENT_REMOVE_SELECTED,
+
+    INGREDIENT_NAME_TEXT_CTRL,
+    INGREDIENT_DESCRIPTION_TEXT_CTRL,
+    INGREDIENT_CATEGORY_TEXT_CTRL,
+    INGREDIENT_RECIPES_COUNT_TEXT_CTRL,
+
 
 
     RECIPE_ADD_NEW,
