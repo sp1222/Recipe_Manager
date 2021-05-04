@@ -68,12 +68,12 @@ Ingredient& IngredientInRecipe::getIngredient()
 	return *ingredient;
 }
 
-string IngredientInRecipe::getIngredientName()
+string IngredientInRecipe::getIngredientName() const
 {
 	return ingredient->getName();
 }
 
-float IngredientInRecipe::getIngredientQuantity()
+float IngredientInRecipe::getIngredientQuantity() const
 {
 	return ingredientQuantity;
 }
@@ -83,7 +83,7 @@ Units IngredientInRecipe::getIngredientUnit()
 	return ingredientUnit;
 }
 
-string IngredientInRecipe::getIngredientUnitStr()
+string IngredientInRecipe::getIngredientUnitStr() const
 {
 	return ingredientUnit.getUnitStr();
 }

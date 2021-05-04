@@ -25,6 +25,7 @@ Category::Category(string& cat)
 
 void Category::setCategoryName(string& cat)
 {
+	for (auto& c : cat) c = toupper(c);
 	category = cat;
 }
 

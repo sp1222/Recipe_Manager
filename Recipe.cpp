@@ -166,7 +166,7 @@ string Recipe::getDirection()
 	return recipeDirections;
 }
 
-int Recipe::getServingCount()
+int Recipe::getServingCount() const
 {
 	return servingCount;
 }
@@ -194,6 +194,11 @@ string Recipe::getMealType() const
 int Recipe::getIngredientCount()
 {
 	return recipeIngredients.size();
+}
+
+list<IngredientInRecipe>& Recipe::getAllIngredientsInRecipe()
+{
+	return recipeIngredients;
 }
 
 // we want to return each ingredient's name, quantity, and unit?

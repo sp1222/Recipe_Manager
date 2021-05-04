@@ -38,12 +38,13 @@ public:
 	string getName() const;
 	string getDescription();
 	string getDirection();
-	int getServingCount();
+	int getServingCount() const;
 	int getYield();
 	string getYieldUnitStr();
 	Units getYieldUnit();
 	string getMealType() const;
 	int getIngredientCount();
+	list<IngredientInRecipe>& getAllIngredientsInRecipe();
 	IngredientInRecipe& getIngredientInRecipe(string& name);
 	IngredientInRecipe& getIngredientInRecipe(int& index);
 	void removeIngredient(string& ingred);

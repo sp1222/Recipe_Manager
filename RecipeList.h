@@ -11,6 +11,11 @@ void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, 
 void sortRecipes(int byCol, list<Recipe>& list);
 bool compareRecipeNames(const Recipe& first, const Recipe& second);
 bool compareMealTypes(const Recipe& first, const Recipe& second);
+bool compareServingCounts(const Recipe& first, const Recipe& second);
+void sortRecipeIngredients(int byCol, list<IngredientInRecipe>& list);
+bool compareIngredientInRecipeNames(const IngredientInRecipe& first, const IngredientInRecipe& second); 
+bool compareIngredientInRecipeQuantity(const IngredientInRecipe& first, const IngredientInRecipe& second);
+bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const IngredientInRecipe& second);
 bool doesRecipeExist(string& name, list<Recipe>& list);
 Recipe& getRecipeInList(string& name, list<Recipe>& list);
 

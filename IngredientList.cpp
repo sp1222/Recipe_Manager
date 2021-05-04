@@ -11,7 +11,7 @@ void setIngredientListFile(string& fileName)
 	ingredientListFile = fileName;
 }
 
-void addIngredient(string& name, string& description, Category& category, list<Ingredient>& list)
+bool addIngredient(string& name, string& description, Category& category, list<Ingredient>& list)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
@@ -28,8 +28,11 @@ void addIngredient(string& name, string& description, Category& category, list<I
 	{
 		Ingredient ingred(n, description, category);
 		list.push_back(ingred);
+		return true;
 	}
+	return false;
 }
+
 /*
 void addIngredient(Ingredient& ingred, list<Ingredient>& list)
 {
@@ -50,7 +53,7 @@ void addIngredient(Ingredient& ingred, list<Ingredient>& list)
 	}
 }
 */
-void removeIngredient(string& name, list<Ingredient>& list)
+bool removeIngredient(string& name, list<Ingredient>& list)
 {
 	// NOTE: WILL NEED TO TAKE INTO ACCOUNT ANY RECIPES UTILIZING THE INGREDIENT BEING REMOVED.
 	// CONSIDER OPTION TO OFFER CHOOSING AN INGREDIENT TO REPLACE 'REMOVING' INGREDIENT FOR ALL RECIPES USING 'REMOVING'INGREDIENT.
@@ -59,17 +62,18 @@ void removeIngredient(string& name, list<Ingredient>& list)
 	{
 		for (auto& i : list)
 		{
-			if (i.getName() == name)
+			if (i.getName() == name && i.getRecipesUsingIngredientCount() == 0)
 			{
 				// since we are removing an ingredient from the list with the intention of no longer using,
 				// decrement the ingredientsUsingCategoryCount by 1.
 				// does it make sense to have a destructor for ingredients to handle this operation?
 				i.getCategoryObj().decrementIngredientsUsingCategoryCount();
 				list.remove(i);
-				break;
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 void saveIngredientList(string& ingredientListFile, list<Ingredient>& list)

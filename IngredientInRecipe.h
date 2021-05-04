@@ -22,10 +22,10 @@ public:
 	void setIngredientQuantity(float& quantity);
 	void setIngredientUnit(string& unit);
 	Ingredient& getIngredient();
-	string getIngredientName();
-	float getIngredientQuantity();
+	string getIngredientName() const;
+	float getIngredientQuantity() const;
 	Units getIngredientUnit();
-	string getIngredientUnitStr();
+	string getIngredientUnitStr() const;
 };
 
 #endif

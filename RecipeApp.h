@@ -2,6 +2,7 @@
 #ifndef RECIPEAPP_H
 #define RECIPEAPP_H
 
+
 #include "RecipeList.h"
 #include<wx/listctrl.h>
 #include<wx/combo.h>
@@ -30,22 +31,22 @@ private:
 
 //*************************************************************************************************
 
-class MainFrame;    // forward
+class MainListCtrl;    // forward
 class AddCategoryFrame : public wxFrame
 {
 public:
     AddCategoryFrame();
-    void SetParent(MainFrame* p);
+    void SetParent(MainListCtrl* p);
 protected:
     void OnFinalize(wxCommandEvent& e);
-    void OnExit(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
 
     wxPanel* mainPanel;
     wxPanel* namePanel;
     wxStaticText* nameLabel;
     wxTextCtrl* nameText;
 private:
-    MainFrame* parent;
+    MainListCtrl* parent;
     wxDECLARE_NO_COPY_CLASS(AddCategoryFrame);
     wxDECLARE_EVENT_TABLE();
 
@@ -68,16 +69,15 @@ public:
 protected:
 
     // edit drop down menu
-//    void OnUpdateRecipe(wxCommandEvent& e);
-    void OnAdd(wxCommandEvent& e);
-    void OnExit(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
 
     wxPanel* mainPanel;
     wxPanel* namePanel;
     wxPanel* ingredientCountPanel;
     wxStaticText* nameLabel;
     wxStaticText* ingredientCountLabel;
-    wxStaticText* nameText;
+    wxTextCtrl* nameText;
     wxStaticText* ingredientCountDisplay;
 
 private:
@@ -89,7 +89,42 @@ private:
 
 //*************************************************************************************************
 
-// IngredientFrame
+// AddCategoryFrame
+
+//*************************************************************************************************
+
+class MainListCtrl;    // forward
+class AddIngredientFrame : public wxFrame
+{
+public:
+    AddIngredientFrame();
+    void SetParent(MainListCtrl* p);
+protected:
+    void OnFinalize(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
+
+    wxPanel* mainPanel;
+    wxPanel* namePanel;
+    wxPanel* descriptionPanel;
+    wxPanel* categoryPanel;
+    wxStaticText* nameLabel;
+    wxStaticText* descriptionLabel;
+    wxStaticText* categoryLabel;
+    wxTextCtrl* nameText;
+    wxTextCtrl* descriptionText;
+    wxComboBox* categoryComboBox;
+
+private:
+    MainListCtrl* parent;
+    list<string>* categoryNames = new list<string>();
+    wxDECLARE_NO_COPY_CLASS(AddIngredientFrame);
+    wxDECLARE_EVENT_TABLE();
+
+};
+
+//*************************************************************************************************
+
+// IngredientFrame class
 
 //*************************************************************************************************
 
@@ -98,8 +133,7 @@ class IngredientFrame : public wxFrame
 {
 public:
     IngredientFrame(const wxString& title);
-    void SetIngredient(Ingredient& i);
-    void SetCategoryList(list<Category>& c, const wxString cstr[], const int size);
+    void SetIngredient(Ingredient& i, list<Category>& cat);
     void SetParent(MainListCtrl* p);
     void RebuildTextFields();
 protected:
@@ -107,7 +141,7 @@ protected:
     // edit drop down menu
 //    void OnUpdateRecipe(wxCommandEvent& e);
     void OnUpdate(wxCommandEvent& e);
-    void OnExit(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
 
     wxPanel* mainPanel;
     wxPanel* namePanel;
@@ -121,8 +155,8 @@ protected:
     wxTextCtrl* nameText;
     wxTextCtrl* descriptionText;
     wxComboBox* categoryComboBox;   // make this a dropdown box
-    
-    wxStaticText* recipeUsingIngredientCountText;
+    wxStaticText* currentCategoryLabel;
+    wxStaticText* currentRecipeUsingIngredientCountLabel;
 
 private:
     Ingredient* currentIngredient = new Ingredient();
@@ -134,6 +168,42 @@ private:
 };
 
 
+//*************************************************************************************************
+
+// IngredientsInRecipeFrame class
+
+//*************************************************************************************************
+
+class IngredientsInRecipeListCtrl;  // forward
+class IngredientInRecipeFrame : public wxFrame
+{
+public:
+    IngredientInRecipeFrame(const wxString& title);
+    void SetIngredientInRecipe(IngredientInRecipe& ir);
+    void RebuildTextFields();
+    void SetParent(IngredientsInRecipeListCtrl* p);
+    void OnUpdateIngredientInRecipe(wxCommandEvent& e);
+protected:
+    void OnExit(wxCloseEvent& e);
+private:
+    wxPanel* mainPanel;
+    wxPanel* namePanel;
+    wxPanel* quantityPanel;
+    wxPanel* unitPanel;
+    wxStaticText* nameLabel;
+    wxStaticText* quantityLabel;
+    wxStaticText* unitLabel;
+    wxStaticText* nameText;
+    wxTextCtrl* quantityText;
+    wxStaticText* unitsText;
+
+    IngredientInRecipe* currentIngredientInRecipe;
+    IngredientsInRecipeListCtrl* parent;
+    wxDECLARE_NO_COPY_CLASS(IngredientInRecipeFrame);
+    wxDECLARE_EVENT_TABLE();
+
+};
+
 
 //*************************************************************************************************
 
@@ -141,31 +211,32 @@ private:
 
 //*************************************************************************************************
 
+class RecipeFrame;  //forward
 class IngredientsInRecipeListCtrl : public wxListCtrl
 {
 public:
     IngredientsInRecipeListCtrl(wxWindow* parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style)
         :wxListCtrl(parent, id, pos, size, style)
     {
-        updated = -1;
     }
 
-    void InsertIngredientsInRecipeListReportDisplay();
+    void InsertIngredientsInRecipeListReportDisplay(IngredientInRecipe& ing, int i);
+    void SetParent(RecipeFrame* p);
     void SetIngredientsInRecipeList(list<IngredientInRecipe>& list);
     void SetSelectedItem(string name);
     void OnActivated(wxListEvent& e);
     void OnSelected(wxListEvent& e);
     void OnColumnHeaderClick(wxListEvent& e);
     void ResetListView(long wxFlags = wxLC_REPORT, bool withText = true);
-    void BuildIngredientsInListReportDisplay();
-
+    void BuildIngredientsInRecipeListReportDisplay();
+    void UpdatingIngredientInRecipes();
 protected:
 private:
 
-    long updated;
     list<IngredientInRecipe>* ingredients;
     IngredientInRecipe* selectedIngredient;
-
+    IngredientInRecipeFrame* ingredientInRecipeFrame;
+    RecipeFrame* parent;
     wxDECLARE_NO_COPY_CLASS(IngredientsInRecipeListCtrl);
     wxDECLARE_EVENT_TABLE();
 };
@@ -186,32 +257,34 @@ public:
     void SetRecipe(Recipe& r, list<pair<string, int>>& tList);
     void RebuildTextFields();
     void SetParent(MainListCtrl* p);
-
+    void UpdateIngredientInRecipe();
 protected:
 
     // edit drop down menu
     void OnUpdateRecipe(wxCommandEvent& e);
-    void OnExit(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
 
     wxPanel* mainPanel;
     wxPanel* namePanel;
     wxPanel* mealTypePanel;
     wxPanel* descriptionPanel;
     wxPanel* directionPanel;
+    wxPanel* ingredientsPanel;
     wxStaticText* nameLabel;
     wxStaticText* mealtypeLabel;
     wxStaticText* descriptionLabel;
     wxStaticText* directionLabel;
+    wxStaticText* ingredientsLabel;
     wxTextCtrl* nameText;
-    wxTextCtrl* mealtypeText;
+    wxStaticText* mealtypeText;
     wxTextCtrl* descriptionText;
     wxTextCtrl* directionText;
-    IngredientsInRecipeListCtrl* listIngredientsInRecipe;
 
 private:
     Recipe* currentRecipe = new Recipe();
     MainListCtrl* parent;
     list<pair<string, int>>* typeList;
+    IngredientsInRecipeListCtrl* listIngredientsInRecipe;
     wxDECLARE_NO_COPY_CLASS(RecipeFrame);
     wxDECLARE_EVENT_TABLE();
 };
@@ -242,8 +315,13 @@ public:
 
     void LoadLists();
     void AddNewCategory(string& c);
+    void AddNewIngredient(string& name, string& desc, string& cat);
     void RemoveCategory();
+    void RemoveIngredient();
+    void GetCategoryNamesList(list<string>& names);
     string GetSelectedCategoryName();
+    string GetSelectedIngredientName();
+    
 
     // when the listController is renewed in RebuildList in MainFrame.
     // we use the following to pass lists from old listController to new listController
@@ -303,7 +381,7 @@ public:
 protected:
     // file drop down menu
     void OnAbout(wxCommandEvent& e);
-    void OnExit(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
 
     // lists drop down menu
     void OnRecipeListReportDisplay(wxCommandEvent& e);
@@ -313,6 +391,8 @@ protected:
 
     void OnAddCategory(wxCommandEvent& e);
     void OnRemoveCategory(wxCommandEvent& e);
+    void OnAddIngredient(wxCommandEvent& e);
+    void OnRemoveIngredient(wxCommandEvent& e);
 
 
 
@@ -377,6 +457,11 @@ enum
     INGREDIENT_RECIPES_COUNT_TEXT_CTRL,
 
 
+    INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL,
+    INGREDIENT_IN_RECIPE_QUANTITY_TEXT_CTRL,
+    INGREDIENT_IN_RECIPE_UNIT_TEXT_CTRL,
+
+
 
     RECIPE_ADD_NEW,
     RECIPE_REMOVE_SELECTED,
@@ -384,7 +469,6 @@ enum
     RECIPE_MEALTYPE_TEXT_CTRL,
     RECIPE_DESCRIPTION_TEXT_CTRL,
     RECIPE_DIRECTIONS_TEXT_CTRL,
-
 
     UPDATE,
     FINALIZE,

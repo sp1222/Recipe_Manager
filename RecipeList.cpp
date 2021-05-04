@@ -65,6 +65,12 @@ void saveRecipeList(string& file, list<Recipe>& list)
 	for (auto& r : list)
 	{
 		// first we output to file general recipe details.
+		string desc = r.getDescription();
+		for (auto& s : desc)
+		{
+			if (s == '\n')
+				s = '`';
+		}
 		fout << r.getName() << "," << r.getDescription() << "," << r.getDirection() << "," 
 			<< r.getServingCount() << "," << r.getYield() << "," << r.getYieldUnitStr() << "," 
 			<< r.getMealType() << ",";
@@ -105,6 +111,12 @@ void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, 
 			// in file
 			// name,description,direction,serving,yield,yieldunit,mealtype,ingredname,ingredqty,ingredunitstr
 			string name = row[0], desc = row[1], direct = row[2], yieldUnit = row[5], meal = row[6];
+			for (auto& s : desc)
+			{
+				if (s == '`')
+					s = '\n';
+			}
+
 			int serv = stoi(row[3]), yield = stoi(row[4]);
 			row.erase(row.begin(), row.begin() + 7);
 			Recipe rec(name, desc, direct, serv, yield, yieldUnit, meal, mlist);
@@ -136,11 +148,9 @@ void sortRecipes(int byCol, list<Recipe>& list)
 		list.sort(compareMealTypes);
 		break;
 	case 2:
-
+		list.sort(compareServingCounts);
 		break;
-
 	default:
-
 		break;
 	}
 }
@@ -173,6 +183,65 @@ bool compareMealTypes(const Recipe& first, const Recipe& second)
 		i++;
 	}
 	return (first.getMealType().length() < second.getMealType().length());
+}
+
+bool compareServingCounts(const Recipe& first, const Recipe& second)
+{
+	return (first.getServingCount() < second.getServingCount());
+}
+
+void sortRecipeIngredients(int byCol, list<IngredientInRecipe>& list)
+{
+	switch (byCol)
+	{
+	case 0:
+		list.sort(compareIngredientInRecipeNames);
+		break;
+	case 1:
+		list.sort(compareIngredientInRecipeQuantity);
+		break;
+	case 2:
+		list.sort(compareIngredientInRecipeUnits);
+		break;
+	default:
+		break;
+	}
+}
+
+// sort the list alphabetized by names, disregarding case sensitivity
+bool compareIngredientInRecipeNames(const IngredientInRecipe& first, const IngredientInRecipe& second)
+{
+	unsigned int i = 0;
+	while ((i < first.getIngredientName().length()) && (i < second.getIngredientName().length()))
+	{
+		if (tolower(first.getIngredientName()[i]) < tolower(second.getIngredientName()[i]))
+			return true;
+		else if (tolower(first.getIngredientName()[i]) > tolower(second.getIngredientName()[i]))
+			return false;
+		i++;
+	}
+	return (first.getIngredientName().length() < second.getIngredientName().length());
+}
+
+// sort the list alphabetized by names, disregarding case sensitivity
+bool compareIngredientInRecipeQuantity(const IngredientInRecipe& first, const IngredientInRecipe& second)
+{
+
+	return (first.getIngredientQuantity() < second.getIngredientQuantity());
+}
+
+bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const IngredientInRecipe& second)
+{
+	unsigned int i = 0;
+	while ((i < first.getIngredientUnitStr().length()) && (i < second.getIngredientUnitStr().length()))
+	{
+		if (tolower(first.getIngredientUnitStr()[i]) < tolower(second.getIngredientUnitStr()[i]))
+			return true;
+		else if (tolower(first.getIngredientUnitStr()[i]) > tolower(second.getIngredientUnitStr()[i]))
+			return false;
+		i++;
+	}
+	return (first.getIngredientUnitStr().length() < second.getIngredientUnitStr().length());
 }
 
 bool doesRecipeExist(string& name, list<Recipe>& list)

@@ -141,7 +141,7 @@ void Units::setUnit(string& u)
 	}
 }
 
-string Units::getUnitStr()
+string Units::getUnitStr() const
 {
 	return unitStr;
 }

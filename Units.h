@@ -62,7 +62,7 @@ public:
     Units();
     Units(string& unit);
     void setUnit(string& unit);
-    string getUnitStr();
+    string getUnitStr() const;
     Unit getUnit();
     string getTypeStr();
     Type getType();
