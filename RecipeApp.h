@@ -174,16 +174,20 @@ private:
 
 //*************************************************************************************************
 
+
+
 class IngredientsInRecipeListCtrl;  // forward
+class RecipeFrame;                  // forward
 class IngredientInRecipeFrame : public wxFrame
 {
 public:
     IngredientInRecipeFrame(const wxString& title);
-    void SetIngredientInRecipe(IngredientInRecipe& ir);
+    void SetIngredientInRecipe(IngredientInRecipe& ir, list<Ingredient>& iList);
     void RebuildTextFields();
-    void SetParent(IngredientsInRecipeListCtrl* p);
-    void OnUpdateIngredientInRecipe(wxCommandEvent& e);
+    void SetParents(IngredientsInRecipeListCtrl* p, RecipeFrame* rf);
+    void SetStringArrays(list<string>& ingredNames);
 protected:
+    void OnUpdateIngredientInRecipe(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 private:
     wxPanel* mainPanel;
@@ -194,15 +198,22 @@ private:
     wxStaticText* quantityLabel;
     wxStaticText* unitLabel;
     wxStaticText* nameText;
+    wxComboBox* nameComboBox;       // consider changing this to a list view format?  or include a second dropdown to narrow list down by category?
     wxTextCtrl* quantityText;
     wxStaticText* unitsText;
+    wxComboBox* unitsComboBox;
 
     IngredientInRecipe* currentIngredientInRecipe;
     IngredientsInRecipeListCtrl* parent;
+    RecipeFrame* parentRF;
+    list<Ingredient>* ingredList;
+    list<string> unitList;
     wxDECLARE_NO_COPY_CLASS(IngredientInRecipeFrame);
     wxDECLARE_EVENT_TABLE();
 
 };
+
+
 
 
 //*************************************************************************************************
@@ -222,25 +233,64 @@ public:
 
     void InsertIngredientsInRecipeListReportDisplay(IngredientInRecipe& ing, int i);
     void SetParent(RecipeFrame* p);
-    void SetIngredientsInRecipeList(list<IngredientInRecipe>& list);
+    void SetIngredientsInRecipeList(list<IngredientInRecipe>& ingredInRecipe);
+    void SetIngredientList(list<Ingredient>& iList);
     void SetSelectedItem(string name);
+    void ResetListView(long wxFlags = wxLC_REPORT, bool withText = true);
+    void BuildIngredientsInRecipeListReportDisplay();
+    void UpdateModifiedIngredient();
+    string GetSelectedIngredient();
+protected:
     void OnActivated(wxListEvent& e);
     void OnSelected(wxListEvent& e);
     void OnColumnHeaderClick(wxListEvent& e);
-    void ResetListView(long wxFlags = wxLC_REPORT, bool withText = true);
-    void BuildIngredientsInRecipeListReportDisplay();
-    void UpdatingIngredientInRecipes();
-protected:
 private:
 
     list<IngredientInRecipe>* ingredients;
     IngredientInRecipe* selectedIngredient;
     IngredientInRecipeFrame* ingredientInRecipeFrame;
     RecipeFrame* parent;
+    list<Ingredient>* ingredList;
     wxDECLARE_NO_COPY_CLASS(IngredientsInRecipeListCtrl);
     wxDECLARE_EVENT_TABLE();
 };
 
+
+
+//*************************************************************************************************
+
+// AddIngredientToRecipeFrame class
+
+//*************************************************************************************************
+
+class RecipeFrame;  //forward
+class AddIngredientToRecipeFrame : public wxFrame
+{
+public:
+    AddIngredientToRecipeFrame();
+    void SetParent(RecipeFrame* p);
+    void SetComboBoxLists(list<Ingredient>& iList);
+protected:
+    void OnFinalize(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
+private:
+    wxPanel* mainPanel;
+    wxPanel* namePanel;
+    wxPanel* quantityPanel;
+    wxPanel* unitsPanel;
+    wxStaticText* nameLabel;
+    wxStaticText* quantityLabel;
+    wxStaticText* unitsLabel;
+    wxComboBox* nameComboBox;
+    wxTextCtrl* quantityText;
+    wxComboBox* unitsComboBox;
+
+    RecipeFrame* parent;
+    list<Ingredient>* ingredList;
+    list<string> unitList;
+    wxDECLARE_NO_COPY_CLASS(AddIngredientToRecipeFrame);
+    wxDECLARE_EVENT_TABLE();
+};
 
 
 //*************************************************************************************************
@@ -254,15 +304,20 @@ class RecipeFrame : public wxFrame
 {
 public:
     RecipeFrame(const wxString& title);
-    void SetRecipe(Recipe& r, list<pair<string, int>>& tList);
+    void SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList);
     void RebuildTextFields();
     void SetParent(MainListCtrl* p);
     void UpdateIngredientInRecipe();
+    void AddIngredientToRecipe(string& name, float& qty, string& unit);
 protected:
 
     // edit drop down menu
     void OnUpdateRecipe(wxCommandEvent& e);
+    void OnAddIngredient(wxCommandEvent& e);
+    void OnRemoveIngredient(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
+
+private:
 
     wxPanel* mainPanel;
     wxPanel* namePanel;
@@ -276,15 +331,16 @@ protected:
     wxStaticText* directionLabel;
     wxStaticText* ingredientsLabel;
     wxTextCtrl* nameText;
-    wxStaticText* mealtypeText;
+    wxTextCtrl* mealtypeText;
     wxTextCtrl* descriptionText;
     wxTextCtrl* directionText;
+    IngredientsInRecipeListCtrl* listIngredientsInRecipe;
 
-private:
     Recipe* currentRecipe = new Recipe();
     MainListCtrl* parent;
+    AddIngredientToRecipeFrame* addIngredientToRecipe;
     list<pair<string, int>>* typeList;
-    IngredientsInRecipeListCtrl* listIngredientsInRecipe;
+    list<Ingredient>* ingredList;
     wxDECLARE_NO_COPY_CLASS(RecipeFrame);
     wxDECLARE_EVENT_TABLE();
 };
@@ -321,6 +377,9 @@ public:
     void GetCategoryNamesList(list<string>& names);
     string GetSelectedCategoryName();
     string GetSelectedIngredientName();
+
+    void GetIngredientsList(list<string>& list);
+    void GetUnitsList(list<Units>& list);
     
 
     // when the listController is renewed in RebuildList in MainFrame.
@@ -396,12 +455,6 @@ protected:
 
 
 
-//    void OnToggleBell(wxCommandEvent& e);
-//    void OnSetRowLines(wxCommandEvent& e);
-
-
-//    void OnUpdateRowLines(wxUpdateUIEvent& e);
-
     wxPanel* panel;
     MainListCtrl* listController;
 
@@ -437,8 +490,6 @@ enum
     CATEGORY_LIST_REPORT_DISPLAY,
 
 
-    //    LIST_TOGGLE_BELL,
-    //    LIST_ROW_LINES,
     LABEL,
 
     CATEGORY_ADD_NEW,
@@ -469,6 +520,8 @@ enum
     RECIPE_MEALTYPE_TEXT_CTRL,
     RECIPE_DESCRIPTION_TEXT_CTRL,
     RECIPE_DIRECTIONS_TEXT_CTRL,
+    RECIPE_ADD_INGREDIENT,
+    RECIPE_REMOVE_INGREDIENT,
 
     UPDATE,
     FINALIZE,

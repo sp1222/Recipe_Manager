@@ -17,9 +17,9 @@ Recipe::Recipe()
 	recipeDirections = "";
 	servingCount = 0;
 	yield = 0;
-	string u = "NONE";
-	Units un(u);
-	yieldUnit = un;
+//	string u = "NONE";
+//	Units un = new Units(u);
+//	yieldUnit = Units("NONE");
 	mealType = "";
 	recipeIngredients.empty();
 }
@@ -226,7 +226,7 @@ IngredientInRecipe& Recipe::getIngredientInRecipe(int& index)
 	return recipeIngredients.front();
 }
 
-void Recipe::removeIngredient(string& ingred)
+void Recipe::removeIngredientFromRecipe(string& ingred)
 {
 	for (auto& r : recipeIngredients)
 	{

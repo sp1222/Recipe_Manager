@@ -4,7 +4,7 @@
 #define RECIPE_H
 
 #include "IngredientInRecipe.h"
-#include "MealType.h"
+#include "MealTypeList.h"
 
 class Recipe
 {
@@ -47,6 +47,6 @@ public:
 	list<IngredientInRecipe>& getAllIngredientsInRecipe();
 	IngredientInRecipe& getIngredientInRecipe(string& name);
 	IngredientInRecipe& getIngredientInRecipe(int& index);
-	void removeIngredient(string& ingred);
+	void removeIngredientFromRecipe(string& ingred);
 };
 #endif // !RECIPE_H

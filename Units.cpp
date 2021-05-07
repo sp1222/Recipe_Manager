@@ -1,5 +1,11 @@
 #include "Units.h"
-#include<iostream>
+#include <iostream>
+
+void GetUnitStringList(list<string>& str)
+{
+	for (int i = 0; i < 16; i++)
+		str.push_back(STR_UNIT[i]);
+}
 
 bool Units::operator == (const Units& u) const
 {
