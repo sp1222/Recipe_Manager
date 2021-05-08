@@ -4,6 +4,8 @@
 #include<sstream>
 #include<fstream>
 #include<vector>
+#include<algorithm>
+#include<regex>
 
 
 void addRecipe(string& name, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& tList, list<Recipe>& list)
@@ -65,13 +67,11 @@ void saveRecipeList(string& file, list<Recipe>& list)
 	for (auto& r : list)
 	{
 		// first we output to file general recipe details.
-		string desc = r.getDescription();
-		for (auto& s : desc)
-		{
-			if (s == '\n')
-				s = '`';
-		}
-		fout << r.getName() << "," << r.getDescription() << "," << r.getDirection() << "," 
+		string d = r.getDirection();
+		regex newlines_re("\n+");
+		string direct = regex_replace(d, newlines_re, "`");
+
+		fout << r.getName() << "," << r.getDescription() << "," << direct << ","
 			<< r.getServingCount() << "," << r.getYield() << "," << r.getYieldUnitStr() << "," 
 			<< r.getMealType() << ",";
 
@@ -110,12 +110,10 @@ void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, 
 			}
 			// in file
 			// name,description,direction,serving,yield,yieldunit,mealtype,ingredname,ingredqty,ingredunitstr
-			string name = row[0], desc = row[1], direct = row[2], yieldUnit = row[5], meal = row[6];
-			for (auto& s : desc)
-			{
-				if (s == '`')
-					s = '\n';
-			}
+			string name = row[0], desc = row[1], d = row[2], yieldUnit = row[5], meal = row[6];
+
+			regex newlines_re("`");
+			string direct = regex_replace(d, newlines_re, "\n");
 
 			int serv = stoi(row[3]), yield = stoi(row[4]);
 			row.erase(row.begin(), row.begin() + 7);

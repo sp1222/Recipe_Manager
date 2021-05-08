@@ -332,6 +332,8 @@ private:
     wxStaticText* ingredientsLabel;
     wxTextCtrl* nameText;
     wxTextCtrl* mealtypeText;
+//    wxStaticText* mealtypeText;
+//    wxComboBox* mealtypeComboBox;
     wxTextCtrl* descriptionText;
     wxTextCtrl* directionText;
     IngredientsInRecipeListCtrl* listIngredientsInRecipe;

@@ -267,7 +267,8 @@ void AddIngredientFrame::OnFinalize(wxCommandEvent& WXUNUSED(e))
     string nm = string(nameText->GetValue());
     string ds = string(descriptionText->GetValue());
     string ct = string(categoryComboBox->GetStringSelection());
-    parent->AddNewIngredient(nm, ds, ct);
+    if(!nm.empty() && !ct.empty())
+        parent->AddNewIngredient(nm, ds, ct);
 }
 
 void AddIngredientFrame::OnExit(wxCloseEvent& WXUNUSED(e))
@@ -386,13 +387,13 @@ void IngredientFrame::SetParent(MainListCtrl* p)
 
 void IngredientFrame::OnUpdate(wxCommandEvent& WXUNUSED(e))
 {
-    string val = string(nameText->GetValue());
-    currentIngredient->setName(val);
-    val = string(descriptionText->GetValue());
-    currentIngredient->setDescription(val);
-    val = categoryComboBox->GetStringSelection();
-    if(!val.empty() || val != currentIngredient->getCategoryStr())
-        currentIngredient->setCategory(getCategoryInList(val, *catList));
+    string nm = string(nameText->GetValue());
+    currentIngredient->setName(nm);
+    string ds = string(descriptionText->GetValue());
+    currentIngredient->setDescription(ds);
+    string ct = string(categoryComboBox->GetStringSelection());
+    if(!ct.empty() || ct != currentIngredient->getCategoryStr())
+        currentIngredient->setCategory(getCategoryInList(ct, *catList));
     parent->ResetListView(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
     RebuildTextFields();
 }
@@ -514,10 +515,10 @@ void IngredientInRecipeFrame::SetParents(IngredientsInRecipeListCtrl* p, RecipeF
 
 void IngredientInRecipeFrame::OnUpdateIngredientInRecipe(wxCommandEvent& WXUNUSED(e))
 {
-    string val = string(nameComboBox->GetStringSelection());
+    string nm = string(nameComboBox->GetStringSelection());
     for (auto& i : *ingredList)
     {
-        if (val == i.getName())
+        if (nm == i.getName())
         {
             currentIngredientInRecipe->setIngredient(i);
             break;
@@ -529,8 +530,9 @@ void IngredientInRecipeFrame::OnUpdateIngredientInRecipe(wxCommandEvent& WXUNUSE
         q = stof(qSTR);
     currentIngredientInRecipe->setIngredientQuantity(q);
 
-    val = string(unitsComboBox->GetStringSelection());
-    currentIngredientInRecipe->setIngredientUnit(val);
+    string u = string(unitsComboBox->GetStringSelection());
+    if(!u.empty())
+        currentIngredientInRecipe->setIngredientUnit(u);
 
     parent->UpdateModifiedIngredient();
     RebuildTextFields();
@@ -749,7 +751,7 @@ AddIngredientToRecipeFrame::AddIngredientToRecipeFrame() : wxFrame(NULL, wxID_AN
     unitsPanel = new wxPanel(mainPanel, wxID_ANY);
 
     nameLabel = new wxStaticText(namePanel, wxID_ANY, wxString("Ingredient: "), wxDefaultPosition, wxSize(100, 20));
-    nameComboBox = new wxComboBox(namePanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
+    nameComboBox = new wxComboBox(namePanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxCB_READONLY);
 
     wxBoxSizer* nameSizer = new wxBoxSizer(wxHORIZONTAL);
     nameSizer->Add(nameLabel, wxSizerFlags().Expand().Border(wxALL));
@@ -765,7 +767,7 @@ AddIngredientToRecipeFrame::AddIngredientToRecipeFrame() : wxFrame(NULL, wxID_AN
     quantityPanel->SetSizer(quantitySizer);
 
     unitsLabel = new wxStaticText(unitsPanel, wxID_ANY, wxString("Units: "), wxDefaultPosition, wxSize(100, 20));
-    unitsComboBox = new wxComboBox(unitsPanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
+    unitsComboBox = new wxComboBox(unitsPanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxCB_READONLY);
 
     wxBoxSizer* unitsSizer = new wxBoxSizer(wxHORIZONTAL);
     unitsSizer->Add(unitsLabel, wxSizerFlags().Expand().Border(wxALL));
@@ -883,11 +885,14 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
 
 
     mealtypeLabel = new wxStaticText(mealTypePanel, LABEL, wxString("Meal Type:"), wxDefaultPosition, wxSize(100, 20));
-    mealtypeText = new wxTextCtrl(mealTypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(600, 20));
+    mealtypeText = new wxTextCtrl(mealTypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
+//    mealtypeText = new wxStaticText(mealTypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
+//    mealtypeComboBox = new wxComboBox(mealTypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxArrayString(), wxCB_READONLY);
 
     wxBoxSizer* const mealtypeSizer = new wxBoxSizer(wxHORIZONTAL);
     mealtypeSizer->Add(mealtypeLabel, wxSizerFlags().Expand().Border(wxALL));
     mealtypeSizer->Add(mealtypeText, wxSizerFlags().Expand().Border(wxALL));
+//    mealtypeSizer->Add(mealtypeComboBox, wxSizerFlags().Expand().Border(wxALL));
     mealTypePanel->SetSizer(mealtypeSizer);
 
 
@@ -901,7 +906,7 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
 
 
     directionLabel = new wxStaticText(directionPanel, LABEL, wxString("Directions:"), wxDefaultPosition, wxSize(100, 20));
-    directionText = new wxTextCtrl(directionPanel, RECIPE_DIRECTIONS_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(600, 300));
+    directionText = new wxTextCtrl(directionPanel, RECIPE_DIRECTIONS_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(600, 300), wxTE_MULTILINE);
 
     wxBoxSizer* const directionSizer = new wxBoxSizer(wxHORIZONTAL);
     directionSizer->Add(directionLabel, wxSizerFlags().Expand().Border(wxALL));
@@ -939,6 +944,8 @@ void RecipeFrame::SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingr
 {
     currentRecipe = &r;
     typeList = &tList;
+//    for (auto& t : *typeList)
+//        mealtypeComboBox->Append(wxString(t.first));
     ingredList = &iList;
     listIngredientsInRecipe->SetParent(this);
     listIngredientsInRecipe->SetIngredientsInRecipeList(currentRecipe->getAllIngredientsInRecipe());
@@ -950,6 +957,7 @@ void RecipeFrame::RebuildTextFields()
 {
     nameText->SetValue(currentRecipe->getName());
     mealtypeText->SetValue(currentRecipe->getMealType());
+//    mealtypeText->SetLabel(currentRecipe->getMealType());
     descriptionText->SetValue(currentRecipe->getDescription());
     directionText->SetValue(currentRecipe->getDirection());
 }
@@ -973,14 +981,19 @@ void RecipeFrame::AddIngredientToRecipe(string& name, float& qty, string& unit)
 
 void RecipeFrame::OnUpdateRecipe(wxCommandEvent& WXUNUSED(e))
 {
-    string val = string(nameText->GetValue());
-    currentRecipe->setName(val);
-    val = string(mealtypeText->GetValue());
-    currentRecipe->setMealType(val, *typeList);
-    val = string(descriptionText->GetValue());
-    currentRecipe->setDescription(val);
-    val = string(directionText->GetValue());
-    currentRecipe->setDirection(val);
+    string nm = string(nameText->GetValue());
+    if(!nm.empty())
+        currentRecipe->setName(nm);
+//    string mt = string(mealtypeComboBox->GetStringSelection());
+    string mt = string(mealtypeText->GetValue());
+    if(!mt.empty())
+        currentRecipe->setMealType(mt, *typeList);
+    string ds = string(descriptionText->GetValue());
+    if(!ds.empty())
+        currentRecipe->setDescription(ds);
+    string dr = string(directionText->GetValue());
+    if(!dr.empty())
+        currentRecipe->setDirection(dr);
     parent->SaveRecipes();
     parent->ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
 }
@@ -1477,7 +1490,6 @@ MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDe
     menuRecipeListEditor = new wxMenu;
     menuRecipeListEditor->Append(RECIPE_ADD_NEW, "Create Recipe");
     menuRecipeListEditor->Append(RECIPE_REMOVE_SELECTED, "Remove Selected Recipe");
-
 
 
     // Define menu bar
