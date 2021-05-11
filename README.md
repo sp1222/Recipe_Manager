@@ -10,4 +10,12 @@ wxWidgets is being used for GUI.
 Categories: and add, modify, and remove categories with information translating to ingredients correctly.
 Ingredients: can add, modify, and remove ingredients with information translating to recipes correctly.
 
-Next Step: Recipes, adding, modifying, and removing.
+Next Steps (notes to self):
+- make it so that new frames stay on top of existing frames
+- add missing fields for all frames that data types can hold (ie Recipe serving size, etc..)
+- track data dumps
+- refactor code
+- make recipes scalable.
+- start daily/weekly/monthly menu builds
+- incorporate grocery item linking to ingredients
+- compile shopping lists based on menu builds and ingredient:item links
