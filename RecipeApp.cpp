@@ -751,9 +751,9 @@ AddIngredientToRecipeFrame::AddIngredientToRecipeFrame() : wxFrame(NULL, wxID_AN
     unitsPanel = new wxPanel(mainPanel, wxID_ANY);
 
     nameLabel = new wxStaticText(namePanel, wxID_ANY, wxString("Ingredient: "), wxDefaultPosition, wxSize(100, 20));
-    nameComboBox = new wxComboBox(namePanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxCB_READONLY);
+    nameComboBox = new wxComboBox(namePanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxArrayString(), wxCB_READONLY);
 
-    wxBoxSizer* nameSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* const nameSizer = new wxBoxSizer(wxHORIZONTAL);
     nameSizer->Add(nameLabel, wxSizerFlags().Expand().Border(wxALL));
     nameSizer->Add(nameComboBox, wxSizerFlags().Expand().Border(wxALL));
     namePanel->SetSizer(nameSizer);
@@ -761,20 +761,20 @@ AddIngredientToRecipeFrame::AddIngredientToRecipeFrame() : wxFrame(NULL, wxID_AN
     quantityLabel = new wxStaticText(quantityPanel, wxID_ANY, wxString("Quantity: "), wxDefaultPosition, wxSize(100, 20));
     quantityText = new wxTextCtrl(quantityPanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
 
-    wxBoxSizer* quantitySizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* const quantitySizer = new wxBoxSizer(wxHORIZONTAL);
     quantitySizer->Add(quantityLabel, wxSizerFlags().Expand().Border(wxALL));
     quantitySizer->Add(quantityText, wxSizerFlags().Expand().Border(wxALL));
     quantityPanel->SetSizer(quantitySizer);
 
     unitsLabel = new wxStaticText(unitsPanel, wxID_ANY, wxString("Units: "), wxDefaultPosition, wxSize(100, 20));
-    unitsComboBox = new wxComboBox(unitsPanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxCB_READONLY);
+    unitsComboBox = new wxComboBox(unitsPanel, INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxArrayString(), wxCB_READONLY);
 
-    wxBoxSizer* unitsSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* const unitsSizer = new wxBoxSizer(wxHORIZONTAL);
     unitsSizer->Add(unitsLabel, wxSizerFlags().Expand().Border(wxALL));
     unitsSizer->Add(unitsComboBox, wxSizerFlags().Expand().Border(wxALL));
     unitsPanel->SetSizer(unitsSizer);
 
-    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* const mainSizer = new wxBoxSizer(wxVERTICAL);
     mainSizer->Add(namePanel, wxSizerFlags().Expand().Border(wxALL, 10));
     mainSizer->Add(quantityPanel, wxSizerFlags().Expand().Border(wxALL, 10));
     mainSizer->Add(unitsPanel, wxSizerFlags().Expand().Border(wxALL, 10));
@@ -809,7 +809,7 @@ void AddIngredientToRecipeFrame::OnFinalize(wxCommandEvent& WXUNUSED(e))
     string n = string(nameComboBox->GetStringSelection());
     string qSTR = string(quantityText->GetValue());
     float q = -1;
-    if(!qSTR.empty() && all_of(qSTR.begin(), qSTR.end(), ::isdigit))
+    if (!qSTR.empty() && all_of(qSTR.begin(), qSTR.end(), ::isdigit))
         q = stof(qSTR);
     string u = string(unitsComboBox->GetStringSelection());
 
@@ -940,8 +940,9 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
 
 //*************************************************************************************************
 
-void RecipeFrame::SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList)
+    void RecipeFrame::SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList, bool in)
 {
+    isnew = in;
     currentRecipe = &r;
     typeList = &tList;
 //    for (auto& t : *typeList)
@@ -994,6 +995,8 @@ void RecipeFrame::OnUpdateRecipe(wxCommandEvent& WXUNUSED(e))
     string dr = string(directionText->GetValue());
     if(!dr.empty())
         currentRecipe->setDirection(dr);
+    if (isnew)
+        parent->AddRecipe(*currentRecipe);
     parent->SaveRecipes();
     parent->ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
 }
@@ -1027,10 +1030,11 @@ void RecipeFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 //*************************************************************************************************
 
 wxBEGIN_EVENT_TABLE(MainListCtrl, wxListCtrl)
-    EVT_LIST_ITEM_ACTIVATED(MAIN_LIST_CTRL, MainListCtrl::OnActivated)
-    EVT_LIST_ITEM_SELECTED(MAIN_LIST_CTRL, MainListCtrl::OnSelected)
-    EVT_LIST_COL_CLICK(MAIN_LIST_CTRL, MainListCtrl::OnColumnHeaderClick)
+EVT_LIST_ITEM_ACTIVATED(MAIN_LIST_CTRL, MainListCtrl::OnActivated)
+EVT_LIST_ITEM_SELECTED(MAIN_LIST_CTRL, MainListCtrl::OnSelected)
+EVT_LIST_COL_CLICK(MAIN_LIST_CTRL, MainListCtrl::OnColumnHeaderClick)
 wxEND_EVENT_TABLE()
+
 
 //*************************************************************************************************
 
@@ -1140,7 +1144,7 @@ void MainListCtrl::RemoveCategory()
     string cat = selectedCategory->getCategory();
     if (removeCategory(cat, categories))
     {
-        SaveCategories();
+        SaveAllLists();
         ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
     }
 }
@@ -1150,10 +1154,34 @@ void MainListCtrl::RemoveIngredient()
     string ing = selectedIngredient->getName();
     if (removeIngredient(ing, ingredients))
     {
-        SaveCategories();
-        SaveIngredients();
+        SaveAllLists();
         ResetListView(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
     }
+}
+
+void MainListCtrl::RemoveRecipe()
+{
+    string rec = selectedRecipe->getName();
+    if (removeRecipe(rec, recipes))
+    {
+        SaveAllLists();
+        ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
+    }
+}
+
+void MainListCtrl::CreateNewRecipe()
+{
+    recipeFrame = new RecipeFrame("Create New Recipe");
+    Recipe* nr = new Recipe();
+    recipeFrame->SetRecipe(*nr, mealTypes, ingredients, true);
+    recipeFrame->SetParent(this);
+    recipeFrame->Show(true);
+}
+
+void MainListCtrl::AddRecipe(Recipe& nr)
+{
+    addRecipe(nr, recipes);
+    SaveAllLists();
 }
 
 void MainListCtrl::GetCategoryNamesList(list<string>& names)
@@ -1174,6 +1202,14 @@ string MainListCtrl::GetSelectedIngredientName()
 {
     if (selectedIngredient != nullptr)
         return selectedIngredient->getName();
+    else
+        return "";
+}
+
+string MainListCtrl::GetSelectedRecipeName()
+{
+    if (selectedRecipe != nullptr)
+        return selectedRecipe->getName();
     else
         return "";
 }
@@ -1237,7 +1273,7 @@ void MainListCtrl::OnActivated(wxListEvent& e)
         // here we open a recipe Frame, make it the primary window, and populate fields with the recipe we have clicked on.
 
         recipeFrame = new RecipeFrame(selectedRecipe->getName());
-        recipeFrame->SetRecipe(*selectedRecipe, mealTypes, ingredients);
+        recipeFrame->SetRecipe(*selectedRecipe, mealTypes, ingredients, false);
         recipeFrame->SetParent(this);
         recipeFrame->RebuildTextFields();
         recipeFrame->Show(true);
@@ -1443,13 +1479,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
     EVT_MENU(CATEGORY_REMOVE_SELECTED, MainFrame::OnRemoveCategory)
     EVT_MENU(INGREDIENT_ADD_NEW, MainFrame::OnAddIngredient)
     EVT_MENU(INGREDIENT_REMOVE_SELECTED, MainFrame::OnRemoveIngredient)
-
-//    EVT_MENU(LIST_TOGGLE_BELL, MainFrame::OnToggleBell)
-//    EVT_MENU(LIST_ROW_LINES, MainFrame::OnSetRowLines)
-
-
-
-//    EVT_UPDATE_UI(LIST_ROW_LINES, MainFrame::OnUpdateRowLines)
+    EVT_MENU(RECIPE_ADD_NEW, MainFrame::OnAddRecipe)
+    EVT_MENU(RECIPE_REMOVE_SELECTED, MainFrame::OnRemoveRecipe)
 wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
@@ -1510,7 +1541,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDe
     sizer->Add(listController, wxSizerFlags(2).Expand().Border(wxALL, 10));
     panel->SetSizer(sizer);
 
-    SetClientSize(panel->GetBestSize());
+    SetClientSize(panel->GetMaxSize());
 }
 
 //*************************************************************************************************
@@ -1608,6 +1639,31 @@ void MainFrame::OnRemoveIngredient(wxCommandEvent& e)
         case wxYES:
         case wxID_YES:
             listController->RemoveIngredient();
+        default:
+            break;
+        }
+    }
+}
+
+void MainFrame::OnAddRecipe(wxCommandEvent& e)
+{
+    listController->CreateNewRecipe();
+}
+
+void MainFrame::OnRemoveRecipe(wxCommandEvent& e)
+{
+    if (listController->GetSelectedRecipeName() != "")
+    {
+        // confirmation message.
+        int choiceValue = wxNO;
+        string rec = listController->GetSelectedRecipeName();
+        wxMessageDialog* d = new wxMessageDialog(NULL, _("You are about to remove a recipe!\n" + rec + " will not be removed if there are recipes using the ingredient " + rec + "\n\nAre you sure you want to remove " + rec + "?"), _("Remove " + rec), wxYES_NO | wxCENTRE);
+        choiceValue = d->ShowModal();
+        switch (choiceValue)
+        {
+        case wxYES:
+        case wxID_YES:
+            listController->RemoveRecipe();
         default:
             break;
         }

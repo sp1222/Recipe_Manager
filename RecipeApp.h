@@ -304,7 +304,7 @@ class RecipeFrame : public wxFrame
 {
 public:
     RecipeFrame(const wxString& title);
-    void SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList);
+    void SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList, bool in = false);
     void RebuildTextFields();
     void SetParent(MainListCtrl* p);
     void UpdateIngredientInRecipe();
@@ -318,7 +318,7 @@ protected:
     void OnExit(wxCloseEvent& e);
 
 private:
-
+    bool isnew = false;
     wxPanel* mainPanel;
     wxPanel* namePanel;
     wxPanel* mealTypePanel;
@@ -346,7 +346,6 @@ private:
     wxDECLARE_NO_COPY_CLASS(RecipeFrame);
     wxDECLARE_EVENT_TABLE();
 };
-
 
 //*************************************************************************************************
 
@@ -376,12 +375,15 @@ public:
     void AddNewIngredient(string& name, string& desc, string& cat);
     void RemoveCategory();
     void RemoveIngredient();
+    void RemoveRecipe();
+    void CreateNewRecipe();
+    void AddRecipe(Recipe& nr);
     void GetCategoryNamesList(list<string>& names);
     string GetSelectedCategoryName();
     string GetSelectedIngredientName();
+    string GetSelectedRecipeName();
 
     void GetIngredientsList(list<string>& list);
-    void GetUnitsList(list<Units>& list);
     
 
     // when the listController is renewed in RebuildList in MainFrame.
@@ -454,6 +456,8 @@ protected:
     void OnRemoveCategory(wxCommandEvent& e);
     void OnAddIngredient(wxCommandEvent& e);
     void OnRemoveIngredient(wxCommandEvent& e);
+    void OnAddRecipe(wxCommandEvent& e);
+    void OnRemoveRecipe(wxCommandEvent& e);
 
 
 
@@ -526,6 +530,7 @@ enum
     RECIPE_REMOVE_INGREDIENT,
 
     UPDATE,
+    UPDATE_NEW,
     FINALIZE,
     SAVE,
     MAIN_LIST_CTRL,

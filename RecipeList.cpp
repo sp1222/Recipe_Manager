@@ -41,7 +41,7 @@ void addRecipe(Recipe& recipe, list<Recipe>& list)
 	}
 }
 
-void removeRecipe(string& name, list<Recipe>& list)
+bool removeRecipe(string& name, list<Recipe>& list)
 {
 	// NOTE: WILL NEED TO TAKE INTO ACCOUNT ANY RECIPES UTILIZING THE INGREDIENT BEING REMOVED.
 	// CONSIDER OPTION TO OFFER CHOOSING AN INGREDIENT TO REPLACE 'REMOVING' INGREDIENT FOR ALL RECIPES USING 'REMOVING'INGREDIENT.
@@ -55,9 +55,10 @@ void removeRecipe(string& name, list<Recipe>& list)
 			// does it make sense to have a destructor for ingredients to handle this operation?
 
 			list.remove(r);
-			break;
+			return true;
 		}
 	}
+	return false;
 }
 
 void saveRecipeList(string& file, list<Recipe>& list)

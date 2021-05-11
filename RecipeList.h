@@ -5,7 +5,7 @@
 
 void addRecipe(string& name, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& tList, list<Recipe>& list);
 void addRecipe(Recipe& recipe, list<Recipe>& list);
-void removeRecipe(string& name, list<Recipe>& list);
+bool removeRecipe(string& name, list<Recipe>& list);
 void saveRecipeList(string& file, list<Recipe>& list);
 void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, list<pair<string, int>>& mlist);
 void sortRecipes(int byCol, list<Recipe>& list);
