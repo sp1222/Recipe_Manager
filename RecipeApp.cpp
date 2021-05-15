@@ -1557,7 +1557,7 @@ void MainFrame::AddCategory(string& c)
 
 void MainFrame::OnAbout(wxCommandEvent& WXUNUSED(e))
 {
-    wxMessageDialog dialog(this, "Recipe Manager System\nStephen Polozoff (c) 2021", "About Recipe Manager");
+    wxMessageDialog dialog(this, "Recipe Manager System\nSP (c) 2021", "About Recipe Manager");
     dialog.ShowModal();
 }
 
