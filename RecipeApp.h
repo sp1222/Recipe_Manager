@@ -321,19 +321,29 @@ private:
     bool isnew = false;
     wxPanel* mainPanel;
     wxPanel* namePanel;
-    wxPanel* mealTypePanel;
+    wxPanel* cuisineMealtypePanel;
+    wxPanel* servingsPanel;
+    wxPanel* yieldPanel;
     wxPanel* descriptionPanel;
     wxPanel* directionPanel;
     wxPanel* ingredientsPanel;
     wxStaticText* nameLabel;
+    wxStaticText* cuisineLabel;
     wxStaticText* mealtypeLabel;
+    wxStaticText* servingsLabel;
+    wxStaticText* yieldLabel;
     wxStaticText* descriptionLabel;
     wxStaticText* directionLabel;
     wxStaticText* ingredientsLabel;
     wxTextCtrl* nameText;
+    wxTextCtrl* cuisineText;            // change to combobox?
     wxTextCtrl* mealtypeText;
 //    wxStaticText* mealtypeText;
 //    wxComboBox* mealtypeComboBox;
+    wxTextCtrl* servingsText;
+    wxTextCtrl* yieldText;
+    wxStaticText* yieldUnitCurrent;
+    wxComboBox* yieldUnitComboBox;
     wxTextCtrl* descriptionText;
     wxTextCtrl* directionText;
     IngredientsInRecipeListCtrl* listIngredientsInRecipe;
@@ -439,7 +449,7 @@ class MainFrame: public wxFrame
 {
 public:
     MainFrame(const wxString& title);
-    void AddCategory(string& c);
+    void SetParent(RecipeApp* p);
 
 protected:
     // file drop down menu
@@ -459,8 +469,6 @@ protected:
     void OnAddRecipe(wxCommandEvent& e);
     void OnRemoveRecipe(wxCommandEvent& e);
 
-
-
     wxPanel* panel;
     MainListCtrl* listController;
 
@@ -471,6 +479,7 @@ private:
     wxMenu* menuIngredientListEditor;
     wxMenu* menuRecipeListEditor;
     wxMenuBar* menuBar;
+    RecipeApp* parent;
 
 
     wxDECLARE_NO_COPY_CLASS(MainFrame);
@@ -524,6 +533,10 @@ enum
     RECIPE_REMOVE_SELECTED,
     RECIPE_NAME_TEXT_CTRL,
     RECIPE_MEALTYPE_TEXT_CTRL,
+    RECIPE_CUISINE_TEXT_CTRL,
+    RECIPE_SERVINGS_TEXT_CTRL,
+    RECIPE_YIELD_TEXT_CTRL,
+    RECIPE_YIELD_UNIT_COMBO_BOX,
     RECIPE_DESCRIPTION_TEXT_CTRL,
     RECIPE_DIRECTIONS_TEXT_CTRL,
     RECIPE_ADD_INGREDIENT,

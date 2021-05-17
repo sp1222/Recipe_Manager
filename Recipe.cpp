@@ -21,46 +21,20 @@ Recipe::Recipe()
 //	Units un = new Units(u);
 //	yieldUnit = Units("NONE");
 	mealType = "";
-	recipeIngredients.empty();
+//	recipeIngredients.empty();
 }
 
-Recipe::Recipe(string& name, string& desc, string& direct, int& count, int& y, string& unit, string& type, list<pair<string, int>>& list)
+Recipe::Recipe(string& name, string& cuis, string& desc, string& direct, int& count, int& y, string& unit, string& type, list<pair<string, int>>& list)
 {
-	// NOTE: need to remove commas from each string values
-
-	for (auto& s : name)
-	{
-		if (s == ',')
-			s = ' ';
-	}
-	for (auto& s : desc)
-	{
-		if (s == ',')
-			s = ' ';
-	}
-	for (auto& s : direct)
-	{
-		if (s == ',')
-			s = ' ';
-	}
-
-	for (auto& s : type)
-	{
-		if (s == ',')
-			s = ' ';
-		s = toupper(s);
-	}
-
-	recipeName = name;
-	recipeDescription = desc;
-	recipeDirections = direct;
-	servingCount = count;
-	yield = y;
-	string u = unit;
-	Units un(u);
-	yieldUnit = un;
+	setName(name);
+	setCuisine(cuis);
+	setDescription(desc);
+	setDirection(direct);
+	setServingCount(count);
+	setYield(y);
+	setYieldUnit(unit);
 	setMealType(type, list);
-	recipeIngredients.empty();
+//	recipeIngredients.empty();
 }
 
 void Recipe::setName(string& name)
@@ -71,6 +45,16 @@ void Recipe::setName(string& name)
 			s = ' ';
 	}
 	recipeName = name;
+}
+void Recipe::setCuisine(string& cuis)
+{
+	for (auto& c : cuis)
+	{
+		if (c == ',')
+			c = ' ';
+		c = toupper(c);
+	}
+	cuisine = cuis;
 }
 
 void Recipe::setDescription(string& desc)
@@ -154,6 +138,11 @@ void Recipe::addIngredientInRecipe(Ingredient& ingred, float& quantity, string& 
 string Recipe::getName() const
 {
 	return recipeName;
+}
+
+string Recipe::getCuisine() const
+{
+	return cuisine;
 }
 
 string Recipe::getDescription()

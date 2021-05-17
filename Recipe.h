@@ -10,6 +10,7 @@ class Recipe
 {
 private:
 	string recipeName;
+	string cuisine;
 	string recipeDescription;
 	string recipeDirections;
 	int servingCount;					// 24 servings.
@@ -24,8 +25,9 @@ public:
 	bool operator == (const Recipe& r) const;
 	bool operator != (const Recipe& r) const;
 	Recipe();
-	Recipe(string& name, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& list);
+	Recipe(string& name, string& cuis, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& list);
 	void setName(string& name);
+	void setCuisine(string&);
 	void setDescription(string& desc);
 	void setDirection(string& direct);
 	void setServingCount(int& count);
@@ -36,6 +38,7 @@ public:
 	void addIngredientInRecipe(string& ingred, float& quantity, string& unit, list<Ingredient>& list);
 	void addIngredientInRecipe(Ingredient& ingred, float& quantity, string& unit);
 	string getName() const;
+	string getCuisine() const;
 	string getDescription();
 	string getDirection();
 	int getServingCount() const;

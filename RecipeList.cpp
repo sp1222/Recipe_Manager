@@ -8,7 +8,7 @@
 #include<regex>
 
 
-void addRecipe(string& name, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& tList, list<Recipe>& list)
+void addRecipe(string& name, string& cuis, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& tList, list<Recipe>& list)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
@@ -22,7 +22,7 @@ void addRecipe(string& name, string& desc, string& direct, int& count, int& yiel
 
 	if (!doesRecipeExist(name, list))
 	{
-		Recipe nRecipe(name, desc, direct, count, yield, unit, type, tList);
+		Recipe nRecipe(name, cuis, desc, direct, count, yield, unit, type, tList);
 		list.push_back(nRecipe);
 	}
 
@@ -35,6 +35,11 @@ void addRecipe(Recipe& recipe, list<Recipe>& list)
 	// if the category does not exist, prompt to select existing category from list.
 	// third, create a new ingredient object to save to ingredientList.
 	string name = recipe.getName();
+	for (auto& s : name)
+	{
+		if (s == ',')
+			s = ' ';
+	}
 	if (!doesRecipeExist(name, list))
 	{
 		list.push_back(recipe);
@@ -72,7 +77,7 @@ void saveRecipeList(string& file, list<Recipe>& list)
 		regex newlines_re("\n+");
 		string direct = regex_replace(d, newlines_re, "`");
 
-		fout << r.getName() << "," << r.getDescription() << "," << direct << ","
+		fout << r.getName() << "," << r.getCuisine() << "," << r.getDescription() << "," << direct << ","
 			<< r.getServingCount() << "," << r.getYield() << "," << r.getYieldUnitStr() << "," 
 			<< r.getMealType() << ",";
 
@@ -105,24 +110,18 @@ void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, 
 			vector<string> row;
 			while (getline(s, token, ','))
 				row.push_back(token);
-			for (int i = 0; i < row.size(); i++)
-			{
-				cout << row[i] << endl;
-			}
-			// in file
-			// name,description,direction,serving,yield,yieldunit,mealtype,ingredname,ingredqty,ingredunitstr
-			string name = row[0], desc = row[1], d = row[2], yieldUnit = row[5], meal = row[6];
 
+			string name = row[0], cuis = row[1], desc = row[2], d = row[3], yieldUnit = row[6], meal = row[7];
+			int serv = stoi(row[4]), yield = stoi(row[5]);
+			row.erase(row.begin(), row.begin() + 8);
 			regex newlines_re("`");
 			string direct = regex_replace(d, newlines_re, "\n");
 
-			int serv = stoi(row[3]), yield = stoi(row[4]);
-			row.erase(row.begin(), row.begin() + 7);
-			Recipe rec(name, desc, direct, serv, yield, yieldUnit, meal, mlist);
-			while (row.size() > 0)
+			Recipe rec(name, cuis, desc, direct, serv, yield, yieldUnit, meal, mlist);
+			while (row.size() > 0 && row[0] != "")
 			{
 				string ingredName = row[0];
-				float ingredQty = stoi(row[1]);
+				float ingredQty = stof(row[1]);
 				string ingredUnit = row[2];
 				rec.addIngredientInRecipe(ingredName, ingredQty, ingredUnit, iList);
 				row.erase(row.begin(), row.begin() + 3);
@@ -144,9 +143,12 @@ void sortRecipes(int byCol, list<Recipe>& list)
 		list.sort(compareRecipeNames);
 		break;
 	case 1:
-		list.sort(compareMealTypes);
+		list.sort(compareRecipeCuisines);
 		break;
 	case 2:
+		list.sort(compareMealTypes);
+		break;
+	case 3:
 		list.sort(compareServingCounts);
 		break;
 	default:
@@ -167,6 +169,20 @@ bool compareRecipeNames(const Recipe& first, const Recipe& second)
 		i++;
 	}
 	return (first.getName().length() < second.getName().length());
+}
+
+bool compareRecipeCuisines(const Recipe& first, const Recipe& second)
+{
+	unsigned int i = 0;
+	while ((i < first.getCuisine().length()) && (i < second.getCuisine().length()))
+	{
+		if (tolower(first.getCuisine()[i]) < tolower(second.getCuisine()[i]))
+			return true;
+		else if (tolower(first.getCuisine()[i]) > tolower(second.getCuisine()[i]))
+			return false;
+		i++;
+	}
+	return (first.getCuisine().length() < second.getCuisine().length());
 }
 
 // sort the list alphabetized by names, disregarding case sensitivity

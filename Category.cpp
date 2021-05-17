@@ -18,7 +18,6 @@ Category::Category()
 
 Category::Category(string& cat)
 {
-	for (auto& c : cat) c = toupper(c);
 	category = cat;
 	ingredientsUsingCategoryCount = 0;
 }
@@ -48,29 +47,3 @@ int Category::getIngredientsUsingCategoryCount() const
 {
 	return ingredientsUsingCategoryCount;
 }
-
-/*
-int Category::getIngredientsUsingCategoryCount()
-{
-	return ingredientUsingCategory.size();
-}
-
-void* getIngredient(string& name)
-{
-
-}
-
-// passive functions to increment/decrement the ingredientsUsingCategoryCount variable.
-// these are only called when an ingredient is assigned or unassigned to this category
-void Category::addIngredientUsingCategory(void* ingred)
-{
-	ingredientUsingCategory.push_back(ingred);
-}
-
-void Category::removeIngredientUsingCategory(void* ingred)
-{
-	if(ingredientUsingCategory.size() > 0)
-		ingredientUsingCategory.remove(ingred);
-}
-
-*/

@@ -26,7 +26,7 @@ bool doesTypeMatchForConversion(Type from, Type to)
 	return false;
 }
 
-float standardUnitConversion(Unit start, Unit end, float value)
+double standardUnitConversion(Unit start, Unit end, double value)
 {
 	// increment if we are going up in scale, ounce to pounds
 	while (start != end)
