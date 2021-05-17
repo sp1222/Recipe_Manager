@@ -11,8 +11,6 @@ Categories: and add, modify, and remove categories with information translating 
 Ingredients: can add, modify, and remove ingredients with information translating to recipes correctly.
 
 Next Steps (notes to self):
-- make it so that new frames stay on top of existing frames
-- add missing fields for all frames that data types can hold (ie Recipe serving size, etc..)
 - track data dumps
 - refactor code
 - make recipes scalable.
