@@ -88,7 +88,7 @@ public:
 bool doesTypeMatchForConversion(Type from, Type to);
 // converts the Units object's unit values if they are convertible.
 // CUP -> GALLON and vice versa, cannot convert GALLON -> POUND as they are two different Type values
-double standardUnitConversion(Unit start, Unit end, float value);
+double standardUnitConversion(Unit start, Unit end, double value);
 
 // index zero represents converting from Unit a to Unit b.
 // in this case, NONE is unconvertible, so we give it a value of -1.
