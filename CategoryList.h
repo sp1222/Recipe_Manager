@@ -1,8 +1,9 @@
 #pragma once
 #ifndef CATEGORYLIST_H
 #define CATEGORYLIST_H
+
 #include "Category.h"
-#include<list>
+#include <list>
 
 
 bool addCategory(string& category, list<Category>& list);

@@ -7,10 +7,11 @@
 #include<wx/listctrl.h>
 #include<wx/combo.h>
 #include<wx/wxprec.h>
+#include<wx/scrolbar.h>
 #ifndef WX_PRECOMP
 #include<wx/wx.h>
 #endif
-    
+
 
 //*************************************************************************************************
 
@@ -24,6 +25,7 @@ public:
     virtual bool OnInit();
 private:
 };
+
 
 //*************************************************************************************************
 
@@ -41,12 +43,14 @@ protected:
     void OnFinalize(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 
-    wxPanel* mainPanel;
-    wxPanel* namePanel;
-    wxStaticText* nameLabel;
-    wxTextCtrl* nameText;
 private:
-    MainListCtrl* parent;
+    wxMenu* menuOptions;
+    wxMenuBar* menuBar;
+    wxPanel* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxTextCtrl* nameText = nullptr;
+    MainListCtrl* parent = nullptr;
     wxDECLARE_NO_COPY_CLASS(AddCategoryFrame);
     wxDECLARE_EVENT_TABLE();
 
@@ -72,16 +76,17 @@ protected:
     void OnUpdate(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 
-    wxPanel* mainPanel;
-    wxPanel* namePanel;
-    wxPanel* ingredientCountPanel;
-    wxStaticText* nameLabel;
-    wxStaticText* ingredientCountLabel;
-    wxTextCtrl* nameText;
-    wxStaticText* ingredientCountDisplay;
-
 private:
-    Category* currentCategory = new Category();
+    wxMenu* menuOptions = nullptr;
+    wxMenuBar* menuBar = nullptr;
+    wxPanel* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxPanel* ingredientCountPanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxStaticText* ingredientCountLabel = nullptr;
+    wxTextCtrl* nameText = nullptr;
+    wxStaticText* ingredientCountDisplay = nullptr;
+    Category* currentCategory = nullptr;
     MainListCtrl* parent;
     wxDECLARE_NO_COPY_CLASS(CategoryFrame);
     wxDECLARE_EVENT_TABLE();
@@ -89,7 +94,7 @@ private:
 
 //*************************************************************************************************
 
-// AddCategoryFrame
+// AddIngredientFrame
 
 //*************************************************************************************************
 
@@ -103,20 +108,21 @@ protected:
     void OnFinalize(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 
-    wxPanel* mainPanel;
-    wxPanel* namePanel;
-    wxPanel* descriptionPanel;
-    wxPanel* categoryPanel;
-    wxStaticText* nameLabel;
-    wxStaticText* descriptionLabel;
-    wxStaticText* categoryLabel;
-    wxTextCtrl* nameText;
-    wxTextCtrl* descriptionText;
-    wxComboBox* categoryComboBox;
-
 private:
-    MainListCtrl* parent;
-    list<string>* categoryNames = new list<string>();
+    wxMenu* menuOptions;
+    wxMenuBar* menuBar;
+    wxPanel* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxPanel* descriptionPanel = nullptr;
+    wxPanel* categoryPanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxStaticText* descriptionLabel = nullptr;
+    wxStaticText* categoryLabel = nullptr;
+    wxTextCtrl* nameText = nullptr;
+    wxTextCtrl* descriptionText = nullptr;
+    wxComboBox* categoryComboBox = nullptr;
+    MainListCtrl* parent = nullptr;
+    list<string> categoryNames;
     wxDECLARE_NO_COPY_CLASS(AddIngredientFrame);
     wxDECLARE_EVENT_TABLE();
 
@@ -138,28 +144,28 @@ public:
     void RebuildTextFields();
 protected:
 
-    // edit drop down menu
-//    void OnUpdateRecipe(wxCommandEvent& e);
     void OnUpdate(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 
-    wxPanel* mainPanel;
-    wxPanel* namePanel;
-    wxPanel* descriptionPanel;
-    wxPanel* categoryPanel;
-    wxPanel* recipeUsingIngredientCountPanel;
-    wxStaticText* nameLabel;
-    wxStaticText* descriptionLabel;
-    wxStaticText* categoryLabel;
-    wxStaticText* recipeUsingIngredientCountLabel;
-    wxTextCtrl* nameText;
-    wxTextCtrl* descriptionText;
-    wxComboBox* categoryComboBox;   // make this a dropdown box
-    wxStaticText* currentCategoryLabel;
-    wxStaticText* currentRecipeUsingIngredientCountLabel;
 
 private:
-    Ingredient* currentIngredient = new Ingredient();
+    wxMenu* menuOptions;
+    wxMenuBar* menuBar;
+    wxScrolledWindow* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxPanel* descriptionPanel = nullptr;
+    wxPanel* categoryPanel = nullptr;
+    wxPanel* recipeUsingIngredientCountPanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxStaticText* descriptionLabel = nullptr;
+    wxStaticText* categoryLabel = nullptr;
+    wxStaticText* recipeUsingIngredientCountLabel = nullptr;
+    wxTextCtrl* nameText = nullptr;
+    wxTextCtrl* descriptionText = nullptr;
+    wxComboBox* categoryComboBox = nullptr;   // make this a dropdown box
+    wxStaticText* currentCategoryLabel = nullptr;
+    wxStaticText* currentRecipeUsingIngredientCountLabel = nullptr;
+    Ingredient* currentIngredient = nullptr;
     list<Category>* catList = nullptr;
     wxArrayString* catStringList;
     MainListCtrl* parent;
@@ -190,23 +196,25 @@ protected:
     void OnUpdateIngredientInRecipe(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 private:
-    wxPanel* mainPanel;
-    wxPanel* namePanel;
-    wxPanel* quantityPanel;
-    wxPanel* unitPanel;
-    wxStaticText* nameLabel;
-    wxStaticText* quantityLabel;
-    wxStaticText* unitLabel;
-    wxStaticText* nameText;
-    wxComboBox* nameComboBox;       // consider changing this to a list view format?  or include a second dropdown to narrow list down by category?
-    wxTextCtrl* quantityText;
-    wxStaticText* unitsText;
-    wxComboBox* unitsComboBox;
+    wxMenu* menuOptions;
+    wxMenuBar* menuBar;
+    wxPanel* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxPanel* quantityPanel = nullptr;
+    wxPanel* unitPanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxStaticText* quantityLabel = nullptr;
+    wxStaticText* unitLabel = nullptr;
+    wxStaticText* nameText = nullptr;
+    wxComboBox* nameComboBox = nullptr;       // consider changing this to a list view format?  or include a second dropdown to narrow list down by category?
+    wxTextCtrl* quantityText = nullptr;
+    wxStaticText* unitsText = nullptr;
+    wxComboBox* unitsComboBox = nullptr;
 
-    IngredientInRecipe* currentIngredientInRecipe;
-    IngredientsInRecipeListCtrl* parent;
-    RecipeFrame* parentRF;
-    list<Ingredient>* ingredList;
+    IngredientInRecipe* currentIngredientInRecipe = nullptr;
+    IngredientsInRecipeListCtrl* parent = nullptr;
+    RecipeFrame* parentRF = nullptr;
+    list<Ingredient>* ingredList = nullptr;
     list<string> unitList;
     wxDECLARE_NO_COPY_CLASS(IngredientInRecipeFrame);
     wxDECLARE_EVENT_TABLE();
@@ -246,11 +254,11 @@ protected:
     void OnColumnHeaderClick(wxListEvent& e);
 private:
 
-    list<IngredientInRecipe>* ingredients;
-    IngredientInRecipe* selectedIngredient;
-    IngredientInRecipeFrame* ingredientInRecipeFrame;
-    RecipeFrame* parent;
-    list<Ingredient>* ingredList;
+    list<IngredientInRecipe>* ingredients = nullptr;
+    IngredientInRecipe* selectedIngredient = nullptr;
+    IngredientInRecipeFrame* ingredientInRecipeFrame = nullptr;
+    RecipeFrame* parent = nullptr;
+    list<Ingredient>* ingredList = nullptr;
     wxDECLARE_NO_COPY_CLASS(IngredientsInRecipeListCtrl);
     wxDECLARE_EVENT_TABLE();
 };
@@ -274,19 +282,21 @@ protected:
     void OnFinalize(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 private:
-    wxPanel* mainPanel;
-    wxPanel* namePanel;
-    wxPanel* quantityPanel;
-    wxPanel* unitsPanel;
-    wxStaticText* nameLabel;
-    wxStaticText* quantityLabel;
-    wxStaticText* unitsLabel;
-    wxComboBox* nameComboBox;
-    wxTextCtrl* quantityText;
-    wxComboBox* unitsComboBox;
+    wxMenu* menuOptions;
+    wxMenuBar* menuBar;
+    wxPanel* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxPanel* quantityPanel = nullptr;
+    wxPanel* unitsPanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxStaticText* quantityLabel = nullptr;
+    wxStaticText* unitsLabel = nullptr;
+    wxComboBox* nameComboBox = nullptr;
+    wxTextCtrl* quantityText = nullptr;
+    wxComboBox* unitsComboBox = nullptr;
 
-    RecipeFrame* parent;
-    list<Ingredient>* ingredList;
+    RecipeFrame* parent = nullptr;
+    list<Ingredient>* ingredList = nullptr;
     list<string> unitList;
     wxDECLARE_NO_COPY_CLASS(AddIngredientToRecipeFrame);
     wxDECLARE_EVENT_TABLE();
@@ -304,7 +314,8 @@ class RecipeFrame : public wxFrame
 {
 public:
     RecipeFrame(const wxString& title);
-    void SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList, bool in = false);
+    void SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList);
+    void SetRecipe(list<pair<string, int>>& tList, list<Ingredient>& iList);
     void RebuildTextFields();
     void SetParent(MainListCtrl* p);
     void UpdateIngredientInRecipe();
@@ -319,43 +330,47 @@ protected:
 
 private:
     bool isnew = false;
-    wxPanel* mainPanel;
-    wxPanel* namePanel;
-    wxPanel* cuisineMealtypePanel;
-    wxPanel* servingsPanel;
-    wxPanel* yieldPanel;
-    wxPanel* descriptionPanel;
-    wxPanel* directionPanel;
-    wxPanel* ingredientsPanel;
-    wxStaticText* nameLabel;
-    wxStaticText* cuisineLabel;
-    wxStaticText* mealtypeLabel;
-    wxStaticText* servingsLabel;
-    wxStaticText* yieldLabel;
-    wxStaticText* descriptionLabel;
-    wxStaticText* directionLabel;
-    wxStaticText* ingredientsLabel;
-    wxTextCtrl* nameText;
-    wxTextCtrl* cuisineText;            // change to combobox?
-    wxTextCtrl* mealtypeText;
-//    wxStaticText* mealtypeText;
-//    wxComboBox* mealtypeComboBox;
-    wxTextCtrl* servingsText;
-    wxTextCtrl* yieldText;
-    wxStaticText* yieldUnitCurrent;
-    wxComboBox* yieldUnitComboBox;
-    wxTextCtrl* descriptionText;
-    wxTextCtrl* directionText;
-    IngredientsInRecipeListCtrl* listIngredientsInRecipe;
+    wxMenu* menuOptions;
+    wxMenuBar* menuBar;
+    wxScrolledWindow* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxPanel* cuisineMealtypePanel = nullptr;
+    wxPanel* servingsPanel = nullptr;
+    wxPanel* yieldPanel = nullptr;
+    wxPanel* descriptionPanel = nullptr;
+    wxPanel* directionPanel = nullptr;
+    wxPanel* ingredientsPanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxStaticText* cuisineLabel = nullptr;
+    wxStaticText* mealtypeLabel = nullptr;
+    wxStaticText* servingsLabel = nullptr;
+    wxStaticText* yieldLabel = nullptr;
+    wxStaticText* descriptionLabel = nullptr;
+    wxStaticText* directionLabel = nullptr;
+    wxStaticText* ingredientsLabel = nullptr;
+    wxTextCtrl* nameText = nullptr;
+    wxTextCtrl* cuisineText = nullptr;            // change to combobox?
+    wxTextCtrl* mealtypeText = nullptr;
+//    wxStaticText* mealtypeText = nullptr;
+//    wxComboBox* mealtypeComboBox = nullptr;
+    wxTextCtrl* servingsText = nullptr;
+    wxTextCtrl* yieldText = nullptr;
+    wxStaticText* yieldUnitCurrent = nullptr;
+    wxComboBox* yieldUnitComboBox = nullptr;
+    wxTextCtrl* descriptionText = nullptr;
+    wxTextCtrl* directionText = nullptr;
+    IngredientsInRecipeListCtrl* listIngredientsInRecipe = nullptr;
 
-    Recipe* currentRecipe = new Recipe();
-    MainListCtrl* parent;
-    AddIngredientToRecipeFrame* addIngredientToRecipe;
-    list<pair<string, int>>* typeList;
-    list<Ingredient>* ingredList;
+    Recipe newRecipe = Recipe();
+    Recipe* currentRecipe = nullptr;
+    MainListCtrl* parent = nullptr;
+    AddIngredientToRecipeFrame* addIngredientToRecipe = nullptr;
+    list<pair<string, int>>* typeList = nullptr;
+    list<Ingredient>* ingredList = nullptr;
     wxDECLARE_NO_COPY_CLASS(RecipeFrame);
     wxDECLARE_EVENT_TABLE();
 };
+
 
 //*************************************************************************************************
 
@@ -379,13 +394,14 @@ public:
     void SaveCategories();
     void SaveIngredients();
     void SaveRecipes();
-
     void LoadLists();
     void AddNewCategory(string& c);
     void AddNewIngredient(string& name, string& desc, string& cat);
     void RemoveCategory();
     void RemoveIngredient();
     void RemoveRecipe();
+    void CreateNewCategory();
+    void CreateNewIngredient();
     void CreateNewRecipe();
     void AddRecipe(Recipe& nr);
     void GetCategoryNamesList(list<string>& names);
@@ -413,9 +429,11 @@ public:
 
 
 protected:
-    CategoryFrame* categoryFrame;
-    IngredientFrame* ingredientFrame;
-    RecipeFrame* recipeFrame;
+    CategoryFrame* categoryFrame = nullptr;
+    AddCategoryFrame* addCategoryFrame = nullptr;
+    IngredientFrame* ingredientFrame = nullptr;
+    AddIngredientFrame* addIngredientFrame = nullptr;
+    RecipeFrame* recipeFrame = nullptr;
 private:
     // data.
     list<Category> categories;
@@ -428,7 +446,7 @@ private:
     string ingredFile = "testIngredientFile.csv";
     string recipeFile = "testRecipeFile.csv";
 
-    long currentList;       // tracker for which list we are currently viewing, used to open approrpiate windows to display details on the item selected
+    long currentList = 0;       // tracker for which list we are currently viewing, used to open approrpiate windows to display details on the item selected
 
     Recipe* selectedRecipe = nullptr;
     Ingredient* selectedIngredient = nullptr;
@@ -438,6 +456,7 @@ private:
     wxDECLARE_NO_COPY_CLASS(MainListCtrl);
     wxDECLARE_EVENT_TABLE();
 };
+
 
 //*************************************************************************************************
 
@@ -455,6 +474,7 @@ protected:
     // file drop down menu
     void OnAbout(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
+    void OnChangeListReportDisplay(wxCommandEvent& e);
 
     // lists drop down menu
     void OnRecipeListReportDisplay(wxCommandEvent& e);
@@ -469,17 +489,16 @@ protected:
     void OnAddRecipe(wxCommandEvent& e);
     void OnRemoveRecipe(wxCommandEvent& e);
 
-    wxPanel* panel;
-    MainListCtrl* listController;
 
 private:
-    wxMenu* menuFile;
-    wxMenu* menuList;
-    wxMenu* menuCategoryListEditor;
-    wxMenu* menuIngredientListEditor;
-    wxMenu* menuRecipeListEditor;
-    wxMenuBar* menuBar;
-    RecipeApp* parent;
+    AddIngredientFrame* addIngredientFrame = nullptr;
+    AddCategoryFrame* addCategoryFrame = nullptr;
+    wxPanel* panel = nullptr;
+    wxMenu* menuFile = nullptr;
+    wxMenu* menuList = nullptr;
+    wxMenuBar* menuBar = nullptr;
+    MainListCtrl* listController = nullptr;
+    RecipeApp* parent = nullptr;
 
 
     wxDECLARE_NO_COPY_CLASS(MainFrame);

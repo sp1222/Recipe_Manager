@@ -1,5 +1,8 @@
 #include "Ingredient.h"
 #include "Category.h"
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 
 bool Ingredient::operator == (const Ingredient & i) const
 {
@@ -29,34 +32,23 @@ Ingredient::Ingredient(string& name, string& description, Category& category)
 	recipesUsingIngredientCount = 0;
 }
 
-// set and get name of ingredient
 void Ingredient::setName(string& name)
 {
-	string n;
-	for (auto& s : name)
-	{
-		if (s != ',')
-			n += s;
-	}
-	ingredientName = n;
+	stringRemoveCommas(name);
+	ingredientName = name;
 }
 
 // set and get description of ingredient
 void Ingredient::setDescription(string& description)
 {
-	string d;
-	for (auto& s : description)
-	{
-		if (s != ',')
-			d += s;
-	}
-	ingredientDescription = d;
+	stringRemoveCommas(description);
+	ingredientDescription = description;
 }
 
 void Ingredient::setCategory(Category& category)//, CategoryList& curList)
 {
-	// NOTE: do we need to remove commas from each string values?
-	// WILL toupper BE REQUIRED WHEN USING DROPDOWN BOXES?
+	// NOTE: do we need to remove commas from each string value?  No.
+	// WILL toupper BE REQUIRED WHEN USING DROPDOWN BOXES?  No.
 
 	// since this implies a re-categorizing of this instance of an ingredient, 
 	// we first decrement the ingredientsUsingCategoryCount value for the current category if needed.
@@ -64,10 +56,8 @@ void Ingredient::setCategory(Category& category)//, CategoryList& curList)
 	// then increment the ingredientsUsingCategoryCount value for the new current category.
 	if (ingredientCategory != nullptr)
 		ingredientCategory->decrementIngredientsUsingCategoryCount();
-//		ingredientCategory->removeIngredientUsingCategory(*this);
 	ingredientCategory = &category;
 	ingredientCategory->incrementIngredientsUsingCategoryCount();
-//	ingredientCategory->addIngredientUsingCategory(*this);
 }
 
 string Ingredient::getName() const
@@ -82,7 +72,7 @@ string Ingredient::getDescription()
 
 string Ingredient::getCategoryStr() const
 {
-	return ingredientCategory->getCategory();
+	return ingredientCategory->getName();
 }
 
 Category& Ingredient::getCategoryObj()

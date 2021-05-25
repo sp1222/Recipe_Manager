@@ -3,20 +3,18 @@
 #include<fstream>
 #include<sstream>
 #include<vector>
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 
-
-bool addCategory(string& str, list<Category>& list)
+bool addCategory(string& str, list<Category>& lst)
 {
-	for (auto& s : str)
-	{
-		if (s == ',')
-			s = ' ';
-		s = toupper(s);
-	}
-	if (!doesCategoryExist(str, list))
+	stringRemoveCommas(str);
+	stringToUpperAll(str);
+	if (!doesCategoryExist(str, lst))
 	{
 		Category category(str);
-		list.push_back(category);
+		lst.push_back(category);
 		return true;
 	}
 	return false;
@@ -25,12 +23,8 @@ bool addCategory(string& str, list<Category>& list)
 // FOR LOADING, IS THIS NECESSARY?
 void addCategory(string& str, int& ct, list<Category>& list)
 {
-	for (auto& s : str)
-	{
-		if (s == ',')
-			s = ' ';
-		s = toupper(s);
-	}
+	stringRemoveCommas(str);
+	stringToUpperAll(str);
 	if (!doesCategoryExist(str, list))
 	{
 		Category category(str);
@@ -50,7 +44,7 @@ bool removeCategory(string& category, list<Category>& list)
 	{
 		for (auto& c : list)
 		{
-			if (c.getCategory() == category && c.getCategory() != "NONE" && c.getIngredientsUsingCategoryCount() == 0)
+			if (c.getName() == category && c.getName() != "NONE" && c.getIngredientsUsingCategoryCount() == 0)
 			{
 				list.remove(c);
 				return true;
@@ -64,7 +58,7 @@ bool doesCategoryExist(string& category, list<Category>& list)
 {
 	for (auto it = list.begin(); it != list.end(); ++it)
 	{
-		if (it->getCategory() == category)
+		if (it->getName() == category)
 			return true;
 	}
 	return false;
@@ -76,7 +70,7 @@ void saveCategoryList(string& categoryListFile, list<Category>& list)
 	fout.open(categoryListFile, ios::out);
 	for (auto& c : list)
 	{
-		fout << c.getCategory() << endl;
+		fout << c.getName() << endl;
 	}
 	fout.close();
 }
@@ -121,15 +115,15 @@ void sortCategories(int byCol, list<Category>& list)
 bool compareCategoryNames(const Category& first, const Category& second)
 {
 	unsigned  i = 0;
-	while ((i < first.getCategory().length()) && (i < second.getCategory().length()))
+	while ((i < first.getName().length()) && (i < second.getName().length()))
 	{
-		if (tolower(first.getCategory()[i]) < tolower(second.getCategory()[i]))
+		if (tolower(first.getName()[i]) < tolower(second.getName()[i]))
 			return true;
-		else if (tolower(first.getCategory()[i]) > tolower(second.getCategory()[i]))
+		else if (tolower(first.getName()[i]) > tolower(second.getName()[i]))
 			return false;
 		i++;
 	}
-	return (first.getCategory().length() < second.getCategory().length());
+	return (first.getName().length() < second.getName().length());
 }
 
 bool compareCategoryIngredientCount(const Category& first, const Category& second)
@@ -143,7 +137,7 @@ Category& getCategoryInList(string& cat, list<Category>& list)
 	// WILL toupper BE REQUIRED WHEN USING DROPDOWN BOXES?
 	for (auto& c : list)
 	{
-		if (c.getCategory() == cat)
+		if (c.getName() == cat)
 			return c;
 	}
 	return list.front();

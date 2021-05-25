@@ -3,6 +3,9 @@
 #include<sstream>
 #include<fstream>
 #include<vector>
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 
 string ingredientListFile;
 
@@ -17,16 +20,10 @@ bool addIngredient(string& name, string& description, Category& category, list<I
 	// second, locate the category that the ingredient is classified under in categoryList
 	// if the category does not exist, prompt to select existing category from list.
 	// third, create a new ingredient object to save to ingredientList.
-
-	string n;
-	for (auto& s : name)
+	stringRemoveCommas(name);
+	if (!doesIngredientExist(name, list))
 	{
-		if (s != ',')
-			n += s;
-	}
-	if (!doesIngredientExist(n, list))
-	{
-		Ingredient ingred(n, description, category);
+		Ingredient ingred(name, description, category);
 		list.push_back(ingred);
 		return true;
 	}
@@ -166,7 +163,7 @@ bool compareIngredientRecipeCount(const Ingredient& first, const Ingredient& sec
 
 bool doesIngredientExist(string& name, list<Ingredient>& list)
 {
-	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?
+	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST? No.
 
 	for (auto& i : list)
 	{
@@ -178,7 +175,7 @@ bool doesIngredientExist(string& name, list<Ingredient>& list)
 
 Ingredient& getIngredientInList(string& name, list<Ingredient>& list)
 {
-	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?
+	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST? No.
 
 	for (auto& i : list)
 	{

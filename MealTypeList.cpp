@@ -1,5 +1,7 @@
 #include"MealTypeList.h"
-
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 void addMealType(string& type, list<pair<string, int>>& list)
 {
 	for (auto& t : type) t = toupper(t);

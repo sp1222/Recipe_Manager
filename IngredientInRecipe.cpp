@@ -1,5 +1,8 @@
 #include "IngredientInRecipe.h"
 #include "IngredientList.h"
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 
 bool IngredientInRecipe::operator == (const IngredientInRecipe& i) const
 {
@@ -26,6 +29,7 @@ IngredientInRecipe::IngredientInRecipe(string& ingred, float& quantity, string& 
 	{
 		ingredient = &getIngredientInList(ingred, list);
 		ingredient->incrementRecipesUsingIngredientCount();
+//		float2Decimals(quantity);
 		ingredientQuantity = quantity;
 		Units u(unit);
 		ingredientUnit = u;
@@ -36,6 +40,7 @@ IngredientInRecipe::IngredientInRecipe(Ingredient& ingred, float& quantity, stri
 {
 	ingredient = &ingred;
 	ingredient->incrementRecipesUsingIngredientCount();
+//	float2Decimals(quantity);
 	ingredientQuantity = quantity;
 	Units u(unit);
 	ingredientUnit = u;
@@ -55,6 +60,8 @@ void IngredientInRecipe::setIngredientQuantity(float& quantity)
 		ingredientQuantity = quantity;
 	else
 		ingredientQuantity = 0.0;
+
+//	float2Decimals(quantity);
 }
 
 void IngredientInRecipe::setIngredientUnit(string& unit)

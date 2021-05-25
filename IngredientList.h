@@ -2,8 +2,10 @@
 #pragma once
 #ifndef INGREDIENTLIST_H
 #define INGREDIENTLIST_H
+
 #include "Ingredient.h"
 #include "CategoryList.h"
+#include "Helpers.h"
 
 bool addIngredient(string& name, string& description, Category& category, list<Ingredient>& list);
 //void addIngredient(Ingredient& ingred, list<Ingredient>& list);

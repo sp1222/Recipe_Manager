@@ -1,4 +1,7 @@
 #include "Category.h"
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 
 bool Category::operator == (const Category& c) const
 {
@@ -22,13 +25,14 @@ Category::Category(string& cat)
 	ingredientsUsingCategoryCount = 0;
 }
 
-void Category::setCategoryName(string& cat)
+void Category::setName(string& cat)
 {
-	for (auto& c : cat) c = toupper(c);
+	stringRemoveCommas(cat);
+	stringToUpperAll(cat);
 	category = cat;
 }
 
-string Category::getCategory() const
+string Category::getName() const
 {
 	return category;
 }

@@ -7,18 +7,17 @@
 #include<algorithm>
 #include<regex>
 
-
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 void addRecipe(string& name, string& cuis, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& tList, list<Recipe>& list)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
 	// if the category does not exist, prompt to select existing category from list.
 	// third, create a new ingredient object to save to ingredientList.
-	for (auto& s : name)
-	{
-		if (s == ',')
-			s = ' ';
-	}
+
+	stringRemoveCommas(name);
 
 	if (!doesRecipeExist(name, list))
 	{
@@ -35,11 +34,8 @@ void addRecipe(Recipe& recipe, list<Recipe>& list)
 	// if the category does not exist, prompt to select existing category from list.
 	// third, create a new ingredient object to save to ingredientList.
 	string name = recipe.getName();
-	for (auto& s : name)
-	{
-		if (s == ',')
-			s = ' ';
-	}
+	stringRemoveCommas(name);
+	recipe.setName(name);
 	if (!doesRecipeExist(name, list))
 	{
 		list.push_back(recipe);
@@ -110,6 +106,8 @@ void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, 
 			vector<string> row;
 			while (getline(s, token, ','))
 				row.push_back(token);
+
+			// there has got to be a cleaner way to do this...
 
 			string name = row[0], cuis = row[1], desc = row[2], d = row[3], yieldUnit = row[6], meal = row[7];
 			int serv = stoi(row[4]), yield = stoi(row[5]);

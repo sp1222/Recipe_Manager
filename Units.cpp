@@ -1,6 +1,8 @@
 #include "Units.h"
 #include <iostream>
-
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 void GetUnitStringList(list<string>& str)
 {
 	for (int i = 0; i < 16; i++)
@@ -125,13 +127,8 @@ void Units::setType(int t)
 void Units::setUnit(string& u)
 {
 	// set the unitStr value in all caps.
-	// WILL toupper AND COMMA REMOVAL BE REQUIRED WHEN USING DROPDOWN BOXES?
-	for (auto& s : u)
-	{
-		if (s == ',')
-			s = ' ';
-		s = toupper(s);
-	}
+	// WILL toupper AND COMMA REMOVAL BE REQUIRED WHEN USING DROPDOWN BOXES?  No, everything is pretty standardized here.
+
 	unitStr = u;
 
 	// set the unit enum value.

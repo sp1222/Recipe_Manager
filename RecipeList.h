@@ -1,7 +1,9 @@
 #pragma once
 #ifndef RECIPELIST_H
 #define RECIPELIST_H
+
 #include "Recipe.h"
+#include "Helpers.h"
 
 void addRecipe(string& name, string& cuis, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& tList, list<Recipe>& list);
 void addRecipe(Recipe& recipe, list<Recipe>& list);

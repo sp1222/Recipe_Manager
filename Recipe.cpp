@@ -1,4 +1,7 @@
 #include"Recipe.h"
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
 
 bool Recipe::operator == (const Recipe& r) const
 {
@@ -13,13 +16,14 @@ bool Recipe::operator != (const Recipe& r) const
 Recipe::Recipe()
 {
 	recipeName = "";
+	cuisine = "";
 	recipeDescription = "";
 	recipeDirections = "";
 	servingCount = 0;
 	yield = 0;
-//	string u = "NONE";
-//	Units un = new Units(u);
-//	yieldUnit = Units("NONE");
+	string u = "NONE";
+	Units un(u);
+	yieldUnit = un;
 	mealType = "";
 //	recipeIngredients.empty();
 }
@@ -39,41 +43,25 @@ Recipe::Recipe(string& name, string& cuis, string& desc, string& direct, int& co
 
 void Recipe::setName(string& name)
 {
-	for (auto& s : name)
-	{
-		if (s == ',')
-			s = ' ';
-	}
+	stringRemoveCommas(name);
 	recipeName = name;
 }
 void Recipe::setCuisine(string& cuis)
 {
-	for (auto& c : cuis)
-	{
-		if (c == ',')
-			c = ' ';
-		c = toupper(c);
-	}
+	stringRemoveCommas(cuis);
+	stringToUpperAll(cuis);
 	cuisine = cuis;
 }
 
 void Recipe::setDescription(string& desc)
 {
-	for (auto& s : desc)
-	{
-		if (s == ',')
-			s = ' ';
-	}
+	stringRemoveCommas(desc);
 	recipeDescription = desc;
 }
 
 void Recipe::setDirection(string& direct)
 {
-	for (auto& s : direct)
-	{
-		if (s == ',')
-			s = ' ';
-	}
+	stringRemoveCommas(direct);
 	recipeDirections = direct;
 }
 
@@ -97,12 +85,7 @@ void Recipe::setYieldUnit(string& unit)
 
 void Recipe::setMealType(string& type, list<pair<string, int>>& list)
 {
-	for (auto& s : type)
-	{
-		if (s == ',')
-			s = ' ';
-		s = toupper(s);
-	}
+	stringRemoveCommas(type);
 	if (type != mealType && doesMealTypeExist(type, list))
 	{
 		decrementRecipeUsingMealTypeCount(mealType, list);
@@ -119,8 +102,9 @@ void Recipe::setMealType(string& type, list<pair<string, int>>& list)
 
 void Recipe::addIngredientInRecipe(string& ingred, float& quantity, string& unit, list<Ingredient>& list)
 {
-	// idea is to item information directly from a dislplayed list.
-	if (doesIngredientExist(ingred, list))
+	stringRemoveCommas(ingred);	// Do we need this here?
+
+	if (!doesIngredientInRecipeExist(ingred))
 	{
 		IngredientInRecipe recipeIngred(ingred, quantity, unit, list);
 		recipeIngredients.push_back(recipeIngred);
@@ -225,4 +209,14 @@ void Recipe::removeIngredientFromRecipe(string& ingred)
 			break;
 		}
 	}
+}
+
+bool Recipe::doesIngredientInRecipeExist(string& str)
+{
+	for (auto& i : recipeIngredients)
+	{
+		if (i.getIngredient().getName() == str)
+			return true;
+	}
+	return false;
 }

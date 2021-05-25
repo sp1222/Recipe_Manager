@@ -51,5 +51,6 @@ public:
 	IngredientInRecipe& getIngredientInRecipe(string& name);
 	IngredientInRecipe& getIngredientInRecipe(int& index);
 	void removeIngredientFromRecipe(string& ingred);
+	bool doesIngredientInRecipeExist(string& str);
 };
 #endif // !RECIPE_H
