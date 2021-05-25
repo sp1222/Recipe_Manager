@@ -11,8 +11,7 @@ Categories: and add, modify, and remove categories with information translating 
 Ingredients: can add, modify, and remove ingredients with information translating to recipes correctly.
 
 Next Steps (notes to self):
-- track data dumps
-- refactor code
+- refactor code, documentation
 - make recipes scalable.
 - start daily/weekly/monthly menu builds
 - incorporate grocery item linking to ingredients
