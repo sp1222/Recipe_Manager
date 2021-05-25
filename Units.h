@@ -13,9 +13,10 @@ const string STR_UNIT[] = { "NONE", "GRAM", "OUNCEWEIGHT", "POUND", "KILOGRAM",
                                             "EACH", "DOZEN" };
 const string STR_TYPE[] = { "NONE", "WEIGHT", "VOLUME", "COUNT", };
 
+// push onto the referenced list parameter available unit strings
 void GetUnitStringList(list<string>& str);
 
-// enumerators that define the Unit and Unit Type.
+// enumerator that define the Unit values
 enum class Unit
 {
     NONE,
@@ -37,6 +38,7 @@ enum class Unit
 
 };
 
+// enumerator that define the Type values
 enum class Type
 {
     NONE,
@@ -60,41 +62,33 @@ private:
     void setType(int t);
 
 public:
+    // make Units objects comparable based on Unit enum values
     bool operator == (const Units& u) const;
+    // make Units objects comparable based on Unit enum values
     bool operator != (const Units& u) const;
+    // defines empty Units object
     Units();
+    // defines a Units object based on a valid string parameter
     Units(string& unit);
+    // sets the Units object to a specified Units based on valid string parameter
+    // this in turn sets the Units Type enum to its corresponding Type, handled internally
     void setUnit(string& unit);
+    // returns the string value of the Units object
     string getUnitStr() const;
+    // returns the Units enum value
     Unit getUnit();
+    // returns the Units' Type string value of the Units object
     string getTypeStr();
+    // returns the Units' Type enum value of the Units object
     Type getType();
 
 };
 
-// prototype functions for conversions
+// compares the Type enum value for two Units objects to determine if they are convertible units of measure
 bool doesTypeMatchForConversion(Type from, Type to);
-float standardUnitConversion(Unit start, Unit end, float value);
-
-/*
-// constants for unit conversions
-//weights
-const float GRAM_TO_OUNCEWEIGHT = 0.0353;
-const float OUNCEWEIGHT_TO_POUND = 0.0625;
-const float POUND_TO_KILOGRAM = 0.4536;
-
-// volumes
-const float MILLILITER_TO_TEASPOON = 0.2029;
-const float TEASPOON_TO_TABLESPOON = 0.3333;
-const float TABLESPOON_TO_OUNCEFLUID = 0.5;
-const float OUNCEFLUID_TO_CUP = 0.125;
-const float CUP_TO_PINT = 0.5;
-const float PINT_TO_QUART = 0.5;
-const float QUART_TO_GALLON = 0.25;
-
-// counts
-const float EACH_TO_DOZEN = .0833;
-*/
+// converts the Units object's unit values if they are convertible.
+// CUP -> GALLON and vice versa, cannot convert GALLON -> POUND as they are two different Type values
+double standardUnitConversion(Unit start, Unit end, float value);
 
 // index zero represents converting from Unit a to Unit b.
 // in this case, NONE is unconvertible, so we give it a value of -1.
