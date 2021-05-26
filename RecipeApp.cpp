@@ -213,7 +213,7 @@ AddIngredientFrame::AddIngredientFrame() : wxFrame(NULL, wxID_ANY, wxString("New
     // Menu Bar
     // File menu
     menuOptions = new wxMenu;
-    menuOptions->Append(FINALIZE, "&Add Category\tAlt-A");
+    menuOptions->Append(FINALIZE, "&Add Ingredient\tAlt-A");
     menuBar = new wxMenuBar;
     menuBar->Append(menuOptions, "&Options");
     SetMenuBar(menuBar);
@@ -1269,8 +1269,8 @@ void MainListCtrl::RemoveRecipe()
 
 void MainListCtrl::CreateNewCategory()
 {
-    if (addCategoryFrame != nullptr)
-        delete(addCategoryFrame);
+//    if (addCategoryFrame != nullptr)
+//        delete(addCategoryFrame);
     addCategoryFrame = new AddCategoryFrame();
     addCategoryFrame->SetParent(this);
     addCategoryFrame->Show();
@@ -1278,8 +1278,8 @@ void MainListCtrl::CreateNewCategory()
 
 void MainListCtrl::CreateNewIngredient()
 {
-    if (addIngredientFrame != nullptr)
-        delete(addIngredientFrame);
+//    if (addIngredientFrame != nullptr)
+//        delete(addIngredientFrame);
     addIngredientFrame = new AddIngredientFrame();
     addIngredientFrame->SetParent(this);
     addIngredientFrame->Show();
@@ -1287,8 +1287,8 @@ void MainListCtrl::CreateNewIngredient()
 
 void MainListCtrl::CreateNewRecipe()
 {
-    if (recipeFrame != nullptr)
-        delete(recipeFrame);
+//    if (recipeFrame != nullptr)
+//        delete(recipeFrame);
     recipeFrame = new RecipeFrame("Create New Recipe");
     recipeFrame->SetRecipe(mealTypes, ingredients);
     recipeFrame->SetParent(this);
