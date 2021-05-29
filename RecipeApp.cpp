@@ -1269,8 +1269,6 @@ void MainListCtrl::RemoveRecipe()
 
 void MainListCtrl::CreateNewCategory()
 {
-//    if (addCategoryFrame != nullptr)
-//        delete(addCategoryFrame);
     addCategoryFrame = new AddCategoryFrame();
     addCategoryFrame->SetParent(this);
     addCategoryFrame->Show();
@@ -1278,8 +1276,6 @@ void MainListCtrl::CreateNewCategory()
 
 void MainListCtrl::CreateNewIngredient()
 {
-//    if (addIngredientFrame != nullptr)
-//        delete(addIngredientFrame);
     addIngredientFrame = new AddIngredientFrame();
     addIngredientFrame->SetParent(this);
     addIngredientFrame->Show();
@@ -1287,8 +1283,6 @@ void MainListCtrl::CreateNewIngredient()
 
 void MainListCtrl::CreateNewRecipe()
 {
-//    if (recipeFrame != nullptr)
-//        delete(recipeFrame);
     recipeFrame = new RecipeFrame("Create New Recipe");
     recipeFrame->SetRecipe(mealTypes, ingredients);
     recipeFrame->SetParent(this);
