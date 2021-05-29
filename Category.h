@@ -8,7 +8,6 @@
 #define CATEGORY_H
 
 #include <string>
-#include <list>
 
 #include "Helpers.h"
 

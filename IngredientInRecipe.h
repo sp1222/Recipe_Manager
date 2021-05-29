@@ -1,6 +1,6 @@
 /*
 	IngredientInRecipe.h
-	Defines a Category IngredientInRecipe.
+	Defines an IngredientInRecipe Class.
 */
 
 #pragma once
@@ -8,15 +8,19 @@
 #define INGREDIENTINRECIPE_H
 
 #include "IngredientList.h"
-#include<iostream>
 #include "Units.h"
 
+/*
+	IngredientInRecipe class for instaces of IngredientInRecipe objects.
+	This will be the user controlled IngredientInRecipe management system.
+	The user will be able to add and remove IngredientInRecipe as they see fit.
+*/
 class IngredientInRecipe
 {
 private:
-	Ingredient* ingredient = nullptr;
-	float ingredientQuantity = 0.0f;
-	Units ingredientUnit;
+	Ingredient* ingredientptr = nullptr;
+	float quantity = 0.0f;
+	Units unit;
 public:
 
 	/*

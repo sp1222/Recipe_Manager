@@ -1,98 +1,83 @@
+/*
+	MealTypeList.cpp
+	Function definitions for MealTypeList.h
+*/
+
 #include"MealTypeList.h"
+
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
-void addMealType(string& type, list<pair<string, int>>& list)
+
+// Adds a new MealType object to a list< pair<string, int> >.
+void addMealType(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& t : type) t = toupper(t);
-	if (!doesMealTypeExist(type, list))
+	if (!doesMealTypeExist(name, lst))
 	{
-		pair<string, int> newType(type, 0);
-		list.push_back(newType);
+		pair<string, int> newType(name, 0);
+		lst.push_back(newType);
 	}
 }
 
-void removeMealType(string& type, list<pair<string, int>>& list)
+/*	CURRENTLY NOT IN USE.  THIS LIST IS "REFRESHED" AT STARTUP WHEN LISTS ARE LOADED.
+
+// Removes named MealType object from list< pair<string, int> >.
+void removeMealType(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& t : type) t = toupper(t);
-	if (doesMealTypeExist(type, list))
+	if (doesMealTypeExist(name, lst))
 	{
-		for (auto& m : list)
+		for (auto& m : lst)
 		{
-			if (m.first == type && m.second > 0)
+			if (m.first == name && m.second > 0)
 			{
-				list.remove(m);
+				lst.remove(m);
 				break;
 			}
 		}
 	}
 }
+*/
 
-bool doesMealTypeExist(string& type, list<pair<string, int>>& list)
+// Checks if a MealType object exists in list< pair<string, int> > based on its name.
+bool doesMealTypeExist(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& t : type) t = toupper(t);
-	for (auto& m : list)
+	for (auto& t : name) t = toupper(t);
+	for (auto& m : lst)
 	{
-		if (m.first == type)
+		if (m.first == name)
 			return true;
 	}
 	return false;
 }
 
-int getRecipeUsingMealTypeCount(string& type, list<pair<string, int>>& list)
+// Returns how many Recipe objects are using this MealType, pair<string, int>, object.
+int getRecipeUsingMealTypeCount(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& t : type) t = toupper(t);
-	for (auto& m : list)
+	for (auto& t : name) t = toupper(t);
+	for (auto& m : lst)
 	{
-		if (m.first == type)
+		if (m.first == name)
 			return m.second;
 	}
 	return 0;
 }
 
-void incrementRecipeUsingMealTypeCount(string& type, list<pair<string, int>>& list)
+// Increments a variable that tracks how many Recipe objects are using this MealType, pair<string, int>, object.
+void incrementRecipeUsingMealTypeCount(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& m : list)
+	for (auto& m : lst)
 	{
-		if (m.first == type)
+		if (m.first == name)
 			m.second++;
 	}
 }
 
-void decrementRecipeUsingMealTypeCount(string& type, list<pair<string, int>>& list)
+// Decrements a variable that tracks how many Recipe objects are using this MealType, pair<string, int>, object.
+void decrementRecipeUsingMealTypeCount(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& m : list)
+	for (auto& m : lst)
 	{
-		if (m.first == type && m.second > 0)
+		if (m.first == name && m.second > 0)
 			m.second--;
 	}
-}
-
-void saveMealType(string& file, list<pair<string, int>>& list)
-{
-	ofstream fout;
-	fout.open(file, ios::out);
-	for (auto& m : list)
-	{
-		fout << m.first << endl;
-	}
-	fout.close();
-}
-
-void loadMealType(string& file, list<pair<string, int>>& list)
-{
-	ifstream fin;
-	fin.open(file, ios::in);
-	if (fin.is_open())
-	{
-		string line = "";
-		while (getline(fin, line))
-		{
-			;
-			list.push_back(pair<string, int>(line, 0));
-		}
-	}
-	else
-		cout << file << " was not found, load aborted." << endl;
-	fin.close();
 }

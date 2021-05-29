@@ -7,9 +7,9 @@
 #ifndef INGREDIENTLIST_H
 #define INGREDIENTLIST_H
 
-#include "Ingredient.h"
 #include "CategoryList.h"
 #include "Helpers.h"
+#include "Ingredient.h"
 
 
 /*

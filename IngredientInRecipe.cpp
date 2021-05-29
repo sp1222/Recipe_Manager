@@ -13,7 +13,7 @@
 // Makes two IngredientInRecipe objects comparable using name variable.
 bool IngredientInRecipe::operator == (const IngredientInRecipe& i) const
 {
-	return ingredient == i.ingredient;
+	return ingredientptr == i.ingredientptr;
 }
 
 // Makes two IngredientInRecipe objects comparable using name variable.
@@ -25,10 +25,10 @@ bool IngredientInRecipe::operator != (const IngredientInRecipe& i) const
 // Initialize a blank IngredientInRecipe object.
 IngredientInRecipe::IngredientInRecipe()
 {
-	ingredientQuantity = 0.0f;
+	this->quantity = 0.0f;
 	string unit = "NONE";
 	Units u(unit);
-	ingredientUnit = u;
+	this->unit = u;
 }
 
 // Initialize an Ingredient object with using valid arguments.
@@ -37,42 +37,42 @@ IngredientInRecipe::IngredientInRecipe(string& ingredient, float& quantity, stri
 	// first, determine if the ingredient exists.
 	if (doesNamedIngredientExist(ingredient, lst))
 	{
-		this->ingredient = &getIngredientInList(ingredient, lst);
-		this->ingredient->incrementRecipesUsingIngredientCount();
+		this->ingredientptr = &getIngredientInList(ingredient, lst);
+		this->ingredientptr->incrementRecipesUsingIngredientCount();
 //		float2Decimals(quantity);
-		ingredientQuantity = quantity;
+		this->quantity = quantity;
 		Units u(unit);
-		ingredientUnit = u;
+		this->unit = u;
 	}
 }
 
 // Initialize an Ingredient object with using valid arguments.
 IngredientInRecipe::IngredientInRecipe(Ingredient& ingredient, float& quantity, string& unit)
 {
-	this->ingredient = &ingredient;
-	this->ingredient->incrementRecipesUsingIngredientCount();
+	this->ingredientptr = &ingredient;
+	this->ingredientptr->incrementRecipesUsingIngredientCount();
 //	float2Decimals(quantity);
-	ingredientQuantity = quantity;
+	this->quantity = quantity;
 	Units u(unit);
-	ingredientUnit = u;
+	this->unit = u;
 }
 
 // Set the reference to Ingredient object for this IngredientInRecipe object.
 void IngredientInRecipe::setIngredient(Ingredient& ingredient)
 {
-	if (this->ingredient != nullptr)
-		this->ingredient->decrementRecipesUsingIngredientCount();
-	this->ingredient = &ingredient;
-	this->ingredient->incrementRecipesUsingIngredientCount();
+	if (this->ingredientptr != nullptr)
+		this->ingredientptr->decrementRecipesUsingIngredientCount();
+	this->ingredientptr = &ingredient;
+	this->ingredientptr->incrementRecipesUsingIngredientCount();
 }
 
 // Set the quantity value for this IngredientInRecipe object.
 void IngredientInRecipe::setIngredientQuantity(float& quantity)
 {
 	if (quantity > 0)
-		ingredientQuantity = quantity;
+		this->quantity = quantity;
 	else
-		ingredientQuantity = 0.0;
+		this->quantity = 0.0;
 
 //	float2Decimals(quantity);
 }
@@ -81,35 +81,35 @@ void IngredientInRecipe::setIngredientQuantity(float& quantity)
 void IngredientInRecipe::setIngredientUnit(string& unit)
 {
 	Units u(unit);
-	ingredientUnit = u;
+	this->unit = u;
 }
 
 // Returns the reference to Ingredient object of this IngredientInRecipe object.
 Ingredient& IngredientInRecipe::getIngredient()
 {
-	return *ingredient;
+	return *ingredientptr;
 }
 
 // Returns the name of the Ingredient object being referenced.
 string IngredientInRecipe::getIngredientName() const
 {
-	return ingredient->getName();
+	return ingredientptr->getName();
 }
 
 // Returns the quantity value for this IngredientInRecipe object.
 float IngredientInRecipe::getIngredientQuantity() const
 {
-	return ingredientQuantity;
+	return this->quantity;
 }
 
 // Returns the Units object for this IngredientInRecipe object.
 Units IngredientInRecipe::getIngredientUnit()
 {
-	return ingredientUnit;
+	return this->unit;
 }
 
 // Returns the Units object's string value for this IngredientInRecipe object.
 string IngredientInRecipe::getIngredientUnitStr() const
 {
-	return ingredientUnit.getUnitStr();
+	return this->unit.getUnitStr();
 }

@@ -52,7 +52,7 @@ void Ingredient::setName(string& name)
 void Ingredient::setDescription(string& description)
 {
 	stringRemoveCommas(description);
-	description = description;
+	this->description = description;
 }
 
 // Set the reference to Category object from list<Category> object

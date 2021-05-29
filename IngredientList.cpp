@@ -4,7 +4,6 @@
 */
 
 #include<fstream>
-#include<iostream>
 #include<sstream>
 #include<vector>
 
@@ -65,8 +64,6 @@ void saveIngredientList(string& fileName, list<Ingredient>& lst)
 		for (auto& i : lst)
 			fout << i.getName() << "," << i.getDescription() << "," << i.getCategoryStr() << "\n";
 	}
-	else
-		cout << fileName << " was not found, load aborted." << endl;
 	fout.close();
 }
 
@@ -90,8 +87,6 @@ void loadIngredientList(string& fileName, list<Ingredient>& ilst, list<Category>
 			addIngredient(row[0], row[1], getCategoryInList(row[2], clst), ilst);
 		}
 	}
-	else
-		cout << fileName << " was not found, load aborted." << endl;
 	fin.close();
 }
 

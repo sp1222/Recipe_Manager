@@ -3,7 +3,6 @@
 	Function definitions for CategoryList.h
 */
 
-#include<iostream>
 #include<fstream>
 #include<sstream>
 #include<vector>
@@ -62,8 +61,6 @@ void saveCategoryList(string& fileName, list<Category>& lst)
 		for (auto& c : lst)
 			fout << c.getName() << endl;
 	}
-	else
-		cout << fileName << " was not found, load aborted." << endl;
 	fout.close();
 }
 
@@ -86,8 +83,6 @@ void loadCategoryList(string& fileName, list<Category>& lst)
 			addCategory(row[0], lst);
 		}
 	}
-	else
-		cout << fileName << " was not found, load aborted." << endl;
 	fin.close();
 }
 
