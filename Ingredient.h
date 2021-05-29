@@ -1,37 +1,125 @@
+/*
+	Ingredient.h
+	Defines an Ingredient class.
+*/
+
 #pragma once
 #ifndef INGREDIENT_H
 #define INGREDIENT_H
+
 #include "Category.h"
 //#include "StoreIngredient.h"
 
+/*
+	Ingredient class definition.
+*/
 class Ingredient
 {
 
 private:
-	// name and description of each ingredients
-	string ingredientName;
-	string ingredientDescription;
-	Category* ingredientCategory = nullptr;
+	string name;
+	string description;
+	Category* category = nullptr;
 	int recipesUsingIngredientCount;
 //	list<StoreIngredient*> storeIngredient;
 	
 public:
+
+	/*
+		Makes two Ingredient objects comparable by name.
+        @param c : constant reference to Ingredient object.
+        @return : If object matches this instance of a Ingredient.
+	*/
 	bool operator == (const Ingredient& i) const;
+
+	/*
+		Makes two Ingredient objects comparable by name.
+		@param c : constant reference to Ingredient object.
+		@return : If object does not match this instance of a Ingredient.
+	*/
 	bool operator != (const Ingredient& i) const;
+
+	/*
+		Create an empty Ingredient object.
+	*/
 	Ingredient();
-	Ingredient(string& name, string& description, Category& category);
+
+	/*
+		Initialize an Ingredient object with valid parameter values.
+		@param name : reference to string to initialize the name of the Ingredient object.
+		@param description : reference to string to initialize the description of the Ingredient object.
+		@param categoryObj : reference to Category object (from list<Category>) to initialize the pointer to Category object in this Ingredient.
+	*/
+	Ingredient(string& name, string& description, Category& categoryObj);
+
+	/*
+		Set the name of the Ingredient object.
+		@param name : reference to string to initialize the name of the Ingredient object.
+	*/
 	void setName(string& name);
+
+	/*
+		Set the description of the Ingredient object.
+		@param description : reference to string to initialize the description of the Ingredient object.
+	*/
 	void setDescription(string& description);
-	void setCategory(Category& category);
-	//	void addStoreIngredient(string& n, string& d, string& c, string& st, string& sk, float& p);  // treat this like we do with categories, where we have a list of pointers to StoreIngredient objects?
+
+	/*
+		Set the reference to Category object from list<Category> object.
+		@param categoryObj : reference to Category object (from list<Category>) to initialize the pointer to Category object in this Ingredient.
+
+	*/
+	void setCategory(Category& categoryObj);
+
+	/*
+		UNDER CONSTRUCTION
+	*/
+//	void addStoreIngredient(string& n, string& d, string& c, string& st, string& sk, float& p);  // treat this like we do with categories, where we have a list of pointers to StoreIngredient objects?
+
+	/*
+		Returns the name of Ingredient object.
+		@return the name of this Ingredient object.
+	*/
 	string getName() const;
+
+	/*
+		Returns the description of Ingredient object.
+		@return the description of this Ingredient object.
+	*/
 	string getDescription();
+
+	/*
+		Returns the Category object this Ingredient object points to.
+		@return the reference to Category object of this Ingredient object.
+	*/
 	Category& getCategoryObj();
+
+	/*
+		Returns the string representation of Category object this Ingredient object points to.
+		@return the name of the Category object of this Ingredient object.
+	*/
 	string getCategoryStr() const;
+
+	/*
+		Returns the number of Recipe objects this Ingredient object is a part of.
+		@return the number of Recipe objects using this Ingredient object.
+	*/
 	int getRecipesUsingIngredientCount() const;
+
+	/*
+		Increments the number of Recipe objects this Ingredient object is a part of.
+	*/
 	void incrementRecipesUsingIngredientCount();
+
+	/*
+		Decrements the number of Recipe objects this Ingredient object is a part of.
+	*/
 	void decrementRecipesUsingIngredientCount();
-	void getStoreIngredientListStr(list<string>& lstr);
+
+	/*
+		UNDER CONSTRUCTION
+	*/
+//	void getStoreIngredientListStr(list<string>& lstr);
 };
 
 

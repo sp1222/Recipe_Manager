@@ -1,52 +1,66 @@
+/*
+	Category.cpp
+	Function definitions for Category.h
+*/
 #include "Category.h"
+
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
+// Makes two Category objects comparable using name variable
 bool Category::operator == (const Category& c) const
 {
-	return category == c.category;
+	return name == c.name;
 }
 
+// Makes two Category objects comparable using name variable
 bool Category::operator != (const Category& c) const
 {
 	return !operator == (c);
 }
 
+// Create a Category object "NONE"
 Category::Category()
 {
-	category = "NONE";
+	name = "NONE";
 	ingredientsUsingCategoryCount = 0;
 }
 
-Category::Category(string& cat)
+// Initialize a Category object based on a valid string parameter
+Category::Category(string& name)
 {
-	category = cat;
+	this->name = name;
 	ingredientsUsingCategoryCount = 0;
 }
 
-void Category::setName(string& cat)
+// Redefine the name of the Category
+void Category::setName(string& name)
 {
-	stringRemoveCommas(cat);
-	stringToUpperAll(cat);
-	category = cat;
+	stringRemoveCommas(name);
+	stringToUpperAll(name);
+	this->name = name;
 }
 
+// Returns the name of the Category object
 string Category::getName() const
 {
-	return category;
+	return name;
 }
 
+// Increments a variable that tracks how many Ingredient objects are using this Category object
 void Category::incrementIngredientsUsingCategoryCount()
 {
 	ingredientsUsingCategoryCount++;
 }
 
+// Decrements a variable that tracks how many Ingredient objects are using this Category object
 void Category::decrementIngredientsUsingCategoryCount()
 {
 	ingredientsUsingCategoryCount--;
 }
 
+// Returns how many Ingredient objects are using this Category object
 int Category::getIngredientsUsingCategoryCount() const
 {
 	return ingredientsUsingCategoryCount;

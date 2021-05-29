@@ -1,63 +1,45 @@
-#include "IngredientList.h"
+/*
+	IngredientList.cpp
+	Function definitions for IngredientList.h
+*/
+
+#include<fstream>
 #include<iostream>
 #include<sstream>
-#include<fstream>
 #include<vector>
+
+#include "IngredientList.h"
+
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
 
-string ingredientListFile;
-
-void setIngredientListFile(string& fileName)
-{
-	ingredientListFile = fileName;
-}
-
-bool addIngredient(string& name, string& description, Category& category, list<Ingredient>& list)
+// Add an Ingredient object to list<Ingredient>.
+bool addIngredient(string& name, string& description, Category& categoryObj, list<Ingredient>& lst)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
 	// if the category does not exist, prompt to select existing category from list.
 	// third, create a new ingredient object to save to ingredientList.
 	stringRemoveCommas(name);
-	if (!doesIngredientExist(name, list))
+	if (!doesNamedIngredientExist(name, lst))
 	{
-		Ingredient ingred(name, description, category);
-		list.push_back(ingred);
+		Ingredient ingred(name, description, categoryObj);
+		lst.push_back(ingred);
 		return true;
 	}
 	return false;
 }
 
-/*
-void addIngredient(Ingredient& ingred, list<Ingredient>& list)
-{
-	// first, check to make sure the item with the same name (in the same category?) does not exist.
-	// second, locate the category that the ingredient is classified under in categoryList
-	// if the category does not exist, prompt to select existing category from list.
-	// third, create a new ingredient object to save to ingredientList.
-
-	for (auto& s : ingred.getName())
-	{
-		if (s == ',')
-			s = ' ';
-	}
-	if (!doesIngredientExist(ingred, list))
-	{
-		list.push_back(ingred);
-		category.addIngredientsUsingCategoryCount();
-	}
-}
-*/
-bool removeIngredient(string& name, list<Ingredient>& list)
+// Remove an Ingredient object from list<Ingredient>.
+bool removeIngredient(string& name, list<Ingredient>& lst)
 {
 	// NOTE: WILL NEED TO TAKE INTO ACCOUNT ANY RECIPES UTILIZING THE INGREDIENT BEING REMOVED.
 	// CONSIDER OPTION TO OFFER CHOOSING AN INGREDIENT TO REPLACE 'REMOVING' INGREDIENT FOR ALL RECIPES USING 'REMOVING'INGREDIENT.
 
-	if (list.size() > 0)
+	if (lst.size() > 0)
 	{
-		for (auto& i : list)
+		for (auto& i : lst)
 		{
 			if (i.getName() == name && i.getRecipesUsingIngredientCount() == 0)
 			{
@@ -65,7 +47,7 @@ bool removeIngredient(string& name, list<Ingredient>& list)
 				// decrement the ingredientsUsingCategoryCount by 1.
 				// does it make sense to have a destructor for ingredients to handle this operation?
 				i.getCategoryObj().decrementIngredientsUsingCategoryCount();
-				list.remove(i);
+				lst.remove(i);
 				return true;
 			}
 		}
@@ -73,21 +55,26 @@ bool removeIngredient(string& name, list<Ingredient>& list)
 	return false;
 }
 
-void saveIngredientList(string& ingredientListFile, list<Ingredient>& list)
+// Save existing list<Ingredient> to designated fileName.
+void saveIngredientList(string& fileName, list<Ingredient>& lst)
 {
 	ofstream fout;
-	fout.open(ingredientListFile, ios::out);
-	for (auto& i : list)
+	fout.open(fileName, ios::out);
+	if (fout.is_open())
 	{
-		fout << i.getName() << "," << i.getDescription() << "," << i.getCategoryStr() << "\n";
+		for (auto& i : lst)
+			fout << i.getName() << "," << i.getDescription() << "," << i.getCategoryStr() << "\n";
 	}
+	else
+		cout << fileName << " was not found, load aborted." << endl;
 	fout.close();
 }
 
-void loadIngredientList(string& ingredientListFile, list<Ingredient>& ilist, list<Category>& clist)
+// Load list<Ingredient> from designated fileName.
+void loadIngredientList(string& fileName, list<Ingredient>& ilst, list<Category>& clst)
 {
 	ifstream fin;
-	fin.open(ingredientListFile, ios::in);
+	fin.open(fileName, ios::in);
 	if (fin.is_open())
 	{
 		string line = "";
@@ -100,26 +87,27 @@ void loadIngredientList(string& ingredientListFile, list<Ingredient>& ilist, lis
 				row.push_back(token);
 			// row[2] is the category name string, 
 			// getCategoryInList returns the reference to category object in category list.
-			addIngredient(row[0], row[1], getCategoryInList(row[2], clist), ilist);
+			addIngredient(row[0], row[1], getCategoryInList(row[2], clst), ilst);
 		}
 	}
 	else
-		cout << ingredientListFile << " was not found, load aborted." << endl;
+		cout << fileName << " was not found, load aborted." << endl;
 	fin.close();
 }
 
-void sortIngredients(int byCol, list<Ingredient>& list)
+// Sorts a list<Ingredient> by indicated column.
+void sortIngredients(int byCol, list<Ingredient>& lst)
 {
 	switch (byCol)
 	{
 	case 0:
-		list.sort(compareIngredientNames);
+		lst.sort(compareIngredientNames);
 		break;
 	case 1:
-		list.sort(compareCategories);
+		lst.sort(compareCategories);
 		break;
 	case 2:
-		list.sort(compareIngredientRecipeCount);
+		lst.sort(compareIngredientRecipeCount);
 		break;
 
 	default:
@@ -128,6 +116,7 @@ void sortIngredients(int byCol, list<Ingredient>& list)
 	}
 }
 
+// Comparator by Name.
 bool compareIngredientNames(const Ingredient& first, const Ingredient& second)
 {
 	unsigned int i = 0;
@@ -142,6 +131,7 @@ bool compareIngredientNames(const Ingredient& first, const Ingredient& second)
 	return (first.getName().length() < second.getName().length());
 }
 
+// Comparator by Categories
 bool compareCategories(const Ingredient& first, const Ingredient& second)
 {
 	unsigned int i = 0;
@@ -156,31 +146,32 @@ bool compareCategories(const Ingredient& first, const Ingredient& second)
 	return (first.getCategoryStr().length() < second.getCategoryStr().length());
 }
 
+// Comparator by number of Recipe objects using Ingredient.
 bool compareIngredientRecipeCount(const Ingredient& first, const Ingredient& second)
 {
 	return (first.getRecipesUsingIngredientCount() < second.getRecipesUsingIngredientCount());
 }
 
-bool doesIngredientExist(string& name, list<Ingredient>& list)
+// Checks if a Ingredient object exists in list<Category> based on its name.
+bool doesNamedIngredientExist(string& name, list<Ingredient>& lst)
 {
-	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST? No.
-
-	for (auto& i : list)
+	for (auto it = lst.begin(); it != lst.end(); ++it)
 	{
-		if (i.getName() == name)
+		if (it->getName() == name)
 			return true;
 	}
 	return false;
 }
 
-Ingredient& getIngredientInList(string& name, list<Ingredient>& list)
+// Returns a reference to named Ingredient object in list<Ingredient> if it exists.
+Ingredient& getIngredientInList(string& name, list<Ingredient>& lst)
 {
 	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST? No.
 
-	for (auto& i : list)
+	for (auto& i : lst)
 	{
 		if (i.getName() == name)
 			return i;
 	}
-	return list.front();
+	return lst.front();
 }
