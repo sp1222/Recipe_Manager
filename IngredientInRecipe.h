@@ -24,14 +24,14 @@ private:
 public:
 
 	/*
-		Makes two IngredientInRecipe objects comparable using name variable.
+		Makes two IngredientInRecipe objects comparable using name of Ingredient object.
 		@param i : constant reference to IngredientInRecipe object.
 		@return : If object matches this instance of a IngredientInRecipe.
 	*/
 	bool operator == (const IngredientInRecipe& i) const;
 
 	/*
-		Makes two IngredientInRecipe objects comparable using name variable.
+		Makes two IngredientInRecipe objects comparable using name of Ingredient object.
 		@param i : constant reference to IngredientInRecipe object.
 		@return : If object matches this instance of a IngredientInRecipe.
 	*/

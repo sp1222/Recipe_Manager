@@ -1,22 +1,41 @@
+/*
+    Units.h
+    Defines a Units class, conducts valid conversion from one unit to another unit.
+*/
+
 #pragma once
 #ifndef UNITS_H
 #define UNITS_H
-#include<string>
-#include<list>
+
+#include <list>
+#include <string>
+
+#include "Helpers.h"
+
 using namespace std;
 
-
-// constants for enums Unit and Type
+/*
+    Constants for string values of Unit.
+*/
 const string STR_UNIT[] = { "NONE", "GRAM", "OUNCEWEIGHT", "POUND", "KILOGRAM",
                                             "MILLILITER", "TEASPOON", "TABLESPOON", "OUNCEFLUID",
                                             "CUP","PINT", "QUART", "LITER", "GALLON",
                                             "EACH", "DOZEN" };
+
+/*
+    Constants for string values of Type.
+*/
 const string STR_TYPE[] = { "NONE", "WEIGHT", "VOLUME", "COUNT", };
 
-// push onto the referenced list parameter available unit strings
+/* 
+    Push onto the referenced list parameter available unit strings.
+    @param str : reference to list of strings.
+*/
 void GetUnitStringList(list<string>& str);
 
-// enumerator that define the Unit values
+/* 
+    Enumerator that define the Unit values.
+*/
 enum class Unit
 {
     NONE,
@@ -38,7 +57,9 @@ enum class Unit
 
 };
 
-// enumerator that define the Type values
+/*
+    Enumerator that define the Type values.
+*/
 enum class Type
 {
     NONE,
@@ -47,7 +68,9 @@ enum class Type
     COUNT
 };
 
-// Units class for instances of units.
+/*
+    Units class for instances of Units objects.
+*/
 class Units
 {
 private:	
@@ -57,47 +80,94 @@ private:
     int typeStrIndex = 0;
     string unitStr = STR_UNIT[unitStrIndex];
     string typeStr = STR_TYPE[typeStrIndex];
-    
-    // private functions
+
+    /*
+        Set the Units object's Type value.
+        @param t : integer value representing Type enum.
+    */
     void setType(int t);
 
 public:
-    // make Units objects comparable based on Unit enum values
+    /*
+        Make Units objects comparable based on Unit enum values.
+        @param u : constant reference to Units object.
+        @return : If object matches this instance of a Units.
+    */
     bool operator == (const Units& u) const;
-    // make Units objects comparable based on Unit enum values
+
+    /*
+        Make Units objects comparable based on Unit enum values.
+        @param u : constant reference to Units object.
+        @return : If object does not match this instance of a Units.
+    */
     bool operator != (const Units& u) const;
-    // defines empty Units object
+
+    /*
+        Initialize a Units object of Unit "NONE" and Type "NONE".
+    */
     Units();
-    // defines a Units object based on a valid string parameter
+
+    /*
+        Initialize a Units object based on a valid string parameter.
+        @param unit : reference to string indicating the unit's definition.
+    */
     Units(string& unit);
-    // sets the Units object to a specified Units based on valid string parameter
-    // this in turn sets the Units Type enum to its corresponding Type, handled internally
+
+    /*
+        Redefine the Units object to a specified Units based on valid string parameter.
+        This in turn sets the Units Type enum to its corresponding Type, handled internally.
+        @param unit : reference to string indicating the unit's definition.
+    */
     void setUnit(string& unit);
-    // returns the string value of the Units object
+
+    /*
+        Returns the string value of the Units object.
+        @return : String value of this Units object.
+    */
     string getUnitStr() const;
-    // returns the Units enum value
+
+    /*
+        Returns the Units enum value.
+        @return : The enum value of this Units object.
+    */
     Unit getUnit();
-    // returns the Units' Type string value of the Units object
+
+    /*
+        Returns the Units' Type string value of the Units object.
+        @return : Units' Type string value of this Units object.
+    */
     string getTypeStr();
-    // returns the Units' Type enum value of the Units object
+
+    /*
+        Returns the Units' Type enum value of the Units object.
+        @return : Units' Type enum value of this Units object.
+    */
     Type getType();
 
 };
 
-// compares the Type enum value for two Units objects to determine if they are convertible units of measure
+/*
+    Compares the Type enum value for two Units objects to determine if they are convertible units of measure.
+    @param from : Type of Units object being converted from.
+    @param to : Type of Units object being converted to.
+    @return : If the Units object is convertible from one Units object to another Units object.
+*/
 bool doesTypeMatchForConversion(Type from, Type to);
-// converts the Units object's unit values if they are convertible.
-// CUP -> GALLON and vice versa, cannot convert GALLON -> POUND as they are two different Type values
+
+/*
+    Converts a quantity value of Unit start to Unit end.
+    Converts the Units object's unit values if they are convertible.
+    CUP -> GALLON and vice versa, cannot convert GALLON -> POUND as they are two different Type values.
+    @param start : the starting Unit enum value.
+    @param end : the ending Unit enum value.
+    @param value : the quantity value to be converted.
+    @return : The converted quantity value.
+*/
 double standardUnitConversion(Unit start, Unit end, double value);
 
-// index zero represents converting from Unit a to Unit b.
-// in this case, NONE is unconvertible, so we give it a value of -1.
-// this includes mismatch type conversions, such as from KILOGRAM to MILLILITER
-
-// to convert incrementally, match the start Unit enum with its respective index value in UNIT_CONVERSION_VALUES
-// ounce to pounds, get index 2, which is OUNCEWEIGHT's enum, and MULTIPLY the value to be converted by the value at index
-// to convert decrementally, match the start Unit enum - 1 with its respective index value.
-// pounds to ounce, get index 3 - 1, which is POUND's enum - 1, and DIVIDE the value to be converted by the value at index
+/*
+    unit conversion values, in order of enum class Unit.
+*/
 const double UNIT_CONVERSION_VALUES[] = { -1, 0.035274, 0.0625, 0.453592, -1, 0.202884, 0.3333333, 0.5, 0.125, 0.5, 0.5, 0.9463534, 0.264172, -1, 0.0833333, -1 };
 
 

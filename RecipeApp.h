@@ -374,6 +374,31 @@ private:
 
 //*************************************************************************************************
 
+// MenuCalendar class
+
+//*************************************************************************************************
+
+class MenuCalendar : public wxFrame
+{
+public:
+    MenuCalendar();
+
+
+protected:
+    void OnExit(wxCloseEvent& e);
+
+private:
+    wxMenu* menuOptions;
+    wxMenu* menuView;
+    wxMenuBar* menuBar;
+
+    wxDECLARE_NO_COPY_CLASS(MenuCalendar);
+    wxDECLARE_EVENT_TABLE();
+};
+
+
+//*************************************************************************************************
+
 // MainListCtrl class
 
 //*************************************************************************************************
@@ -412,16 +437,13 @@ public:
     void GetIngredientsList(list<string>& list);
     
 
-    // when the listController is renewed in RebuildList in MainFrame.
+    // when the listController is renewed in RebuildList in ListMgrFrame.
     // we use the following to pass lists from old listController to new listController
 
     void SetCurrentList(long c);
     long GetCurrentList();   
 
     void SetSelectedItem(string name);
-    void OnActivated(wxListEvent& e);
-    void OnSelected(wxListEvent& e);
-    void OnColumnHeaderClick(wxListEvent& e);
     void ResetListView(long custFlags, long wxFlags = wxLC_REPORT, bool withText = true);
     void BuildRecipeListReportDisplay();
     void BuildIngredientListReportDisplay();
@@ -429,13 +451,16 @@ public:
 
 
 protected:
+    void OnActivated(wxListEvent& e);
+    void OnSelected(wxListEvent& e);
+    void OnColumnHeaderClick(wxListEvent& e);
+private:
+    // data.
     CategoryFrame* categoryFrame = nullptr;
     AddCategoryFrame* addCategoryFrame = nullptr;
     IngredientFrame* ingredientFrame = nullptr;
     AddIngredientFrame* addIngredientFrame = nullptr;
     RecipeFrame* recipeFrame = nullptr;
-private:
-    // data.
     list<Category> categories;
     list<Ingredient> ingredients;
     list<pair<string, int>> mealTypes;
@@ -460,14 +485,14 @@ private:
 
 //*************************************************************************************************
 
-// MainFrame class
+// ListMgrFrame class
 
 //*************************************************************************************************
 
-class MainFrame: public wxFrame
+class ListMgrFrame: public wxFrame
 {
 public:
-    MainFrame(const wxString& title);
+    ListMgrFrame(const wxString& title);
     void SetParent(RecipeApp* p);
 
 protected:
@@ -501,11 +526,12 @@ private:
     RecipeApp* parent = nullptr;
 
 
-    wxDECLARE_NO_COPY_CLASS(MainFrame);
+    wxDECLARE_NO_COPY_CLASS(ListMgrFrame);
     wxDECLARE_EVENT_TABLE();
 };
 
 wxDECLARE_APP(RecipeApp);
+
 
 //*************************************************************************************************
 
@@ -523,7 +549,6 @@ enum
     INGREDIENT_LIST_REPORT_DISPLAY,
     CATEGORY_LIST_REPORT_DISPLAY,
 
-
     LABEL,
 
     CATEGORY_ADD_NEW,
@@ -531,7 +556,6 @@ enum
 
     CATEGORY_NAME_TEXT_CTRL,
     CATEGORY_INGREDIENT_COUNT_TEXT_CTRL,
-
 
     INGREDIENT_ADD_NEW,
     INGREDIENT_REMOVE_SELECTED,
@@ -541,12 +565,9 @@ enum
     INGREDIENT_CATEGORY_TEXT_CTRL,
     INGREDIENT_RECIPES_COUNT_TEXT_CTRL,
 
-
     INGREDIENT_IN_RECIPE_NAME_TEXT_CTRL,
     INGREDIENT_IN_RECIPE_QUANTITY_TEXT_CTRL,
     INGREDIENT_IN_RECIPE_UNIT_TEXT_CTRL,
-
-
 
     RECIPE_ADD_NEW,
     RECIPE_REMOVE_SELECTED,
@@ -566,8 +587,11 @@ enum
     FINALIZE,
     SAVE,
     MAIN_LIST_CTRL,
-    RECIPE_INGREDIENTS_LIST_CTRL
+    RECIPE_INGREDIENTS_LIST_CTRL,
 
+    MENU_CALENDAR_MONTHLY_VIEW,
+    MENU_CALENDAR_WEEKLY_VIEW,
+    MENU_CALENDAR_DAILY_VIEW,
 };
 
 #endif // !RECIPEAPP_H

@@ -11,7 +11,7 @@
 wxIMPLEMENT_APP(RecipeApp);
 bool RecipeApp::OnInit()
 {
-    MainFrame* Main = new MainFrame(_("Recipe Manager App"));
+    ListMgrFrame* Main = new ListMgrFrame(_("Recipe Manager App"));
     Main->SetParent(this);
     Main->Show(true);
     SetTopWindow(Main);
@@ -175,7 +175,7 @@ void CategoryFrame::RebuildTextFields()
     ingredientCountDisplay->SetLabel(wxString(to_string(currentCategory->getIngredientsUsingCategoryCount())));
 }
 
-// save changes and rebuild the list view in MainFrame after an update to a category is made
+// save changes and rebuild the list view in ListMgrFrame after an update to a category is made
 void CategoryFrame::OnUpdate(wxCommandEvent& e)
 {
     string val = string(nameText->GetValue());
@@ -1006,6 +1006,9 @@ void RecipeFrame::SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingr
         yieldUnitComboBox->Append(wxString(i->c_str()));
     listIngredientsInRecipe->SetParent(this);
     listIngredientsInRecipe->SetIngredientsInRecipeList(currentRecipe->getAllIngredientsInRecipe());
+//    list<IngredientInRecipe>* temp;
+//    currentRecipe->getAllIngredientsInRecipe(*temp);
+//    listIngredientsInRecipe->SetIngredientsInRecipeList(*temp);
     listIngredientsInRecipe->SetIngredientList(*ingredList);
     listIngredientsInRecipe->ResetListView(wxLC_REPORT);
 }
@@ -1119,6 +1122,51 @@ void RecipeFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 
 //*************************************************************************************************
 
+// MenuCalendar Event Table
+
+//*************************************************************************************************
+
+wxBEGIN_EVENT_TABLE(MenuCalendar, wxFrame)
+
+wxEND_EVENT_TABLE()
+
+//*************************************************************************************************
+
+// MenuCalendar definition
+
+//*************************************************************************************************
+
+MenuCalendar::MenuCalendar() : wxFrame(NULL, wxID_ANY, wxString("Menu Calendar"), wxDefaultPosition, wxSize(800, 500), wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
+{
+    menuOptions = new wxMenu;
+    menuOptions->Append(EXIT, "Exit");
+
+    menuView = new wxMenu;
+    menuView->Append(MENU_CALENDAR_MONTHLY_VIEW, "Monthly View");
+    menuView->Append(MENU_CALENDAR_WEEKLY_VIEW, "Weekly View");
+    menuView->Append(MENU_CALENDAR_DAILY_VIEW, "Daily View");
+
+    menuBar = new wxMenuBar;
+    menuBar->Append(menuOptions, "Options");
+    menuBar->Append(menuView, "View");
+    SetMenuBar(menuBar);
+}
+
+//*************************************************************************************************
+
+// MenuCalendar function definition
+
+//*************************************************************************************************
+
+
+
+void MenuCalendar::OnExit(wxCloseEvent& WXUNUSED(e))
+{
+    Destroy();
+}
+
+//*************************************************************************************************
+
 // MainListCtrl Event Table
 
 //*************************************************************************************************
@@ -1136,7 +1184,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// Done in MainFrame object.
+// Done in ListMgrFrame object.
 
 
 //*************************************************************************************************
@@ -1577,34 +1625,34 @@ void MainListCtrl::BuildCategoryListReportDisplay()
 
 //*************************************************************************************************
 
-// MainFrame Event Table
+// ListMgrFrame Event Table
 
 //*************************************************************************************************
 
-wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
-    EVT_MENU(ABOUT, MainFrame::OnAbout)
-    EVT_CLOSE(MainFrame::OnExit)
+wxBEGIN_EVENT_TABLE(ListMgrFrame, wxFrame)
+    EVT_MENU(ABOUT, ListMgrFrame::OnAbout)
+    EVT_CLOSE(ListMgrFrame::OnExit)
 
-    EVT_MENU(RECIPE_LIST_REPORT_DISPLAY, MainFrame::OnRecipeListReportDisplay)
-    EVT_MENU(INGREDIENT_LIST_REPORT_DISPLAY, MainFrame::OnIngredientListReportDisplay)
-    EVT_MENU(CATEGORY_LIST_REPORT_DISPLAY, MainFrame::OnCategoryListReportDisplay)
+    EVT_MENU(RECIPE_LIST_REPORT_DISPLAY, ListMgrFrame::OnRecipeListReportDisplay)
+    EVT_MENU(INGREDIENT_LIST_REPORT_DISPLAY, ListMgrFrame::OnIngredientListReportDisplay)
+    EVT_MENU(CATEGORY_LIST_REPORT_DISPLAY, ListMgrFrame::OnCategoryListReportDisplay)
 
 
-    EVT_MENU(CATEGORY_ADD_NEW, MainFrame::OnAddCategory)
-    EVT_MENU(CATEGORY_REMOVE_SELECTED, MainFrame::OnRemoveCategory)
-    EVT_MENU(INGREDIENT_ADD_NEW, MainFrame::OnAddIngredient)
-    EVT_MENU(INGREDIENT_REMOVE_SELECTED, MainFrame::OnRemoveIngredient)
-    EVT_MENU(RECIPE_ADD_NEW, MainFrame::OnAddRecipe)
-    EVT_MENU(RECIPE_REMOVE_SELECTED, MainFrame::OnRemoveRecipe)
+    EVT_MENU(CATEGORY_ADD_NEW, ListMgrFrame::OnAddCategory)
+    EVT_MENU(CATEGORY_REMOVE_SELECTED, ListMgrFrame::OnRemoveCategory)
+    EVT_MENU(INGREDIENT_ADD_NEW, ListMgrFrame::OnAddIngredient)
+    EVT_MENU(INGREDIENT_REMOVE_SELECTED, ListMgrFrame::OnRemoveIngredient)
+    EVT_MENU(RECIPE_ADD_NEW, ListMgrFrame::OnAddRecipe)
+    EVT_MENU(RECIPE_REMOVE_SELECTED, ListMgrFrame::OnRemoveRecipe)
 wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// MainFrame definition
+// ListMgrFrame definition
 
 //*************************************************************************************************
 
-MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 500), wxMINIMIZE_BOX|wxMAXIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX|wxCLIP_CHILDREN)
+ListMgrFrame::ListMgrFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 500), wxMINIMIZE_BOX|wxMAXIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX|wxCLIP_CHILDREN)
 {
 
     // Menu Bar
@@ -1656,6 +1704,9 @@ MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDe
     menuList->Enable(CATEGORY_LIST_REPORT_DISPLAY, true);
     menuList->Enable(CATEGORY_ADD_NEW, false);
     menuList->Enable(CATEGORY_REMOVE_SELECTED, false);
+    
+
+    // Define Menu Planner
 
     // Define menu bar
     menuBar = new wxMenuBar;
@@ -1680,22 +1731,22 @@ MainFrame::MainFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDe
 
 //*************************************************************************************************
 
-// MainFrame function definitions
+// ListMgrFrame function definitions
 
 //*************************************************************************************************
 
-void MainFrame::SetParent(RecipeApp* p)
+void ListMgrFrame::SetParent(RecipeApp* p)
 {
     parent = p;
 }
 
-void MainFrame::OnAbout(wxCommandEvent& WXUNUSED(e))
+void ListMgrFrame::OnAbout(wxCommandEvent& WXUNUSED(e))
 {
     wxMessageDialog dialog(this, "Recipe Manager System\sp1222 (c) 2021", "About Recipe Manager");
     dialog.ShowModal();
 }
 
-void MainFrame::OnExit(wxCloseEvent& WXUNUSED(e))
+void ListMgrFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 {
     listController->SaveAllLists();
     // release data, prevent memory leaks
@@ -1704,7 +1755,7 @@ void MainFrame::OnExit(wxCloseEvent& WXUNUSED(e))
     Destroy();
 }
 
-void MainFrame::OnRecipeListReportDisplay(wxCommandEvent& WXUNUSED(e))
+void ListMgrFrame::OnRecipeListReportDisplay(wxCommandEvent& WXUNUSED(e))
 {
     // here we clear the current listController and display the recipe list.
     listController->ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
@@ -1722,7 +1773,7 @@ void MainFrame::OnRecipeListReportDisplay(wxCommandEvent& WXUNUSED(e))
 //    menuBar->Append(menuRecipeListEditor, "Recipe List Options");
 }
 
-void MainFrame::OnIngredientListReportDisplay(wxCommandEvent& WXUNUSED(e))
+void ListMgrFrame::OnIngredientListReportDisplay(wxCommandEvent& WXUNUSED(e))
 {
     // here we clear the current listController and display the ingredient list.
     listController->ResetListView(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
@@ -1740,7 +1791,7 @@ void MainFrame::OnIngredientListReportDisplay(wxCommandEvent& WXUNUSED(e))
 //    menuBar->Append(menuIngredientListEditor, "Ingredient List Options");
 }
 
-void MainFrame::OnCategoryListReportDisplay(wxCommandEvent& WXUNUSED(e))
+void ListMgrFrame::OnCategoryListReportDisplay(wxCommandEvent& WXUNUSED(e))
 {
     // here we clear the current listController and display the category list.
     listController->ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
@@ -1758,13 +1809,13 @@ void MainFrame::OnCategoryListReportDisplay(wxCommandEvent& WXUNUSED(e))
 //    menuBar->Append(menuCategoryListEditor, "Category List Options");
 }
 
-void MainFrame::OnAddCategory(wxCommandEvent& WXUNUSED(e))
+void ListMgrFrame::OnAddCategory(wxCommandEvent& WXUNUSED(e))
 {
     listController->CreateNewCategory();
     
 }
 
-void MainFrame::OnRemoveCategory(wxCommandEvent& e)
+void ListMgrFrame::OnRemoveCategory(wxCommandEvent& e)
 {
     if (listController->GetSelectedCategoryName() != "")
     {
@@ -1784,13 +1835,13 @@ void MainFrame::OnRemoveCategory(wxCommandEvent& e)
     }
 }
 
-void MainFrame::OnAddIngredient(wxCommandEvent& WXUNUSED(e))
+void ListMgrFrame::OnAddIngredient(wxCommandEvent& WXUNUSED(e))
 {
     listController->CreateNewIngredient();
     
 }
 
-void MainFrame::OnRemoveIngredient(wxCommandEvent& e)
+void ListMgrFrame::OnRemoveIngredient(wxCommandEvent& e)
 {
     if (listController->GetSelectedIngredientName() != "")
     {
@@ -1810,12 +1861,12 @@ void MainFrame::OnRemoveIngredient(wxCommandEvent& e)
     }
 }
 
-void MainFrame::OnAddRecipe(wxCommandEvent& e)
+void ListMgrFrame::OnAddRecipe(wxCommandEvent& e)
 {
     listController->CreateNewRecipe();
 }
 
-void MainFrame::OnRemoveRecipe(wxCommandEvent& e)
+void ListMgrFrame::OnRemoveRecipe(wxCommandEvent& e)
 {
     if (listController->GetSelectedRecipeName() != "")
     {

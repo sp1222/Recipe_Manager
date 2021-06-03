@@ -1,16 +1,23 @@
+/*
+	RecipeList.h
+	Handles lists of type Recipe functionalities.
+*/
+
+#include<algorithm>
+#include<fstream>
+#include<regex>
+#include<sstream>
+#include<vector>
+
 #include "IngredientList.h"
 #include "RecipeList.h"
-#include<iostream>
-#include<sstream>
-#include<fstream>
-#include<vector>
-#include<algorithm>
-#include<regex>
 
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
-void addRecipe(string& name, string& cuis, string& desc, string& direct, int& count, int& yield, string& unit, string& type, list<pair<string, int>>& tList, list<Recipe>& list)
+
+// Add a Recipe object to list<Recipe>.
+void addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& mealtypelst, list<Recipe>& recipelst)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
@@ -19,15 +26,15 @@ void addRecipe(string& name, string& cuis, string& desc, string& direct, int& co
 
 	stringRemoveCommas(name);
 
-	if (!doesRecipeExist(name, list))
+	if (!doesRecipeExist(name, recipelst))
 	{
-		Recipe nRecipe(name, cuis, desc, direct, count, yield, unit, type, tList);
-		list.push_back(nRecipe);
+		Recipe nRecipe(name, cuisine, description, direction, servingCount, yield, yieldUnit, mealtype, mealtypelst);
+		recipelst.push_back(nRecipe);
 	}
-
 }
 
-void addRecipe(Recipe& recipe, list<Recipe>& list)
+// Add a Recipe object to list<Recipe>.
+void addRecipe(Recipe& recipe, list<Recipe>& lst)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
@@ -36,18 +43,19 @@ void addRecipe(Recipe& recipe, list<Recipe>& list)
 	string name = recipe.getName();
 	stringRemoveCommas(name);
 	recipe.setName(name);
-	if (!doesRecipeExist(name, list))
+	if (!doesRecipeExist(name, lst))
 	{
-		list.push_back(recipe);
+		lst.push_back(recipe);
 	}
 }
 
-bool removeRecipe(string& name, list<Recipe>& list)
+// Remove a Recipe object from list<Recipe>.
+bool removeRecipe(string& name, list<Recipe>& lst)
 {
 	// NOTE: WILL NEED TO TAKE INTO ACCOUNT ANY RECIPES UTILIZING THE INGREDIENT BEING REMOVED.
 	// CONSIDER OPTION TO OFFER CHOOSING AN INGREDIENT TO REPLACE 'REMOVING' INGREDIENT FOR ALL RECIPES USING 'REMOVING'INGREDIENT.
 
-	for (auto& r : list)
+	for (auto& r : lst)
 	{
 		if (r.getName() == name)
 		{
@@ -55,47 +63,51 @@ bool removeRecipe(string& name, list<Recipe>& list)
 			// decrement the ingredientsUsingCategoryCount by 1.
 			// does it make sense to have a destructor for ingredients to handle this operation?
 
-			list.remove(r);
+			lst.remove(r);
 			return true;
 		}
 	}
 	return false;
 }
 
-void saveRecipeList(string& file, list<Recipe>& list)
+// Save list<Recipe> to comma separated values file.
+void saveRecipeList(string& fileName, list<Recipe>& lst)
 {
 	ofstream fout;
-	fout.open(file, ios::out);
-	for (auto& r : list)
+	fout.open(fileName, ios::out);
+	if (fout.is_open())
 	{
-		// first we output to file general recipe details.
-		string d = r.getDirection();
-		regex newlines_re("\n+");
-		string direct = regex_replace(d, newlines_re, "`");
-
-		fout << r.getName() << "," << r.getCuisine() << "," << r.getDescription() << "," << direct << ","
-			<< r.getServingCount() << "," << r.getYield() << "," << r.getYieldUnitStr() << "," 
-			<< r.getMealType() << ",";
-
-		// next we output to file the details for each ingredient in the recipe.
-		for (int i = 0; i < r.getIngredientCount(); i++)
+		for (auto& r : lst)
 		{
-			IngredientInRecipe& curIngred = r.getIngredientInRecipe(i);
-			fout << curIngred.getIngredientName() << ","
-				<< curIngred.getIngredientQuantity() << ","
-				<< curIngred.getIngredientUnitStr() << ",";
+			// first we output to file general recipe details.
+			string d = r.getDirection();
+			regex newlines_re("\n+");
+			string direct = regex_replace(d, newlines_re, "`");
+
+			fout << r.getName() << "," << r.getCuisine() << "," << r.getDescription() << "," << direct << ","
+				<< r.getServingCount() << "," << r.getYield() << "," << r.getYieldUnitStr() << ","
+				<< r.getMealType() << ",";
+
+			// next we output to file the details for each ingredient in the recipe.
+			for (int i = 0; i < r.getIngredientCount(); i++)
+			{
+				IngredientInRecipe& curIngred = r.getIngredientInRecipe(i);
+				fout << curIngred.getIngredientName() << ","
+					<< curIngred.getIngredientQuantity() << ","
+					<< curIngred.getIngredientUnitStr() << ",";
+			}
+			// indicates the end of a recipe being outputted.
+			fout << endl;
 		}
-		// indicates the end of a recipe being outputted.
-		fout << endl;
 	}
 	fout.close();
 }
 
-
-void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, list<pair<string, int>>& mlist)
+// Comma separated values file to load list<Recipe> from.
+void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>& ingredientlst, list<pair<string, int>>& mealtypelst)
 {
 	ifstream fin;
-	fin.open(file, ios::in);
+	fin.open(fileName, ios::in);
 	if (fin.is_open())
 	{
 		string line = "";
@@ -115,46 +127,45 @@ void loadRecipeList(string& file, list<Recipe>& rList, list<Ingredient>& iList, 
 			regex newlines_re("`");
 			string direct = regex_replace(d, newlines_re, "\n");
 
-			Recipe rec(name, cuis, desc, direct, serv, yield, yieldUnit, meal, mlist);
+			Recipe rec(name, cuis, desc, direct, serv, yield, yieldUnit, meal, mealtypelst);
 			while (row.size() > 0 && row[0] != "")
 			{
 				string ingredName = row[0];
 				float ingredQty = stof(row[1]);
 				string ingredUnit = row[2];
-				rec.addIngredientInRecipe(ingredName, ingredQty, ingredUnit, iList);
+				rec.addIngredientInRecipe(ingredName, ingredQty, ingredUnit, ingredientlst);
 				row.erase(row.begin(), row.begin() + 3);
 			}
 			// add recipe to recipeList.
-			rList.push_back(rec);
+			recipelst.push_back(rec);
 		}
 	}
-	else
-		cout << file << " was not found, load aborted." << endl;
 	fin.close();
 }
 
-void sortRecipes(int byCol, list<Recipe>& list)
+// Sort the list<Recipe> by column indicated in front end.
+void sortRecipes(int byCol, list<Recipe>& lst)
 {
 	switch (byCol)
 	{
 	case 0:
-		list.sort(compareRecipeNames);
+		lst.sort(compareRecipeNames);
 		break;
 	case 1:
-		list.sort(compareRecipeCuisines);
+		lst.sort(compareRecipeCuisines);
 		break;
 	case 2:
-		list.sort(compareMealTypes);
+		lst.sort(compareMealTypes);
 		break;
 	case 3:
-		list.sort(compareServingCounts);
+		lst.sort(compareServingCounts);
 		break;
 	default:
 		break;
 	}
 }
 
-// sort the list alphabetized by names, disregarding case sensitivity
+// Comparator by name for two Recipe objects.
 bool compareRecipeNames(const Recipe& first, const Recipe& second)
 {
 	unsigned int i = 0;
@@ -169,6 +180,7 @@ bool compareRecipeNames(const Recipe& first, const Recipe& second)
 	return (first.getName().length() < second.getName().length());
 }
 
+// Comparator by cuisine for two Recipe objects.
 bool compareRecipeCuisines(const Recipe& first, const Recipe& second)
 {
 	unsigned int i = 0;
@@ -183,7 +195,7 @@ bool compareRecipeCuisines(const Recipe& first, const Recipe& second)
 	return (first.getCuisine().length() < second.getCuisine().length());
 }
 
-// sort the list alphabetized by names, disregarding case sensitivity
+// Comparator by mealtype for two Recipe objects.
 bool compareMealTypes(const Recipe& first, const Recipe& second)
 {
 	unsigned int i = 0;
@@ -198,30 +210,32 @@ bool compareMealTypes(const Recipe& first, const Recipe& second)
 	return (first.getMealType().length() < second.getMealType().length());
 }
 
+// Comparator by servingCount for two Recipe objects.
 bool compareServingCounts(const Recipe& first, const Recipe& second)
 {
 	return (first.getServingCount() < second.getServingCount());
 }
 
-void sortRecipeIngredients(int byCol, list<IngredientInRecipe>& list)
+// Sort the list<IngredientInRecipe> by column indicated in front end.
+void sortRecipeIngredients(int byCol, list<IngredientInRecipe>& lst)
 {
 	switch (byCol)
 	{
 	case 0:
-		list.sort(compareIngredientInRecipeNames);
+		lst.sort(compareIngredientInRecipeNames);
 		break;
 	case 1:
-		list.sort(compareIngredientInRecipeQuantity);
+		lst.sort(compareIngredientInRecipeQuantity);
 		break;
 	case 2:
-		list.sort(compareIngredientInRecipeUnits);
+		lst.sort(compareIngredientInRecipeUnits);
 		break;
 	default:
 		break;
 	}
 }
 
-// sort the list alphabetized by names, disregarding case sensitivity
+// Comparator by name for two IngredientInRecipe objects.
 bool compareIngredientInRecipeNames(const IngredientInRecipe& first, const IngredientInRecipe& second)
 {
 	unsigned int i = 0;
@@ -236,13 +250,14 @@ bool compareIngredientInRecipeNames(const IngredientInRecipe& first, const Ingre
 	return (first.getIngredientName().length() < second.getIngredientName().length());
 }
 
-// sort the list alphabetized by names, disregarding case sensitivity
+// Comparator by quantity for two IngredientInRecipe objects.
 bool compareIngredientInRecipeQuantity(const IngredientInRecipe& first, const IngredientInRecipe& second)
 {
 
 	return (first.getIngredientQuantity() < second.getIngredientQuantity());
 }
 
+// Comparator by Unit for two IngredientInRecipe objects.
 bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const IngredientInRecipe& second)
 {
 	unsigned int i = 0;
@@ -257,11 +272,12 @@ bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const Ingre
 	return (first.getIngredientUnitStr().length() < second.getIngredientUnitStr().length());
 }
 
-bool doesRecipeExist(string& name, list<Recipe>& list)
+// Determines if a Recipe object exists in list<Recipe> by name.
+bool doesRecipeExist(string& name, list<Recipe>& lst)
 {
 	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?
 
-	for (auto& r : list)
+	for (auto& r : lst)
 	{
 		if (r.getName() == name)
 			return true;
@@ -269,14 +285,15 @@ bool doesRecipeExist(string& name, list<Recipe>& list)
 	return false;
 }
 
-Recipe& getRecipeInList(string& name, list<Recipe>& list)
+// Returns the reference to Recipe object by name in list<Recipe>.
+Recipe& getRecipeInList(string& name, list<Recipe>& lst)
 {
 	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?
 
-	for (auto& r : list)
+	for (auto& r : lst)
 	{
 		if (r.getName() == name)
 			return r;
 	}
-	return list.front();
+	return lst.front();
 }
