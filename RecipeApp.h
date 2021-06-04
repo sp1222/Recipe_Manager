@@ -2,12 +2,16 @@
 #ifndef RECIPEAPP_H
 #define RECIPEAPP_H
 
+#include<wx/calctrl.h>
+#include<wx/combo.h>
+#include<wx/datetime.h>
+#include<wx/grid.h>
+#include<wx/listctrl.h>
+#include<wx/scrolbar.h>
+#include<wx/wxprec.h>
 
 #include "RecipeList.h"
-#include<wx/listctrl.h>
-#include<wx/combo.h>
-#include<wx/wxprec.h>
-#include<wx/scrolbar.h>
+
 #ifndef WX_PRECOMP
 #include<wx/wx.h>
 #endif
@@ -222,8 +226,6 @@ private:
 };
 
 
-
-
 //*************************************************************************************************
 
 // IngredientsInRecipeListCtrl class
@@ -374,25 +376,50 @@ private:
 
 //*************************************************************************************************
 
-// MenuCalendar class
+// MealPlannerFrame class
 
 //*************************************************************************************************
 
-class MenuCalendar : public wxFrame
+class MealPlannerFrame : public wxFrame
 {
 public:
-    MenuCalendar();
-
+    MealPlannerFrame();
+    void SetParent(MainListCtrl* p);
+    void RebuildCalendarView();
+    void BuildMonthlyCalendarView();
 
 protected:
     void OnExit(wxCloseEvent& e);
 
 private:
-    wxMenu* menuOptions;
-    wxMenu* menuView;
-    wxMenuBar* menuBar;
+    wxMenu* menuOptions = nullptr;
+    wxMenu* menuView = nullptr;
+    wxMenuBar* menuBar = nullptr;
 
-    wxDECLARE_NO_COPY_CLASS(MenuCalendar);
+    wxPanel* mainPanel = nullptr;
+
+    wxPanel* rightPanel = nullptr;
+    wxPanel* monthPanel = nullptr;
+    wxTextCtrl* monthLabel = nullptr;
+    wxPanel* calendarWeekDayHeaderPanel = nullptr;
+    wxTextCtrl* sundayLabel = nullptr;
+    wxTextCtrl* mondayLabel = nullptr;
+    wxTextCtrl* tuesdayLabel = nullptr;
+    wxTextCtrl* wednesdayLabel = nullptr;
+    wxTextCtrl* thursdayLabel = nullptr;
+    wxTextCtrl* fridayLabel = nullptr;
+    wxTextCtrl* saturdayLabel = nullptr;
+    wxPanel* calendarMonthlyDisplayPanel = nullptr;   // make wxScrolledWindow?
+
+    wxPanel* leftPanel = nullptr;
+    wxCalendarCtrl* sideCalendar = nullptr;
+
+    MainListCtrl* parent = nullptr;
+
+    long currentView;
+    wxDateTime selectedDate;
+
+    wxDECLARE_NO_COPY_CLASS(MealPlannerFrame);
     wxDECLARE_EVENT_TABLE();
 };
 
@@ -416,29 +443,25 @@ public:
     void InsertItemsInCategoryListReportDisplay(Category& n, int& i);
 
     void SaveAllLists();
-    void SaveCategories();
-    void SaveIngredients();
-    void SaveRecipes();
+//    void SaveCategories();
+//    void SaveIngredients();
+//    void SaveRecipes();
     void LoadLists();
     void AddNewCategory(string& c);
     void AddNewIngredient(string& name, string& desc, string& cat);
+    void AddRecipe(Recipe& nr);
     void RemoveCategory();
     void RemoveIngredient();
     void RemoveRecipe();
     void CreateNewCategory();
     void CreateNewIngredient();
     void CreateNewRecipe();
-    void AddRecipe(Recipe& nr);
     void GetCategoryNamesList(list<string>& names);
     string GetSelectedCategoryName();
     string GetSelectedIngredientName();
     string GetSelectedRecipeName();
 
     void GetIngredientsList(list<string>& list);
-    
-
-    // when the listController is renewed in RebuildList in ListMgrFrame.
-    // we use the following to pass lists from old listController to new listController
 
     void SetCurrentList(long c);
     long GetCurrentList();   
@@ -448,7 +471,7 @@ public:
     void BuildRecipeListReportDisplay();
     void BuildIngredientListReportDisplay();
     void BuildCategoryListReportDisplay();
-
+    void OpenPlanner();
 
 protected:
     void OnActivated(wxListEvent& e);
@@ -461,6 +484,7 @@ private:
     IngredientFrame* ingredientFrame = nullptr;
     AddIngredientFrame* addIngredientFrame = nullptr;
     RecipeFrame* recipeFrame = nullptr;
+    MealPlannerFrame* mealPlannerFrame;
     list<Category> categories;
     list<Ingredient> ingredients;
     list<pair<string, int>> mealTypes;
@@ -514,13 +538,15 @@ protected:
     void OnAddRecipe(wxCommandEvent& e);
     void OnRemoveRecipe(wxCommandEvent& e);
 
+    // Meal Planner
+    void OnOpenPlanner(wxCommandEvent& e);
+
 
 private:
-    AddIngredientFrame* addIngredientFrame = nullptr;
-    AddCategoryFrame* addCategoryFrame = nullptr;
     wxPanel* panel = nullptr;
     wxMenu* menuFile = nullptr;
     wxMenu* menuList = nullptr;
+    wxMenu* menuCalendar = nullptr;
     wxMenuBar* menuBar = nullptr;
     MainListCtrl* listController = nullptr;
     RecipeApp* parent = nullptr;
@@ -589,9 +615,12 @@ enum
     MAIN_LIST_CTRL,
     RECIPE_INGREDIENTS_LIST_CTRL,
 
-    MENU_CALENDAR_MONTHLY_VIEW,
-    MENU_CALENDAR_WEEKLY_VIEW,
-    MENU_CALENDAR_DAILY_VIEW,
+    MEAL_PLANNER_DISPLAY,
+    MEAL_PLANNER_CALENDAR_MONTHLY_VIEW,
+    MEAL_PLANNER_CALENDAR_WEEKLY_VIEW,
+    MEAL_PLANNER_CALENDAR_DAILY_VIEW,
+    CALENDAR_SIDE_PANEL,
+
 };
 
 #endif // !RECIPEAPP_H

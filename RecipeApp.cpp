@@ -37,7 +37,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-AddCategoryFrame::AddCategoryFrame() : wxFrame(NULL, wxID_ANY, wxString("New Category"), wxDefaultPosition, wxSize(400, 300), wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
+AddCategoryFrame::AddCategoryFrame() : wxFrame(NULL, wxID_ANY, wxString("New Category"), wxDefaultPosition, wxSize(400, 200), wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
 {
     // Menu Bar
     // File menu
@@ -306,7 +306,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-IngredientFrame::IngredientFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 600), wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
+IngredientFrame::IngredientFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(500, 300), wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
 {
     // Menu Bar
     // File menu
@@ -876,7 +876,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(1000, 800), wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
+RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 900), wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
 {
     // Menu Bar
     // File menu
@@ -1120,47 +1120,148 @@ void RecipeFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 
 
 
-//*************************************************************************************************
-
-// MenuCalendar Event Table
 
 //*************************************************************************************************
 
-wxBEGIN_EVENT_TABLE(MenuCalendar, wxFrame)
+// MealPlannerFrame Event Table
 
+//*************************************************************************************************
+
+wxBEGIN_EVENT_TABLE(MealPlannerFrame, wxFrame)
+EVT_CLOSE(MealPlannerFrame::OnExit)
 wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// MenuCalendar definition
+// MealPlannerFrame definition
 
 //*************************************************************************************************
 
-MenuCalendar::MenuCalendar() : wxFrame(NULL, wxID_ANY, wxString("Menu Calendar"), wxDefaultPosition, wxSize(800, 500), wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
+MealPlannerFrame::MealPlannerFrame() : wxFrame(NULL, wxID_ANY, wxString("Meal Planner"), wxDefaultPosition, wxSize(1250, 1000), wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
 {
     menuOptions = new wxMenu;
-    menuOptions->Append(EXIT, "Exit");
 
     menuView = new wxMenu;
-    menuView->Append(MENU_CALENDAR_MONTHLY_VIEW, "Monthly View");
-    menuView->Append(MENU_CALENDAR_WEEKLY_VIEW, "Weekly View");
-    menuView->Append(MENU_CALENDAR_DAILY_VIEW, "Daily View");
+    menuView->Append(MEAL_PLANNER_CALENDAR_MONTHLY_VIEW, "Monthly View");
+    menuView->Append(MEAL_PLANNER_CALENDAR_WEEKLY_VIEW, "Weekly View");
+    menuView->Append(MEAL_PLANNER_CALENDAR_DAILY_VIEW, "Daily View");
+
+    // make calendar monthly view unselectable since it starts by default.
+    menuView->Enable(MEAL_PLANNER_CALENDAR_MONTHLY_VIEW, false);
 
     menuBar = new wxMenuBar;
     menuBar->Append(menuOptions, "Options");
     menuBar->Append(menuView, "View");
     SetMenuBar(menuBar);
+
+    selectedDate = wxDefaultDateTime;   // set selectedDate to current date which = wxDefaultDateTime.
+
+    mainPanel = new wxPanel(this, wxID_ANY);
+    rightPanel = new wxPanel(mainPanel, wxID_ANY);
+    leftPanel = new wxPanel(mainPanel, wxID_ANY);
+
+    // set month display panel
+    monthPanel = new wxPanel(rightPanel, wxID_ANY);
+    monthLabel = new wxTextCtrl(monthPanel, wxID_ANY, selectedDate.GetEnglishMonthName(selectedDate.GetCurrentMonth()), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    
+    // set weekly header panel.
+    calendarWeekDayHeaderPanel = new wxPanel(rightPanel, wxID_ANY);
+    wxBoxSizer* calendarWeeklyHeaderSizer = new wxBoxSizer(wxHORIZONTAL);
+    sundayLabel = new wxTextCtrl(calendarWeekDayHeaderPanel, wxID_ANY, wxString("Sunday"), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    mondayLabel = new wxTextCtrl(calendarWeekDayHeaderPanel, wxID_ANY, wxString("Monday"), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    tuesdayLabel = new wxTextCtrl(calendarWeekDayHeaderPanel, wxID_ANY, wxString("Tuesday"), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    wednesdayLabel = new wxTextCtrl(calendarWeekDayHeaderPanel, wxID_ANY, wxString("Wednesday"), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    thursdayLabel = new wxTextCtrl(calendarWeekDayHeaderPanel, wxID_ANY, wxString("Thursday"), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    fridayLabel = new wxTextCtrl(calendarWeekDayHeaderPanel, wxID_ANY, wxString("Friday"), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    saturdayLabel = new wxTextCtrl(calendarWeekDayHeaderPanel, wxID_ANY, wxString("Saturday"), wxDefaultPosition, wxSize(120, 30), wxTE_READONLY);
+    calendarWeeklyHeaderSizer->Add(sundayLabel);
+    calendarWeeklyHeaderSizer->Add(mondayLabel);
+    calendarWeeklyHeaderSizer->Add(tuesdayLabel);
+    calendarWeeklyHeaderSizer->Add(wednesdayLabel);
+    calendarWeeklyHeaderSizer->Add(thursdayLabel);
+    calendarWeeklyHeaderSizer->Add(fridayLabel);
+    calendarWeeklyHeaderSizer->Add(saturdayLabel);
+    calendarWeekDayHeaderPanel->SetSizer(calendarWeeklyHeaderSizer);
+
+    // set the display panel for each day of the month.
+    // 6 by 7 grid of list controllers with day of the month as column labels.
+    // thought, make calendarMonthlyDisplayPanel a wxScrolledWindow ??
+    calendarMonthlyDisplayPanel = new wxPanel(rightPanel, wxID_ANY);
+    for (int x = 0; x < 7; x++)
+    {
+        for (int y = 0; y < 6; y++)
+        {
+            
+        }
+    }
+
+
+    // calendar object off to the side to handle some calendar events.
+    sideCalendar = new wxCalendarCtrl(leftPanel, CALENDAR_SIDE_PANEL, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize);
+
+    wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
+    leftSizer->Add(sideCalendar);
+    leftPanel->SetSizer(leftSizer);
+
+    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
+    rightSizer->Add(monthPanel);
+    rightSizer->Add(calendarWeekDayHeaderPanel);
+    rightSizer->Add(calendarMonthlyDisplayPanel);
+    rightPanel->SetSizer(rightSizer);
+
+
+    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
+    mainSizer->Add(leftPanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(rightPanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainPanel->SetSizer(mainSizer);
+
+
+    currentView = MEAL_PLANNER_CALENDAR_MONTHLY_VIEW;
+    RebuildCalendarView();
+    
 }
 
 //*************************************************************************************************
 
-// MenuCalendar function definition
+// MealPlannerFrame function definition
 
 //*************************************************************************************************
 
+void MealPlannerFrame::SetParent(MainListCtrl* p)
+{
+    parent = p;
+}
 
+void MealPlannerFrame::RebuildCalendarView()
+{
+    switch (currentView)
+    {
+    case MEAL_PLANNER_CALENDAR_MONTHLY_VIEW:
+    default:
+        BuildMonthlyCalendarView();
+        break;
+    }
+}
 
-void MenuCalendar::OnExit(wxCloseEvent& WXUNUSED(e))
+void MealPlannerFrame::BuildMonthlyCalendarView()
+{
+    // first, change the monthLabel to current month using selectedDate object, then display
+    // second, setup calendarWeekDayHeaderPanel for Sunday through Saturday, then display
+    // third, setup grid for for month view with saved meal objects.
+    rightPanel->SetSizer(NULL);
+    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
+    rightSizer->Add(monthPanel);
+    rightSizer->Add(calendarWeekDayHeaderPanel);
+    rightSizer->Add(calendarMonthlyDisplayPanel);
+    rightPanel->SetSizer(rightSizer);
+
+    // since we are toggling to monthly view from another view, enable/disable appropriate items in menuView.
+    menuView->Enable(MEAL_PLANNER_CALENDAR_MONTHLY_VIEW, false);
+    menuView->Enable(MEAL_PLANNER_CALENDAR_WEEKLY_VIEW, true);
+    menuView->Enable(MEAL_PLANNER_CALENDAR_DAILY_VIEW, true);
+}
+
+void MealPlannerFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 {
     Destroy();
 }
@@ -1285,6 +1386,12 @@ void MainListCtrl::AddNewIngredient(string& name, string& desc, string& cat)
     }
 }
 
+void MainListCtrl::AddRecipe(Recipe& nr)
+{
+    addRecipe(nr, recipes);
+    SaveAllLists();
+}
+
 void MainListCtrl::RemoveCategory()
 {
     string cat = selectedCategory->getName();
@@ -1335,12 +1442,6 @@ void MainListCtrl::CreateNewRecipe()
     recipeFrame->SetRecipe(mealTypes, ingredients);
     recipeFrame->SetParent(this);
     recipeFrame->Show(true);
-}
-
-void MainListCtrl::AddRecipe(Recipe& nr)
-{
-    addRecipe(nr, recipes);
-    SaveAllLists();
 }
 
 void MainListCtrl::GetCategoryNamesList(list<string>& names)
@@ -1408,112 +1509,12 @@ void MainListCtrl::SetSelectedItem(string name)
         break;
     }
 }
-
-void MainListCtrl::OnActivated(wxListEvent& e)
-{
-    wxListItem info;
-    info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
-    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
-                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.                
-
-    selectedItem = info;   
-
-    info.m_mask = wxLIST_MASK_TEXT;
-    if (GetItem(info))
-    {
-        SetSelectedItem(string(info.m_text));
-    }
-    
-    // here we open a window to the activated item, depending on the currentList we are in.
-    switch (GetCurrentList())
-    {
-    case RECIPE_LIST_REPORT_DISPLAY:
-        // here we open a recipe Frame, make it the primary window, and populate fields with the recipe we have clicked on.
-
-        recipeFrame = new RecipeFrame(selectedRecipe->getName());
-        recipeFrame->SetRecipe(*selectedRecipe, mealTypes, ingredients);
-        recipeFrame->SetParent(this);
-        recipeFrame->RebuildTextFields();
-        recipeFrame->Show(true);
-
-        break;
-    case INGREDIENT_LIST_REPORT_DISPLAY:
-        // here we open an ingredient Frame, make it the primary window, and populate fields with the ingredient information we have clicked on.
-
-        ingredientFrame = new IngredientFrame(selectedIngredient->getName());
-        ingredientFrame->SetIngredient(*selectedIngredient, categories);
-        ingredientFrame->SetParent(this);
-        ingredientFrame->RebuildTextFields();
-        ingredientFrame->Show(true);
-
-        break;
-    case CATEGORY_LIST_REPORT_DISPLAY:
-        // here we open a category Frame, make it the primary window, and populate fields with the category we have clicked on.
-
-        categoryFrame = new CategoryFrame(selectedCategory->getName());
-        categoryFrame->SetCategory(*selectedCategory);
-        categoryFrame->SetParent(this);
-        categoryFrame->RebuildTextFields();
-        categoryFrame->Show(true);
-
-        break;
-    default:
-        wxFAIL_MSG("Currently not in an updatable list.");
-        break;
-    }
-    
-}
-
-void MainListCtrl::OnSelected(wxListEvent& e)
-{
-    wxListItem info;
-    info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
-    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
-                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.
-    info.m_mask = wxLIST_MASK_TEXT;
-    if (GetItem(info))
-    {
-        SetSelectedItem(string(info.m_text));
-    }
-    else
-        wxFAIL_MSG("wxListCtrl::GetItem() failed");
-}
-
-void MainListCtrl::OnColumnHeaderClick(wxListEvent& e)
-{
-    // this is where we sort the lists by the column clicked.
-    // first, we need to determine which list we are sorting.
-    int col = e.GetColumn();
-
-    switch (GetCurrentList())
-    {
-        // if current list is recipes
-    case RECIPE_LIST_REPORT_DISPLAY:
-        sortRecipes(col, recipes);
-        ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
-        break;
-        // if current list is ingredients
-    case INGREDIENT_LIST_REPORT_DISPLAY:
-        sortIngredients(col, ingredients);
-        ResetListView(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
-        break;
-        // if current list is categories
-    case CATEGORY_LIST_REPORT_DISPLAY:
-        sortCategories(col, categories);
-        ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
-        break;
-    default:
-        wxMessageDialog d(this, "List to sort does not exist!", "Sort Error");
-        break;
-    }
-}
-
 void MainListCtrl::ResetListView(long custFlags, long wxFlags, bool withText)
 {
 #if 0
     if (!this || ((flags & wxLC_VIRTUAL) 1 = (this->GetWindowStyleFlag() & wxLC_VIRTUAL)))
 #endif
-    Hide();
+        Hide();
     ClearAll();
     SetSingleStyle(wxFlags | wxLC_SINGLE_SEL);
     switch (wxFlags & wxLC_MASK_TYPE)
@@ -1623,6 +1624,114 @@ void MainListCtrl::BuildCategoryListReportDisplay()
     SetCurrentList(CATEGORY_LIST_REPORT_DISPLAY);
 }
 
+void MainListCtrl::OpenPlanner()
+{
+    mealPlannerFrame = new MealPlannerFrame();
+    mealPlannerFrame->SetParent(this);
+    mealPlannerFrame->Show();
+
+}
+
+void MainListCtrl::OnActivated(wxListEvent& e)
+{
+    wxListItem info;
+    info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
+    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
+                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.                
+
+    selectedItem = info;   
+
+    info.m_mask = wxLIST_MASK_TEXT;
+    if (GetItem(info))
+    {
+        SetSelectedItem(string(info.m_text));
+    }
+    
+    // here we open a window to the activated item, depending on the currentList we are in.
+    switch (GetCurrentList())
+    {
+    case RECIPE_LIST_REPORT_DISPLAY:
+        // here we open a recipe Frame, make it the primary window, and populate fields with the recipe we have clicked on.
+
+        recipeFrame = new RecipeFrame(selectedRecipe->getName());
+        recipeFrame->SetRecipe(*selectedRecipe, mealTypes, ingredients);
+        recipeFrame->SetParent(this);
+        recipeFrame->RebuildTextFields();
+        recipeFrame->Show(true);
+
+        break;
+    case INGREDIENT_LIST_REPORT_DISPLAY:
+        // here we open an ingredient Frame, make it the primary window, and populate fields with the ingredient information we have clicked on.
+
+        ingredientFrame = new IngredientFrame(selectedIngredient->getName());
+        ingredientFrame->SetIngredient(*selectedIngredient, categories);
+        ingredientFrame->SetParent(this);
+        ingredientFrame->RebuildTextFields();
+        ingredientFrame->Show(true);
+
+        break;
+    case CATEGORY_LIST_REPORT_DISPLAY:
+        // here we open a category Frame, make it the primary window, and populate fields with the category we have clicked on.
+
+        categoryFrame = new CategoryFrame(selectedCategory->getName());
+        categoryFrame->SetCategory(*selectedCategory);
+        categoryFrame->SetParent(this);
+        categoryFrame->RebuildTextFields();
+        categoryFrame->Show(true);
+
+        break;
+    default:
+        wxFAIL_MSG("Currently not in an updatable list.");
+        break;
+    }
+    
+}
+
+void MainListCtrl::OnSelected(wxListEvent& e)
+{
+    wxListItem info;
+    info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
+    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
+                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.
+    info.m_mask = wxLIST_MASK_TEXT;
+    if (GetItem(info))
+    {
+        SetSelectedItem(string(info.m_text));
+    }
+    else
+        wxFAIL_MSG("wxListCtrl::GetItem() failed");
+}
+
+void MainListCtrl::OnColumnHeaderClick(wxListEvent& e)
+{
+    // this is where we sort the lists by the column clicked.
+    // first, we need to determine which list we are sorting.
+    int col = e.GetColumn();
+
+    switch (GetCurrentList())
+    {
+        // if current list is recipes
+    case RECIPE_LIST_REPORT_DISPLAY:
+        sortRecipes(col, recipes);
+        ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
+        break;
+        // if current list is ingredients
+    case INGREDIENT_LIST_REPORT_DISPLAY:
+        sortIngredients(col, ingredients);
+        ResetListView(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
+        break;
+        // if current list is categories
+    case CATEGORY_LIST_REPORT_DISPLAY:
+        sortCategories(col, categories);
+        ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
+        break;
+    default:
+        wxMessageDialog d(this, "List to sort does not exist!", "Sort Error");
+        break;
+    }
+}
+
+
 //*************************************************************************************************
 
 // ListMgrFrame Event Table
@@ -1630,20 +1739,22 @@ void MainListCtrl::BuildCategoryListReportDisplay()
 //*************************************************************************************************
 
 wxBEGIN_EVENT_TABLE(ListMgrFrame, wxFrame)
-    EVT_MENU(ABOUT, ListMgrFrame::OnAbout)
-    EVT_CLOSE(ListMgrFrame::OnExit)
+EVT_MENU(ABOUT, ListMgrFrame::OnAbout)
+EVT_CLOSE(ListMgrFrame::OnExit)
 
-    EVT_MENU(RECIPE_LIST_REPORT_DISPLAY, ListMgrFrame::OnRecipeListReportDisplay)
-    EVT_MENU(INGREDIENT_LIST_REPORT_DISPLAY, ListMgrFrame::OnIngredientListReportDisplay)
-    EVT_MENU(CATEGORY_LIST_REPORT_DISPLAY, ListMgrFrame::OnCategoryListReportDisplay)
+EVT_MENU(RECIPE_LIST_REPORT_DISPLAY, ListMgrFrame::OnRecipeListReportDisplay)
+EVT_MENU(INGREDIENT_LIST_REPORT_DISPLAY, ListMgrFrame::OnIngredientListReportDisplay)
+EVT_MENU(CATEGORY_LIST_REPORT_DISPLAY, ListMgrFrame::OnCategoryListReportDisplay)
 
 
-    EVT_MENU(CATEGORY_ADD_NEW, ListMgrFrame::OnAddCategory)
-    EVT_MENU(CATEGORY_REMOVE_SELECTED, ListMgrFrame::OnRemoveCategory)
-    EVT_MENU(INGREDIENT_ADD_NEW, ListMgrFrame::OnAddIngredient)
-    EVT_MENU(INGREDIENT_REMOVE_SELECTED, ListMgrFrame::OnRemoveIngredient)
-    EVT_MENU(RECIPE_ADD_NEW, ListMgrFrame::OnAddRecipe)
-    EVT_MENU(RECIPE_REMOVE_SELECTED, ListMgrFrame::OnRemoveRecipe)
+EVT_MENU(CATEGORY_ADD_NEW, ListMgrFrame::OnAddCategory)
+EVT_MENU(CATEGORY_REMOVE_SELECTED, ListMgrFrame::OnRemoveCategory)
+EVT_MENU(INGREDIENT_ADD_NEW, ListMgrFrame::OnAddIngredient)
+EVT_MENU(INGREDIENT_REMOVE_SELECTED, ListMgrFrame::OnRemoveIngredient)
+EVT_MENU(RECIPE_ADD_NEW, ListMgrFrame::OnAddRecipe)
+EVT_MENU(RECIPE_REMOVE_SELECTED, ListMgrFrame::OnRemoveRecipe)
+
+EVT_MENU(MEAL_PLANNER_DISPLAY, ListMgrFrame::OnOpenPlanner)
 wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
@@ -1655,42 +1766,24 @@ wxEND_EVENT_TABLE()
 ListMgrFrame::ListMgrFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, wxDefaultPosition, wxSize(800, 500), wxMINIMIZE_BOX|wxMAXIMIZE_BOX|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCAPTION|wxCLOSE_BOX|wxCLIP_CHILDREN)
 {
 
-    // Menu Bar
     // File menu
     menuFile = new wxMenu;
-    menuFile->Append(ABOUT, "&About\tAlt-A");
+    menuFile->Append(ABOUT, "About");
     menuFile->AppendSeparator();
-    menuFile->Append(EXIT, "&Quit\tAlt-Q");
+    menuFile->Append(EXIT, "Quit");
 
 
-/*
-    // Category List Editor menu
-    menuCategoryListEditor = new wxMenu;
-    menuCategoryListEditor->Append(CATEGORY_ADD_NEW, "Create Category");
-    menuCategoryListEditor->Append(CATEGORY_REMOVE_SELECTED, "Remove Selected Category");
-     
-    // Ingredient List Editor menu
-    menuIngredientListEditor = new wxMenu;
-    menuIngredientListEditor->Append(INGREDIENT_ADD_NEW, "Create Ingredient");
-    menuIngredientListEditor->Append(INGREDIENT_REMOVE_SELECTED, "Remove Selected Ingredient");
-     
-    
-    // Recipe List Editor menu, default start point.
-    menuRecipeListEditor = new wxMenu;
-    menuRecipeListEditor->Append(RECIPE_ADD_NEW, "Create Recipe");
-    menuRecipeListEditor->Append(RECIPE_REMOVE_SELECTED, "Remove Selected Recipe");
-    */
     // List menu
     menuList = new wxMenu;
-    menuList->Append(RECIPE_LIST_REPORT_DISPLAY, "Display &Recipe List\tAlt-R");
+    menuList->Append(RECIPE_LIST_REPORT_DISPLAY, "Display Recipe List");
     menuList->Append(RECIPE_ADD_NEW, "Create Recipe");
     menuList->Append(RECIPE_REMOVE_SELECTED, "Remove Selected Recipe");
     menuList->AppendSeparator();
-    menuList->Append(INGREDIENT_LIST_REPORT_DISPLAY, "Display &Ingredient List\tAlt-I");
+    menuList->Append(INGREDIENT_LIST_REPORT_DISPLAY, "Display Ingredient List");
     menuList->Append(INGREDIENT_ADD_NEW, "Create Ingredient");
     menuList->Append(INGREDIENT_REMOVE_SELECTED, "Remove Selected Ingredient");
     menuList->AppendSeparator();
-    menuList->Append(CATEGORY_LIST_REPORT_DISPLAY, "Display &Category List\tAlt-C");
+    menuList->Append(CATEGORY_LIST_REPORT_DISPLAY, "Display Category List");
     menuList->Append(CATEGORY_ADD_NEW, "Create Category");
     menuList->Append(CATEGORY_REMOVE_SELECTED, "Remove Selected Category");
 
@@ -1707,12 +1800,15 @@ ListMgrFrame::ListMgrFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title
     
 
     // Define Menu Planner
+    menuCalendar = new wxMenu;
+    menuCalendar->Append(MEAL_PLANNER_DISPLAY, "Open Planner");
 
-    // Define menu bar
+
+    // Menu Bar
     menuBar = new wxMenuBar;
-    menuBar->Append(menuFile, "&File");
-    menuBar->Append(menuList, "&Lists");
-//    menuBar->Append(menuRecipeListEditor, "Recipe List Options");
+    menuBar->Append(menuFile, "File");
+    menuBar->Append(menuList, "Lists");
+    menuBar->Append(menuCalendar, "Meal Planner");
     SetMenuBar(menuBar);
 
     panel = new wxPanel(this, wxID_ANY);
@@ -1884,4 +1980,9 @@ void ListMgrFrame::OnRemoveRecipe(wxCommandEvent& e)
             break;
         }
     }
+}
+
+void ListMgrFrame::OnOpenPlanner(wxCommandEvent& WXUNUSED(e))
+{
+    listController->OpenPlanner();
 }
