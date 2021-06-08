@@ -6,10 +6,6 @@ Unit conversion for scaling up or down will also be an option for the user to de
 
 wxWidgets is being used for GUI.
 
-05.04.21 update:
-Categories: and add, modify, and remove categories with information translating to ingredients correctly.
-Ingredients: can add, modify, and remove ingredients with information translating to recipes correctly.
-
 Next Steps (notes to self):
 - Test Files need to be updated to correspond with current functionalities.
 - refactor code, documentation. work in progress.
