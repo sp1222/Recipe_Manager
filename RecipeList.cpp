@@ -17,7 +17,7 @@
 #endif
 
 // Add a Recipe object to list<Recipe>.
-void addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& mealtypelst, list<Recipe>& recipelst)
+bool addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& mealtypelst, list<Recipe>& recipelst)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
@@ -25,14 +25,22 @@ void addRecipe(string& name, string& cuisine, string& description, string& direc
 	// third, create a new ingredient object to save to ingredientList.
 
 	stringRemoveCommas(name);
-
-	if (!doesRecipeExist(name, recipelst))
+	stringRemoveCommas(cuisine);
+	stringToUpperAll(cuisine);
+	stringRemoveCommas(description);
+	stringRemoveCommas(direction);
+	stringRemoveCommas(mealtype);
+	stringToUpperAll(mealtype);
+	if (!doesNamedItemExist<Recipe>(name, recipelst))
 	{
 		Recipe nRecipe(name, cuisine, description, direction, servingCount, yield, yieldUnit, mealtype, mealtypelst);
 		recipelst.push_back(nRecipe);
+		return true;
 	}
+	return false;
 }
 
+/*
 // Add a Recipe object to list<Recipe>.
 void addRecipe(Recipe& recipe, list<Recipe>& lst)
 {
@@ -43,11 +51,27 @@ void addRecipe(Recipe& recipe, list<Recipe>& lst)
 	string name = recipe.getName();
 	stringRemoveCommas(name);
 	recipe.setName(name);
-	if (!doesRecipeExist(name, lst))
+	string var = recipe.getCuisine();
+	stringRemoveCommas(var);
+	stringToUpperAll(var);
+	recipe.setCuisine(var);
+	var = recipe.getDescription();
+	stringRemoveCommas(var);
+	recipe.setDescription(var);
+	var = recipe.getDirection();
+	stringRemoveCommas(var);
+	recipe.setDirection(var);
+	var = recipe.getMealType();
+	stringRemoveCommas(var);
+	stringToUpperAll(var);
+	recipe.setMealType(var);
+
+	if (!doesNamedItemExist<Recipe>(name, lst))
 	{
 		lst.push_back(recipe);
 	}
 }
+*/
 
 // Remove a Recipe object from list<Recipe>.
 bool removeRecipe(string& name, list<Recipe>& lst)
@@ -114,12 +138,12 @@ void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>&
 		while (getline(fin, line))
 		{
 			stringstream s(line);
-			string token;
+			string token = "";
 			vector<string> row;
 			while (getline(s, token, ','))
 				row.push_back(token);
 
-			// there has got to be a cleaner way to do this...
+			// consider a cleaner way to do this...
 
 			string name = row[0], cuis = row[1], desc = row[2], d = row[3], yieldUnit = row[6], meal = row[7];
 			int serv = stoi(row[4]), yield = stoi(row[5]);
@@ -133,10 +157,9 @@ void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>&
 				string ingredName = row[0];
 				float ingredQty = stof(row[1]);
 				string ingredUnit = row[2];
-				rec.addIngredientInRecipe(ingredName, ingredQty, ingredUnit, ingredientlst);
+				rec.addIngredientInRecipeFromLoad(ingredName, ingredQty, ingredUnit, ingredientlst);
 				row.erase(row.begin(), row.begin() + 3);
 			}
-			// add recipe to recipeList.
 			recipelst.push_back(rec);
 		}
 	}
@@ -272,6 +295,7 @@ bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const Ingre
 	return (first.getIngredientUnitStr().length() < second.getIngredientUnitStr().length());
 }
 
+/*
 // Determines if a Recipe object exists in list<Recipe> by name.
 bool doesRecipeExist(string& name, list<Recipe>& lst)
 {
@@ -283,7 +307,7 @@ bool doesRecipeExist(string& name, list<Recipe>& lst)
 			return true;
 	}
 	return false;
-}
+}*/
 
 // Returns the reference to Recipe object by name in list<Recipe>.
 Recipe& getRecipeInList(string& name, list<Recipe>& lst)

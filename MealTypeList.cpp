@@ -3,7 +3,8 @@
 	Function definitions for MealTypeList.h
 */
 
-#include"MealTypeList.h"
+#include "Helpers.h"
+#include "MealTypeList.h"
 
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
@@ -12,6 +13,7 @@
 // Adds a new MealType object to a list< pair<string, int> >.
 void addMealType(string& name, list<pair<string, int>>& lst)
 {
+	stringToUpperAll(name);
 	if (!doesMealTypeExist(name, lst))
 	{
 		pair<string, int> newType(name, 0);
@@ -41,7 +43,6 @@ void removeMealType(string& name, list<pair<string, int>>& lst)
 // Checks if a MealType object exists in list< pair<string, int> > based on its name.
 bool doesMealTypeExist(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& t : name) t = toupper(t);
 	for (auto& m : lst)
 	{
 		if (m.first == name)
@@ -53,7 +54,6 @@ bool doesMealTypeExist(string& name, list<pair<string, int>>& lst)
 // Returns how many Recipe objects are using this MealType, pair<string, int>, object.
 int getRecipeUsingMealTypeCount(string& name, list<pair<string, int>>& lst)
 {
-	for (auto& t : name) t = toupper(t);
 	for (auto& m : lst)
 	{
 		if (m.first == name)

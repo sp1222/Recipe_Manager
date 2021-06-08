@@ -61,9 +61,17 @@ public:
 
 	/*
 		Set the reference to Ingredient object for this IngredientInRecipe object.
-		@param i : constant reference to Ingredient object.
+		@param ingredient : constant reference to Ingredient object.
 	*/
 	void setIngredient(Ingredient& ingredient);
+
+
+	/*
+		Set the reference to Ingredient object for this IngredientInRecipe object.
+		@param name : name of Ingredient object.
+		@param lst : list of Ingredient objects.
+	*/
+	void setIngredient(string& name, list<Ingredient>& lst);
 
 	/*
 		Set the quantity value for this IngredientInRecipe object.

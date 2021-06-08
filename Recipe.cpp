@@ -38,21 +38,33 @@ Recipe::Recipe()
 // Initialize an Recipe object with using valid arguments.
 Recipe::Recipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& lst)
 {
-	setName(name);
-	setCuisine(cuisine);
-	setDescription(description);
-	setDirection(direction);
-	setServingCount(servingCount);
-	setYield(yield);
-	setYieldUnit(yieldUnit);
-	setMealType(mealtype, lst);
+	this->name = name;
+	this->cuisine = cuisine;
+	this->description = description;
+	this->direction = direction;
+	this->servingCount = servingCount;
+	this->yield = yield;
+	this->yieldUnit = yieldUnit;
+	if (mealtype != mealType && doesMealTypeExist(mealtype, lst))
+	{
+		decrementRecipeUsingMealTypeCount(mealType, lst);
+		mealType = mealtype;
+		incrementRecipeUsingMealTypeCount(mealType, lst);
+	}
+	else
+	{
+		addMealType(mealtype, lst);
+		mealType = mealtype;
+		incrementRecipeUsingMealTypeCount(mealType, lst);
+	}
 }
 
 // Set the name of the Recipe object.
 void Recipe::setName(string& name)
 {
 	stringRemoveCommas(name);
-	this->name = name;
+	if (!name.empty())
+		this->name = name;
 }
 
 // Set the cuisine of the Recipe object.
@@ -60,7 +72,8 @@ void Recipe::setCuisine(string& cuisine)
 {
 	stringRemoveCommas(cuisine);
 	stringToUpperAll(cuisine);
-	this->cuisine = cuisine;
+	if (!cuisine.empty())
+		this->cuisine = cuisine;
 }
 
 // Set the description of the Recipe object.
@@ -74,27 +87,37 @@ void Recipe::setDescription(string& description)
 void Recipe::setDirection(string& direction)
 {
 	stringRemoveCommas(direction);
-	this->direction = direction;
+	if(!direction.empty())
+		this->direction = direction;
 }
 
 // Set the serving count of the Recipe object.
 void Recipe::setServingCount(int& servingCount)
 {
-	this->servingCount = servingCount;
+	if (servingCount >= 0)
+		this->servingCount = servingCount;
+	else
+		this->servingCount = 0;
 }
 
 // Set the number of yielded units of measure of the Recipe object.
 void Recipe::setYield(int& yield)
 {
-	this->yield = yield;
+	if (yield >= 0)
+		this->yield = yield;
+	else
+		this->yield = 0;
 }
 
 // Set the  units of measure of the yielded units of the Recipe object.
 void Recipe::setYieldUnit(string& yieldUnit)
 {
-	string u = yieldUnit;
-	Units un(u);
-	this->yieldUnit = un;
+	if (!yieldUnit.empty())
+	{
+		string u = yieldUnit;
+		Units un(u);
+		this->yieldUnit = un;
+	}
 }
 
 // Set the meal type of the Recipe object.
@@ -102,7 +125,7 @@ void Recipe::setMealType(string& mealtype, list<pair<string, int>>& lst)
 {
 	stringRemoveCommas(mealtype);
 	stringToUpperAll(mealtype);
-	if (mealtype != mealType && doesMealTypeExist(mealtype, lst))
+	if (!mealtype.empty() && mealtype != mealType && doesMealTypeExist(mealtype, lst))
 	{
 		decrementRecipeUsingMealTypeCount(mealType, lst);
 		mealType = mealtype;
@@ -119,9 +142,7 @@ void Recipe::setMealType(string& mealtype, list<pair<string, int>>& lst)
 // Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.
 void Recipe::addIngredientInRecipe(string& ingredientName, float& quantity, string& unit, list<Ingredient>& lst)
 {
-	//stringRemoveCommas(ingred);	// Do we need this here?  No.
-
-	if (!doesIngredientInRecipeExist(ingredientName))
+	if (!doesIngredientInRecipeExist(ingredientName) && doesNamedItemExist<Ingredient>(ingredientName, lst))
 	{
 		IngredientInRecipe recipeIngred(ingredientName, quantity, unit, lst);
 		ingredientsList.push_back(recipeIngred);
@@ -129,9 +150,9 @@ void Recipe::addIngredientInRecipe(string& ingredientName, float& quantity, stri
 }
 
 // Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.
-void Recipe::addIngredientInRecipe(Ingredient& ingredient, float& quantity, string& unit)
+void Recipe::addIngredientInRecipeFromLoad(string& ingredientName, float& quantity, string& unit, list<Ingredient>& lst)
 {
-	IngredientInRecipe recipeIngred(ingredient, quantity, unit);
+	IngredientInRecipe recipeIngred(ingredientName, quantity, unit, lst);
 	ingredientsList.push_back(recipeIngred);
 }
 
@@ -242,11 +263,12 @@ IngredientInRecipe& Recipe::getIngredientInRecipe(int& index)
 // Remove an IngredientInRecipe object from Recipe object's list<IngredientInRecipe>.
 void Recipe::removeIngredientFromRecipe(string& ingredientName)
 {
-	for (auto& r : ingredientsList)
+	for (auto& i : ingredientsList)
 	{
-		if (r.getIngredientName() == ingredientName)
+		if (i.getIngredientName() == ingredientName)
 		{
-			ingredientsList.remove(r);
+			i.getIngredient().decrementRecipesUsingIngredientCount();
+			ingredientsList.remove(i);
 			break;
 		}
 	}

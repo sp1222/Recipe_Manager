@@ -125,11 +125,12 @@ public:
 
 	/*
 		Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.
-		@param ingredient : Ingredient object to reference to add to list<IngredientInRecipe> of Recipe object.
+		@param ingredientName : name of the Ingredient object to reference to add to list<IngredientInRecipe> of Recipe object.
 		@param quantity : quantity of the IngredientInRecipe object.
 		@param unit : unit of measure for the IngredientInRecipe object.
+		@param lst : list<Ingredient> to get referenced Ingredient object from.
 	*/
-	void addIngredientInRecipe(Ingredient& ingredient, float& quantity, string& unit);
+	void addIngredientInRecipeFromLoad(string& ingredientName, float& quantity, string& unit, list<Ingredient>& lst);
 
 	/*
 		Returns the name of the Recipe object.

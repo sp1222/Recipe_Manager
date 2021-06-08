@@ -3,11 +3,8 @@
 #define STOREINGREDIENT_H
 
 #include <string>
-#include "Helpers.h"
-// item csv file for HEB.
-// Name		Variant Price	Variant		Variant Pack Size	Variant Alt Price	Variant Alt UOM		UOM Price	UOM	Brand	
-// href		Item SKU key	Category Name	Category Key	Parent Category Name	Parent Category Key
 
+#include "Helpers.h"
 
 using namespace std;
 
@@ -15,12 +12,12 @@ class StoreIngredient
 {
 private:
 	string name;
+	string store;
+	string sku;
 	string description;
 	string category;
 	string parentCategory;
 	string brand;
-	string store;
-	string sku;
 	float price;
 	string UOM;
 	float microPrice;
@@ -31,7 +28,7 @@ public:
 	bool operator == (const StoreIngredient& si) const;
 	bool operator != (const StoreIngredient& si) const;
 	StoreIngredient();
-	StoreIngredient(string& n, string& d, string& c, string& pc, string& b, string& st, string& sk, float& p, string& u, float& mp, string& mu, string& h);
+	StoreIngredient(string& n, string& st, string& sk, string& d, string& c, string& pc, string& b, float& p, string& u, float& mp, string& mu, string& h);
 	void setName(string& n);
 	void setDescription(string& d);
 	void setCategory(string& c);

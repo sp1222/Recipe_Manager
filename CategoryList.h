@@ -20,6 +20,14 @@
 bool addCategory(string& name, list<Category>& lst);
 
 /*
+	Adds a new Category object to a list<Category>.
+	@param name : Reference to string, the name of the Category object being added to list<Category>.
+	@param lst : The list<Category> that the Category object is being added to.
+	@return : If the Category object was successfully added to list<Category>.
+*/
+void addCategoryFromLoad(string& name, list<Category>& lst);
+
+/*
 	Removes named Category object from list<Category>.
 	@param name : Reference to string, the name of the Category object being removed from list<Category>.
 	@param lst : The list<Category> that the Category object is being removed from.
@@ -71,7 +79,7 @@ bool compareCategoryIngredientCount(const Category& first, const Category& secon
 	@param name : Reference to string, the name of the Category object searched for in list<Category>.
 	@param lst : The list<Category> that the Category object is being removed from.
 */
-bool doesNamedCategoryExist(string& name, list<Category>& lst);
+//bool doesNamedCategoryExist(string& name, list<Category>& lst);
 
 /*
 	Returns a reference to named Category object in list<Category> if it exists.

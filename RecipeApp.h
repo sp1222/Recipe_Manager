@@ -318,6 +318,7 @@ public:
     RecipeFrame(const wxString& title);
     void SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList);
     void SetRecipe(list<pair<string, int>>& tList, list<Ingredient>& iList);
+    void SetRecipe(Recipe& r);
     void RebuildTextFields();
     void SetParent(MainListCtrl* p);
     void UpdateIngredientInRecipe();
@@ -443,13 +444,13 @@ public:
     void InsertItemsInCategoryListReportDisplay(Category& n, int& i);
 
     void SaveAllLists();
-//    void SaveCategories();
-//    void SaveIngredients();
-//    void SaveRecipes();
+    void SaveCategories();
+    void SaveIngredients();
+    void SaveRecipes();
     void LoadLists();
     void AddNewCategory(string& c);
     void AddNewIngredient(string& name, string& desc, string& cat);
-    void AddRecipe(Recipe& nr);
+    void AddRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<IngredientInRecipe>& ingredients);
     void RemoveCategory();
     void RemoveIngredient();
     void RemoveRecipe();
@@ -520,6 +521,9 @@ public:
     void SetParent(RecipeApp* p);
 
 protected:
+    void SetRecipeListOptions();
+    void SetIngredientListOptions();
+    void SetCategoryListOptions();
     // file drop down menu
     void OnAbout(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);

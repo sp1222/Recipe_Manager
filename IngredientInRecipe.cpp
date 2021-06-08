@@ -34,16 +34,12 @@ IngredientInRecipe::IngredientInRecipe()
 // Initialize an Ingredient object with using valid arguments.
 IngredientInRecipe::IngredientInRecipe(string& ingredient, float& quantity, string& unit, list<Ingredient>& lst)
 {
-	// first, determine if the ingredient exists.
-	if (doesNamedIngredientExist(ingredient, lst))
-	{
-		this->ingredientptr = &getIngredientInList(ingredient, lst);
-		this->ingredientptr->incrementRecipesUsingIngredientCount();
+	this->ingredientptr = &getIngredientInList(ingredient, lst);
+	this->ingredientptr->incrementRecipesUsingIngredientCount();
 //		float2Decimals(quantity);
-		this->quantity = quantity;
-		Units u(unit);
-		this->unit = u;
-	}
+	this->quantity = quantity;
+	Units u(unit);
+	this->unit = u;
 }
 
 // Initialize an Ingredient object with using valid arguments.
@@ -66,6 +62,25 @@ void IngredientInRecipe::setIngredient(Ingredient& ingredient)
 	this->ingredientptr->incrementRecipesUsingIngredientCount();
 }
 
+// Determines if an ingredient exists. If so sets the reference to Ingredient object for this IngredientInRecipe object.
+void IngredientInRecipe::setIngredient(string& name, list<Ingredient>& lst)
+{
+	if (doesNamedItemExist(name, lst))
+	{
+		for (auto& i : lst)
+		{
+			if (name == i.getName())
+			{
+				if (this->ingredientptr != nullptr)
+					this->ingredientptr->decrementRecipesUsingIngredientCount();
+				this->ingredientptr = &i;
+				this->ingredientptr->incrementRecipesUsingIngredientCount();
+				break;
+			}
+		}
+	}
+}
+
 // Set the quantity value for this IngredientInRecipe object.
 void IngredientInRecipe::setIngredientQuantity(float& quantity)
 {
@@ -80,8 +95,11 @@ void IngredientInRecipe::setIngredientQuantity(float& quantity)
 // Set the Units object for this IngredientInRecipe object.
 void IngredientInRecipe::setIngredientUnit(string& unit)
 {
-	Units u(unit);
-	this->unit = u;
+	if (!unit.empty())
+	{
+		Units u(unit);
+		this->unit = u;
+	}
 }
 
 // Returns the reference to Ingredient object of this IngredientInRecipe object.

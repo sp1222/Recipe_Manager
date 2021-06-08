@@ -22,6 +22,15 @@
 bool addIngredient(string& name, string& description, Category& categoryObj, list<Ingredient>& lst);
 
 /*
+	Add an Ingredient object to list<Ingredient>.
+	@param name : name of the Ingredient object.
+	@param description : description of the Ingredient object.
+	@param categoryObj : reference to Category object of the Ingredient object.
+	@param lst : list<Ingredient> that the Ingredient object is being added to.
+*/
+void addIngredientFromLoad(string& name, string& description, Category& categoryObj, list<Ingredient>& lst);
+
+/*
 	Remove an Ingredient object from list<Ingredient>.
 	@param name : name of the Ingredient object.
 	@param lst : list<Ingredient> that the Ingredient object is being removed from.
@@ -79,7 +88,7 @@ bool compareIngredientRecipeCount(const Ingredient& first, const Ingredient& sec
 	@param name : name of the Ingredient object.
 	@param lst : list<Ingredient> that the Ingredient object is being searched for in.
 */
-bool doesNamedIngredientExist(string& name, list<Ingredient>& lst);
+//bool doesNamedIngredientExist(string& name, list<Ingredient>& lst);
 
 /*
 	Returns a reference to named Ingredient object in list<Ingredient> if it exists.

@@ -39,7 +39,8 @@ void Category::setName(string& name)
 {
 	stringRemoveCommas(name);
 	stringToUpperAll(name);
-	this->name = name;
+	if(!name.empty())
+		this->name = name;
 }
 
 // Returns the name of the Category object

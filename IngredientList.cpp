@@ -21,13 +21,25 @@ bool addIngredient(string& name, string& description, Category& categoryObj, lis
 	// if the category does not exist, prompt to select existing category from list.
 	// third, create a new ingredient object to save to ingredientList.
 	stringRemoveCommas(name);
-	if (!doesNamedIngredientExist(name, lst))
+	stringRemoveCommas(description);
+	if (!name.empty() && !doesNamedItemExist<Ingredient>(name, lst))
 	{
 		Ingredient ingred(name, description, categoryObj);
 		lst.push_back(ingred);
 		return true;
 	}
 	return false;
+}
+
+// Add an Ingredient object to list<Ingredient>.
+void addIngredientFromLoad(string& name, string& description, Category& categoryObj, list<Ingredient>& lst)
+{
+	// first, check to make sure the item with the same name (in the same category?) does not exist.
+	// second, locate the category that the ingredient is classified under in categoryList
+	// if the category does not exist, prompt to select existing category from list.
+	// third, create a new ingredient object to save to ingredientList.
+	Ingredient ingred(name, description, categoryObj);
+	lst.push_back(ingred);
 }
 
 // Remove an Ingredient object from list<Ingredient>.
@@ -78,13 +90,13 @@ void loadIngredientList(string& fileName, list<Ingredient>& ilst, list<Category>
 		while (getline(fin, line))
 		{
 			stringstream s(line);
-			string token;
+			string token = "";
 			vector<string>row;
 			while (getline(s, token, ','))
 				row.push_back(token);
 			// row[2] is the category name string, 
 			// getCategoryInList returns the reference to category object in category list.
-			addIngredient(row[0], row[1], getCategoryInList(row[2], clst), ilst);
+			addIngredientFromLoad(row[0], row[1], getCategoryInList(row[2], clst), ilst);
 		}
 	}
 	fin.close();
@@ -147,6 +159,7 @@ bool compareIngredientRecipeCount(const Ingredient& first, const Ingredient& sec
 	return (first.getRecipesUsingIngredientCount() < second.getRecipesUsingIngredientCount());
 }
 
+/*
 // Checks if a Ingredient object exists in list<Category> based on its name.
 bool doesNamedIngredientExist(string& name, list<Ingredient>& lst)
 {
@@ -156,7 +169,7 @@ bool doesNamedIngredientExist(string& name, list<Ingredient>& lst)
 			return true;
 	}
 	return false;
-}
+}*/
 
 // Returns a reference to named Ingredient object in list<Ingredient> if it exists.
 Ingredient& getIngredientInList(string& name, list<Ingredient>& lst)

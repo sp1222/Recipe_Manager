@@ -22,14 +22,14 @@
 	@param mealtypelst : list of mealtypes, pair<string, int>, to track number of different mealtypes.
 	@param recipelst : list<Recipe> object to add the new Recipe object to.
 */
-void addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& mealtypelst, list<Recipe>& recipelst);
+bool addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& mealtypelst, list<Recipe>& recipelst);
 
 /*
 	Add a Recipe object to list<Recipe>.
 	@param recipe : Recipe object being added to the list<Recipe>.
 	@param recipelst : list<Recipe> object to add the new Recipe object to.
 */
-void addRecipe(Recipe& recipe, list<Recipe>& lst);
+//void addRecipe(Recipe& recipe, list<Recipe>& lst);
 
 /*
 	Remove a Recipe object from list<Recipe>.
@@ -133,7 +133,7 @@ bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const Ingre
 	@param lst : list<Recipe> to search in.
 	@return If Recipe object by name exists in list<Recipe>.
 */
-bool doesRecipeExist(string& name, list<Recipe>& lst);
+//bool doesRecipeExist(string& name, list<Recipe>& lst);
 
 /*
 	Returns the reference to Recipe object by name in list<Recipe>.

@@ -34,10 +34,10 @@ Ingredient::Ingredient()
 // Initialize an Ingredient object with valid parameter values
 Ingredient::Ingredient(string& name, string& description, Category& categoryObj)
 {
-
-	setName(name);
-	setDescription(description);
-	setCategory(categoryObj);
+	this->name = name;
+	this->description = description;
+	this->category = &categoryObj;
+	this->category->incrementIngredientsUsingCategoryCount();
 	recipesUsingIngredientCount = 0;
 }
 
@@ -45,7 +45,8 @@ Ingredient::Ingredient(string& name, string& description, Category& categoryObj)
 void Ingredient::setName(string& name)
 {
 	stringRemoveCommas(name);
-	this->name = name;
+	if(!name.empty())
+		this->name = name;
 }
 
 // Set the description of the Ingredient object
