@@ -18,17 +18,17 @@
 class Recipe
 {
 private:
-	string name;
-	string cuisine;
-	string description;
-	string direction;
+	std::string name;
+	std::string cuisine;
+	std::string description;
+	std::string direction;
 	int servingCount;					// 24 servings.
 	int yield;							// 8
 	Units yieldUnit;					// DOZEN
 										// based on servingCount, yield, and yieldUnit, we will be able to determine the quantity of DOZEN makes up one serving 
 										// (8 DOZEN = 96 EACH => 96 EACH / 24 servings = 4 EACH per serving, or 1/3 DOZEN per serving)
-	string mealType;
-	list<IngredientInRecipe> ingredientsList;	// list of ingredientsInRecipe, class made up of a reference to an ingredient from ingredientList,
+	std::string mealType;
+	std::list<IngredientInRecipe> ingredientsList;	// list of ingredientsInRecipe, class made up of a reference to an ingredient from ingredientList,
 												// quantity of ingredient in recipe, and unit of measure for ingreident in recipe
 public:
 
@@ -63,31 +63,31 @@ public:
 		@param mealtype : mealtype of Recipe.
 		@param lst : list of mealtypes in the form of pair<string, int>.
 	*/
-	Recipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& lst);
+	Recipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& mealtype, std::list<std::pair<std::string, int>>& lst);
 
 	/*
 		Set the name of the Recipe object.
 		@param name : name of Recipe object.
 	*/
-	void setName(string& name);
+	void setName(std::string& name);
 
 	/*
 		Set the cuisine of the Recipe object.
 		@param cuisine : cuisine of Recipe object.
 	*/
-	void setCuisine(string& cuisine);
+	void setCuisine(std::string& cuisine);
 
 	/*
 		Set the description of the Recipe object.
 		@param description : description of Recipe object.
 	*/
-	void setDescription(string& description);
+	void setDescription(std::string& description);
 
 	/*
 		Set the direction of the Recipe object.
 		@param direction : direction of Recipe object.
 	*/
-	void setDirection(string& direction);
+	void setDirection(std::string& direction);
 
 	/*
 		Set the serving count of the Recipe object.
@@ -105,14 +105,14 @@ public:
 		Set the  units of measure of the yielded units of the Recipe object.
 		@param yieldUnit : units of measure of the yielded units of Recipe object.
 	*/
-	void setYieldUnit(string& yieldUnit);
+	void setYieldUnit(std::string& yieldUnit);
 
 	/*
 		Set the meal type of the Recipe object.
 		@param mealtype : meal type of Recipe object.
 		@param lst : list< pair<string, int> > of meal types.
 	*/
-	void setMealType(string& mealtype, list<pair<string, int>>& lst);
+	void setMealType(std::string& mealtype, std::list<std::pair<std::string, int>>& lst);
 
 	/*
 		Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.
@@ -121,7 +121,7 @@ public:
 		@param unit : unit of measure for the IngredientInRecipe object.
 		@param lst : list<Ingredient> to get referenced Ingredient object from.
 	*/
-	void addIngredientInRecipe(string& ingredientName, float& quantity, string& unit, list<Ingredient>& lst);
+	void addIngredientInRecipe(std::string& ingredientName, float& quantity, std::string& unit, std::list<Ingredient>& lst);
 
 	/*
 		Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.
@@ -130,31 +130,31 @@ public:
 		@param unit : unit of measure for the IngredientInRecipe object.
 		@param lst : list<Ingredient> to get referenced Ingredient object from.
 	*/
-	void addIngredientInRecipeFromLoad(string& ingredientName, float& quantity, string& unit, list<Ingredient>& lst);
+	void addIngredientInRecipeFromLoad(std::string& ingredientName, float& quantity, std::string& unit, std::list<Ingredient>& lst);
 
 	/*
 		Returns the name of the Recipe object.
 		@return the name of Recipe object.
 	*/
-	string getName() const;
+	std::string getName() const;
 
 	/*
 		Returns the cuisine of the Recipe object.
 		@return the cuisine of Recipe object.
 	*/
-	string getCuisine() const;
+	std::string getCuisine() const;
 
 	/*
 		Returns the description of the Recipe object.
 		@return the description of Recipe object.
 	*/
-	string getDescription();
+	std::string getDescription();
 
 	/*
 		Returns the direction of the Recipe object.
 		@return the direction of Recipe object.
 	*/
-	string getDirection();
+	std::string getDirection();
 
 	/*
 		Returns the number of servings of the Recipe object.
@@ -172,7 +172,7 @@ public:
 		Returns the yield units of measure as a string value of the Recipe object.
 		@return the yield units of measure as a string value of Recipe object.
 	*/
-	string getYieldUnitStr();
+	std::string getYieldUnitStr();
 
 	/*
 		Returns the Units object for yield unit of measure of the Recipe object.
@@ -184,7 +184,7 @@ public:
 		Returns the name of the Recipe object.
 		@return the mealType string value of Recipe object.
 	*/
-	string getMealType() const;
+	std::string getMealType() const;
 
 	/*
 		Returns the number of IngredientInRecipe objects in the Recipe object.
@@ -196,20 +196,20 @@ public:
 		Returns the reference to list<IngredientInRecipe> of the Recipe object.
 		@return reference to list<IngredientInRecipe> of this Recipe object.
 	*/
-	list<IngredientInRecipe>& getAllIngredientsInRecipe();	// CHANGE THIS METHOD TO THE METHOD BELOW!  
+	std::list<IngredientInRecipe>& getAllIngredientsInRecipe();	// CHANGE THIS METHOD TO THE METHOD BELOW!  
 
 	/*
 		Loads list<IngredientInRecipe> into referenced list<IngredientInRecipe> parameter.
 		@param lst : list to be populated with this Recipe object's list<IngredientInRecipe>.
 	*/
-	void getAllIngredientsInRecipe(list<IngredientInRecipe>& lst);
+	void getAllIngredientsInRecipe(std::list<IngredientInRecipe>& lst);
 
 	/*
 		Returns a reference to IngredientInRecipe object in Recipe's list<IngredientInRecipe>.
 		@param ingredientName : name of ingredient in Recipe object's list<IngredientInRecipe> to be returned.
 		@return The IngredientInRecipe reference from list<IngredientInRecipe>.
 	*/
-	IngredientInRecipe& getIngredientInRecipe(string& ingredientName);
+	IngredientInRecipe& getIngredientInRecipe(std::string& ingredientName);
 
 	/*
 		Returns a reference to IngredientInRecipe object in Recipe's list<IngredientInRecipe>.
@@ -222,14 +222,14 @@ public:
 		Remove an IngredientInRecipe object from Recipe object's list<IngredientInRecipe>.
 		@param ingredientName : name of ingredient in Recipe object's list<IngredientInRecipe> to be removed.
 	*/
-	void removeIngredientFromRecipe(string& ingredientName);
+	void removeIngredientFromRecipe(std::string& ingredientName);
 
 	/*
 		Determines if an IngredientInRecipe object exists in Recipe object's list<IngredientInRecipe>.
 		@param ingredientName : name of ingredient in Recipe object's list<IngredientInRecipe> to be searched for.
 		@return Whether the ingredient by name exists in the Recipe object's list<IngredientInRecipe>.
 	*/
-	bool doesIngredientInRecipeExist(string& ingredientName);
+	bool doesIngredientInRecipeExist(std::string& ingredientName);
 
 };
 #endif // !RECIPE_H

@@ -126,7 +126,7 @@ private:
     wxTextCtrl* descriptionText = nullptr;
     wxComboBox* categoryComboBox = nullptr;
     MainListCtrl* parent = nullptr;
-    list<string> categoryNames;
+    std::list<std::string> categoryNames;
     wxDECLARE_NO_COPY_CLASS(AddIngredientFrame);
     wxDECLARE_EVENT_TABLE();
 
@@ -143,7 +143,7 @@ class IngredientFrame : public wxFrame
 {
 public:
     IngredientFrame(const wxString& title);
-    void SetIngredient(Ingredient& i, list<Category>& cat);
+    void SetIngredient(Ingredient& i, std::list<Category>& cat);
     void SetParent(MainListCtrl* p);
     void RebuildTextFields();
 protected:
@@ -170,7 +170,7 @@ private:
     wxStaticText* currentCategoryLabel = nullptr;
     wxStaticText* currentRecipeUsingIngredientCountLabel = nullptr;
     Ingredient* currentIngredient = nullptr;
-    list<Category>* catList = nullptr;
+    std::list<Category>* catList = nullptr;
     wxArrayString* catStringList;
     MainListCtrl* parent;
     wxDECLARE_NO_COPY_CLASS(IngredientFrame);
@@ -192,10 +192,10 @@ class IngredientInRecipeFrame : public wxFrame
 {
 public:
     IngredientInRecipeFrame(const wxString& title);
-    void SetIngredientInRecipe(IngredientInRecipe& ir, list<Ingredient>& iList);
+    void SetIngredientInRecipe(IngredientInRecipe& ir, std::list<Ingredient>& iList);
     void RebuildTextFields();
     void SetParents(IngredientsInRecipeListCtrl* p, RecipeFrame* rf);
-    void SetStringArrays(list<string>& ingredNames);
+    void SetStringArrays(std::list<std::string>& ingredNames);
 protected:
     void OnUpdateIngredientInRecipe(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
@@ -218,8 +218,8 @@ private:
     IngredientInRecipe* currentIngredientInRecipe = nullptr;
     IngredientsInRecipeListCtrl* parent = nullptr;
     RecipeFrame* parentRF = nullptr;
-    list<Ingredient>* ingredList = nullptr;
-    list<string> unitList;
+    std::list<Ingredient>* ingredList = nullptr;
+    std::list<std::string> unitList;
     wxDECLARE_NO_COPY_CLASS(IngredientInRecipeFrame);
     wxDECLARE_EVENT_TABLE();
 
@@ -243,24 +243,24 @@ public:
 
     void InsertIngredientsInRecipeListReportDisplay(IngredientInRecipe& ing, int i);
     void SetParent(RecipeFrame* p);
-    void SetIngredientsInRecipeList(list<IngredientInRecipe>& ingredInRecipe);
-    void SetIngredientList(list<Ingredient>& iList);
-    void SetSelectedItem(string name);
+    void SetIngredientsInRecipeList(std::list<IngredientInRecipe>& ingredInRecipe);
+    void SetIngredientList(std::list<Ingredient>& iList);
+    void SetSelectedItem(std::string name);
     void ResetListView(long wxFlags = wxLC_REPORT, bool withText = true);
     void BuildIngredientsInRecipeListReportDisplay();
     void UpdateModifiedIngredient();
-    string GetSelectedIngredient();
+    std::string GetSelectedIngredient();
 protected:
     void OnActivated(wxListEvent& e);
     void OnSelected(wxListEvent& e);
     void OnColumnHeaderClick(wxListEvent& e);
 private:
 
-    list<IngredientInRecipe>* ingredients = nullptr;
+    std::list<IngredientInRecipe>* ingredients = nullptr;
     IngredientInRecipe* selectedIngredient = nullptr;
     IngredientInRecipeFrame* ingredientInRecipeFrame = nullptr;
     RecipeFrame* parent = nullptr;
-    list<Ingredient>* ingredList = nullptr;
+    std::list<Ingredient>* ingredList = nullptr;
     wxDECLARE_NO_COPY_CLASS(IngredientsInRecipeListCtrl);
     wxDECLARE_EVENT_TABLE();
 };
@@ -279,7 +279,7 @@ class AddIngredientToRecipeFrame : public wxFrame
 public:
     AddIngredientToRecipeFrame();
     void SetParent(RecipeFrame* p);
-    void SetComboBoxLists(list<Ingredient>& iList);
+    void SetComboBoxLists(std::list<Ingredient>& iList);
 protected:
     void OnFinalize(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
@@ -298,8 +298,8 @@ private:
     wxComboBox* unitsComboBox = nullptr;
 
     RecipeFrame* parent = nullptr;
-    list<Ingredient>* ingredList = nullptr;
-    list<string> unitList;
+    std::list<Ingredient>* ingredList = nullptr;
+    std::list<std::string> unitList;
     wxDECLARE_NO_COPY_CLASS(AddIngredientToRecipeFrame);
     wxDECLARE_EVENT_TABLE();
 };
@@ -316,13 +316,13 @@ class RecipeFrame : public wxFrame
 {
 public:
     RecipeFrame(const wxString& title);
-    void SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingredient>& iList);
-    void SetRecipe(list<pair<string, int>>& tList, list<Ingredient>& iList);
+    void SetRecipe(Recipe& r, std::list<std::pair<std::string, int>>& tList, std::list<Ingredient>& iList);
+    void SetRecipe(std::list<std::pair<std::string, int>>& tList, std::list<Ingredient>& iList);
     void SetRecipe(Recipe& r);
     void RebuildTextFields();
     void SetParent(MainListCtrl* p);
     void UpdateIngredientInRecipe();
-    void AddIngredientToRecipe(string& name, float& qty, string& unit);
+    void AddIngredientToRecipe(std::string& name, float& qty, std::string& unit);
 protected:
 
     // edit drop down menu
@@ -368,8 +368,8 @@ private:
     Recipe* currentRecipe = nullptr;
     MainListCtrl* parent = nullptr;
     AddIngredientToRecipeFrame* addIngredientToRecipe = nullptr;
-    list<pair<string, int>>* typeList = nullptr;
-    list<Ingredient>* ingredList = nullptr;
+    std::list<std::pair<std::string, int>>* typeList = nullptr;
+    std::list<Ingredient>* ingredList = nullptr;
     wxDECLARE_NO_COPY_CLASS(RecipeFrame);
     wxDECLARE_EVENT_TABLE();
 };
@@ -386,7 +386,13 @@ class MealPlannerFrame : public wxFrame
 public:
     MealPlannerFrame();
     void SetParent(MainListCtrl* p);
+    void SetupSideCalendar();
+    void SetupDailyHeader();
+    void SetupDailyView();
+    void SetupWeekDayHeader();
+    void SetupMonthlyGrid();
     void RebuildCalendarView();
+    void BuildDailyCalendarView();
     void BuildMonthlyCalendarView();
 
 protected:
@@ -399,9 +405,16 @@ private:
 
     wxPanel* mainPanel = nullptr;
 
+    // Right panel will display all of the daily/weekly/monthly details.
     wxPanel* rightPanel = nullptr;
-    wxPanel* monthPanel = nullptr;
-    wxTextCtrl* monthLabel = nullptr;
+    wxPanel* calendarDisplayPanel = nullptr;   // make wxScrolledWindow?
+
+    // for monthly setup
+    wxPanel* monthPanel = nullptr;              // monthly header
+    wxTextCtrl* monthLabel = nullptr;           // for month header
+    std::vector< std::vector<wxListBox*> > calendarTableMonthly;
+
+    // for days of the week, to be used in weekly and monthly display.
     wxPanel* calendarWeekDayHeaderPanel = nullptr;
     wxTextCtrl* sundayLabel = nullptr;
     wxTextCtrl* mondayLabel = nullptr;
@@ -410,8 +423,14 @@ private:
     wxTextCtrl* thursdayLabel = nullptr;
     wxTextCtrl* fridayLabel = nullptr;
     wxTextCtrl* saturdayLabel = nullptr;
-    wxPanel* calendarMonthlyDisplayPanel = nullptr;   // make wxScrolledWindow?
 
+    // for daily display.
+    wxPanel* calendarDailyHeaderPanel = nullptr;
+    wxPanel* headerPanel = nullptr;
+    wxTextCtrl* headerLabel = nullptr;
+    wxListBox* calendarTableDaily;
+
+    // Left panel will be the mini calendar to the side.
     wxPanel* leftPanel = nullptr;
     wxCalendarCtrl* sideCalendar = nullptr;
 
@@ -448,26 +467,26 @@ public:
     void SaveIngredients();
     void SaveRecipes();
     void LoadLists();
-    void AddNewCategory(string& c);
-    void AddNewIngredient(string& name, string& desc, string& cat);
-    void AddRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<IngredientInRecipe>& ingredients);
+    void AddNewCategory(std::string& c);
+    void AddNewIngredient(std::string& name, std::string& desc, std::string& cat);
+    void AddRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& mealtype, std::list<IngredientInRecipe>& ingredients);
     void RemoveCategory();
     void RemoveIngredient();
     void RemoveRecipe();
     void CreateNewCategory();
     void CreateNewIngredient();
     void CreateNewRecipe();
-    void GetCategoryNamesList(list<string>& names);
-    string GetSelectedCategoryName();
-    string GetSelectedIngredientName();
-    string GetSelectedRecipeName();
+    void GetCategoryNamesList(std::list<std::string>& names);
+    std::string GetSelectedCategoryName();
+    std::string GetSelectedIngredientName();
+    std::string GetSelectedRecipeName();
 
-    void GetIngredientsList(list<string>& list);
+    void GetIngredientsList(std::list<std::string>& list);
 
     void SetCurrentList(long c);
     long GetCurrentList();   
 
-    void SetSelectedItem(string name);
+    void SetSelectedItem(std::string name);
     void ResetListView(long custFlags, long wxFlags = wxLC_REPORT, bool withText = true);
     void BuildRecipeListReportDisplay();
     void BuildIngredientListReportDisplay();
@@ -486,15 +505,15 @@ private:
     AddIngredientFrame* addIngredientFrame = nullptr;
     RecipeFrame* recipeFrame = nullptr;
     MealPlannerFrame* mealPlannerFrame;
-    list<Category> categories;
-    list<Ingredient> ingredients;
-    list<pair<string, int>> mealTypes;
-    list<Recipe> recipes;
+    std::list<Category> categories;
+    std::list<Ingredient> ingredients;
+    std::list<std::pair<std::string, int>> mealTypes;
+    std::list<Recipe> recipes;
 
     // files storing list data.
-    string categoryFile = "testCategoryFile.csv";
-    string ingredFile = "testIngredientFile.csv";
-    string recipeFile = "testRecipeFile.csv";
+    std::string categoryFile = "testCategoryFile.csv";
+    std::string ingredFile = "testIngredientFile.csv";
+    std::string recipeFile = "testRecipeFile.csv";
 
     long currentList = 0;       // tracker for which list we are currently viewing, used to open approrpiate windows to display details on the item selected
 

@@ -49,7 +49,7 @@ public:
 		@param unit : unit of measure for the Ingredient object being used.
 		@param lst : list<Ingredient> to extract the Ingredient object from.
 	*/
-	IngredientInRecipe(string& ingredient, float& quantity, string& unit, list<Ingredient>& lst);
+	IngredientInRecipe(std::string& ingredient, float& quantity, std::string& unit, std::list<Ingredient>& lst);
 
 	/*		
 		Initialize an Ingredient object with using valid arguments.
@@ -57,7 +57,7 @@ public:
 		@param quantity : quantity of Ingredient to be used in recipe.
 		@param unit : unit of measure for the Ingredient object being used.
 	*/
-	IngredientInRecipe(Ingredient& ingredient, float& quantity, string& unit);
+	IngredientInRecipe(Ingredient& ingredient, float& quantity, std::string& unit);
 
 	/*
 		Set the reference to Ingredient object for this IngredientInRecipe object.
@@ -71,7 +71,7 @@ public:
 		@param name : name of Ingredient object.
 		@param lst : list of Ingredient objects.
 	*/
-	void setIngredient(string& name, list<Ingredient>& lst);
+	void setIngredient(std::string& name, std::list<Ingredient>& lst);
 
 	/*
 		Set the quantity value for this IngredientInRecipe object.
@@ -83,7 +83,7 @@ public:
 		Set the Units object for this IngredientInRecipe object.
 		@param unit : string representing the unit of measure for this IngredientInRecipe object.
 	*/
-	void setIngredientUnit(string& unit);
+	void setIngredientUnit(std::string& unit);
 
 	/*
 		Returns the reference to Ingredient object of this IngredientInRecipe object.
@@ -95,7 +95,7 @@ public:
 		Returns the name of the Ingredient object being referenced.
 		@return the name of the Ingredient object used in this IngredientInRecipe object.
 	*/
-	string getIngredientName() const;
+	std::string getIngredientName() const;
 
 	/*
 		Returns the quantity value for this IngredientInRecipe object.
@@ -113,7 +113,7 @@ public:
 		Returns the Units object's string value for this IngredientInRecipe object.
 		@return the Units object's string value of this IngredientInRecipe object.
 	*/
-	string getIngredientUnitStr() const;
+	std::string getIngredientUnitStr() const;
 };
 
 #endif

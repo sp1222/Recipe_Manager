@@ -1,13 +1,14 @@
 /*
-	CategoryList.cpp
-	Function definitions for CategoryList.h
+	MealList.cpp
+	Function definitions for MealList.h
 */
 
-#include<fstream>
-#include<sstream>
-#include<vector>
+#include <fstream>
+#include <sstream>
+#include <vector>
 
 #include "CategoryList.h"
+using namespace std;
 
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
@@ -43,15 +44,12 @@ bool removeCategory(string& name, list<Category>& lst)
 	// and chech that the category being removed is not NONE.
 	// WILL toupper BE REQUIRED WHEN USING DROPDOWN BOXES?  No.
 
-	if (lst.size() > 1)
+	for (auto& c : lst)
 	{
-		for (auto& c : lst)
+		if (c.getName() == name && c.getName() != "NONE" && c.getIngredientsUsingCategoryCount() == 0)
 		{
-			if (c.getName() == name && c.getName() != "NONE" && c.getIngredientsUsingCategoryCount() == 0)
-			{
-				lst.remove(c);
-				return true;
-			}
+			lst.remove(c);
+			return true;
 		}
 	}
 	return false;

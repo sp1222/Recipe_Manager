@@ -22,7 +22,7 @@
 	@param mealtypelst : list of mealtypes, pair<string, int>, to track number of different mealtypes.
 	@param recipelst : list<Recipe> object to add the new Recipe object to.
 */
-bool addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& mealtypelst, list<Recipe>& recipelst);
+bool addRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& mealtype, std::list<std::pair<std::string, int>>& mealtypelst, std::list<Recipe>& recipelst);
 
 /*
 	Add a Recipe object to list<Recipe>.
@@ -37,7 +37,7 @@ bool addRecipe(string& name, string& cuisine, string& description, string& direc
 	@param recipelst : list<Recipe> the Recipe object is being removed from.
 	@return If recipe was successfully removed.
 */
-bool removeRecipe(string& name, list<Recipe>& lst);
+bool removeRecipe(std::string& name, std::list<Recipe>& lst);
 
 /*
 	Save list<Recipe> to comma separated values file.
@@ -45,7 +45,7 @@ bool removeRecipe(string& name, list<Recipe>& lst);
 	@param fileName : name of the file to save the list<Recipe> to.
 	@param recipelst : list<Recipe> object to save.
 */
-void saveRecipeList(string& fileName, list<Recipe>& lst);
+void saveRecipeList(std::string& fileName, std::list<Recipe>& lst);
 
 /*
 	Comma separated values file to load list<Recipe> from.
@@ -55,14 +55,14 @@ void saveRecipeList(string& fileName, list<Recipe>& lst);
 	@param ingredientlst : list<Recipe> object use as reference for list<IngredientInRecipe>.
 	@param mealtypelst : list of mealtypes, pair<string, int>, to track number of different mealtypes.
 */
-void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>& ingredientlst, list<pair<string, int>>& mealtypelst);
+void loadRecipeList(std::string& fileName, std::list<Recipe>& recipelst, std::list<Ingredient>& ingredientlst, std::list<std::pair<std::string, int>>& mealtypelst);
 
 /*
 	Sort the list<Recipe> by column indicated in front end.
 	@param byCol : the column indicated in front end to sort the list<Recipe> by.
 	@param lst : list<Recipe> object to sort.
 */
-void sortRecipes(int byCol, list<Recipe>& lst);
+void sortRecipes(int byCol, std::list<Recipe>& lst);
 
 /*
 	Comparator by name for two Recipe objects.
@@ -101,7 +101,7 @@ bool compareServingCounts(const Recipe& first, const Recipe& second);
 	@param byCol : the column indicated in front end to sort the list<IngredientInRecipe> by.
 	@param lst : list<IngredientInRecipe> object to sort.
 */
-void sortRecipeIngredients(int byCol, list<IngredientInRecipe>& lst);
+void sortRecipeIngredients(int byCol, std::list<IngredientInRecipe>& lst);
 
 /*
 	Comparator by name for two IngredientInRecipe objects.
@@ -141,6 +141,6 @@ bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const Ingre
 	@param lst : list<Recipe> to search in.
 	@return Reference to Recipe object in list<Recipe>.
 */
-Recipe& getRecipeInList(string& name, list<Recipe>& lst);
+Recipe& getRecipeInList(std::string& name, std::list<Recipe>& lst);
 
 #endif

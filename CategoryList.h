@@ -17,7 +17,7 @@
 	@param lst : The list<Category> that the Category object is being added to.
 	@return : If the Category object was successfully added to list<Category>.
 */
-bool addCategory(string& name, list<Category>& lst);
+bool addCategory(std::string& name, std::list<Category>& lst);
 
 /*
 	Adds a new Category object to a list<Category>.
@@ -25,7 +25,7 @@ bool addCategory(string& name, list<Category>& lst);
 	@param lst : The list<Category> that the Category object is being added to.
 	@return : If the Category object was successfully added to list<Category>.
 */
-void addCategoryFromLoad(string& name, list<Category>& lst);
+void addCategoryFromLoad(std::string& name, std::list<Category>& lst);
 
 /*
 	Removes named Category object from list<Category>.
@@ -33,7 +33,7 @@ void addCategoryFromLoad(string& name, list<Category>& lst);
 	@param lst : The list<Category> that the Category object is being removed from.
 	@return : If the Category object was successfully removed from list<Category>.
 */
-bool removeCategory(string& name, list<Category>& lst);
+bool removeCategory(std::string& name, std::list<Category>& lst);
 
 /*
 	Save existing list<Category> to designated fileName.
@@ -41,7 +41,7 @@ bool removeCategory(string& name, list<Category>& lst);
 	@param fileName : Name of the file to save list<Category> to.
 	@param lst : The list<Category> that the Category object is being saved.
 */
-void saveCategoryList(string& fileName, list<Category>& lst);
+void saveCategoryList(std::string& fileName, std::list<Category>& lst);
 
 /*
 	Load list<Category> from designated fileName.
@@ -49,14 +49,14 @@ void saveCategoryList(string& fileName, list<Category>& lst);
 	@param fileName : Name of the file to save list<Category> to.
 	@param lst : The list<Category> that the Category object is being loaded.
 */
-void loadCategoryList(string& fileName, list<Category>& lst);
+void loadCategoryList(std::string& fileName, std::list<Category>& lst);
 
 /*
 	Sorts the list<Category> by indicated column.
 	@param byCol : Column index to sort the list by.
 	@param lst : The list<Category> that the Category object is being loaded.
 */
-void sortCategories(int byCol, list<Category>& lst);
+void sortCategories(int byCol, std::list<Category>& lst);
 
 /*
 	Comparator by Name for list sorting.
@@ -87,6 +87,6 @@ bool compareCategoryIngredientCount(const Category& first, const Category& secon
 	@param name : Reference to string, the name of the Category object searched for in list<Category>.
 	@param lst : The list<Category> that the Category object is being removed from.
 */
-Category& getCategoryInList(string& name, list<Category>& lst);
+Category& getCategoryInList(std::string& name, std::list<Category>& lst);
 
 #endif

@@ -9,6 +9,8 @@
 
 #include "IngredientList.h"
 
+using namespace std;
+
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
@@ -48,19 +50,16 @@ bool removeIngredient(string& name, list<Ingredient>& lst)
 	// NOTE: WILL NEED TO TAKE INTO ACCOUNT ANY RECIPES UTILIZING THE INGREDIENT BEING REMOVED.
 	// CONSIDER OPTION TO OFFER CHOOSING AN INGREDIENT TO REPLACE 'REMOVING' INGREDIENT FOR ALL RECIPES USING 'REMOVING'INGREDIENT.
 
-	if (lst.size() > 0)
+	for (auto& i : lst)
 	{
-		for (auto& i : lst)
+		if (i.getName() == name && i.getRecipesUsingIngredientCount() == 0)
 		{
-			if (i.getName() == name && i.getRecipesUsingIngredientCount() == 0)
-			{
-				// since we are removing an ingredient from the list with the intention of no longer using,
-				// decrement the ingredientsUsingCategoryCount by 1.
-				// does it make sense to have a destructor for ingredients to handle this operation?
-				i.getCategoryObj().decrementIngredientsUsingCategoryCount();
-				lst.remove(i);
-				return true;
-			}
+			// since we are removing an ingredient from the list with the intention of no longer using,
+			// decrement the ingredientsUsingCategoryCount by 1.
+			// does it make sense to have a destructor for ingredients to handle this operation?
+			i.getCategoryObj().decrementIngredientsUsingCategoryCount();
+			lst.remove(i);
+			return true;
 		}
 	}
 	return false;

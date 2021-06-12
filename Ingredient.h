@@ -17,8 +17,8 @@ class Ingredient
 {
 
 private:
-	string name;
-	string description;
+	std::string name;
+	std::string description;
 	Category* category = nullptr;
 	int recipesUsingIngredientCount;
 //	list<StoreIngredient*> storeIngredient;
@@ -50,19 +50,19 @@ public:
 		@param description : reference to string to initialize the description of the Ingredient object.
 		@param categoryObj : reference to Category object (from list<Category>) to initialize the pointer to Category object in this Ingredient.
 	*/
-	Ingredient(string& name, string& description, Category& categoryObj);
+	Ingredient(std::string& name, std::string& description, Category& categoryObj);
 
 	/*
 		Set the name of the Ingredient object.
 		@param name : reference to string to initialize the name of the Ingredient object.
 	*/
-	void setName(string& name);
+	void setName(std::string& name);
 
 	/*
 		Set the description of the Ingredient object.
 		@param description : reference to string to initialize the description of the Ingredient object.
 	*/
-	void setDescription(string& description);
+	void setDescription(std::string& description);
 
 	/*
 		Set the reference to Category object from list<Category> object.
@@ -80,13 +80,13 @@ public:
 		Returns the name of Ingredient object.
 		@return the name of this Ingredient object.
 	*/
-	string getName() const;
+	std::string getName() const;
 
 	/*
 		Returns the description of Ingredient object.
 		@return the description of this Ingredient object.
 	*/
-	string getDescription();
+	std::string getDescription();
 
 	/*
 		Returns the Category object this Ingredient object points to.
@@ -98,7 +98,7 @@ public:
 		Returns the string representation of Category object this Ingredient object points to.
 		@return the name of the Category object of this Ingredient object.
 	*/
-	string getCategoryStr() const;
+	std::string getCategoryStr() const;
 
 	/*
 		Returns the number of Recipe objects this Ingredient object is a part of.

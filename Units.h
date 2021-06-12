@@ -12,12 +12,10 @@
 
 #include "Helpers.h"
 
-using namespace std;
-
 /*
     Constants for string values of Unit.
 */
-const string STR_UNIT[] = { "NONE", "GRAM", "OUNCEWEIGHT", "POUND", "KILOGRAM",
+const std::string STR_UNIT[] = { "NONE", "GRAM", "OUNCEWEIGHT", "POUND", "KILOGRAM",
                                             "MILLILITER", "TEASPOON", "TABLESPOON", "OUNCEFLUID",
                                             "CUP","PINT", "QUART", "LITER", "GALLON",
                                             "EACH", "DOZEN" };
@@ -25,13 +23,13 @@ const string STR_UNIT[] = { "NONE", "GRAM", "OUNCEWEIGHT", "POUND", "KILOGRAM",
 /*
     Constants for string values of Type.
 */
-const string STR_TYPE[] = { "NONE", "WEIGHT", "VOLUME", "COUNT", };
+const std::string STR_TYPE[] = { "NONE", "WEIGHT", "VOLUME", "COUNT", };
 
 /* 
     Push onto the referenced list parameter available unit strings.
     @param str : reference to list of strings.
 */
-void GetUnitStringList(list<string>& str);
+void GetUnitStringList(std::list<std::string>& str);
 
 /* 
     Enumerator that define the Unit values.
@@ -78,8 +76,8 @@ private:
     Type type = Type::NONE;
     int unitStrIndex = 0;
     int typeStrIndex = 0;
-    string unitStr = STR_UNIT[unitStrIndex];
-    string typeStr = STR_TYPE[typeStrIndex];
+    std::string unitStr = STR_UNIT[unitStrIndex];
+    std::string typeStr = STR_TYPE[typeStrIndex];
 
     /*
         Set the Units object's Type value.
@@ -111,20 +109,20 @@ public:
         Initialize a Units object based on a valid string parameter.
         @param unit : reference to string indicating the unit's definition.
     */
-    Units(string& unit);
+    Units(std::string& unit);
 
     /*
         Redefine the Units object to a specified Units based on valid string parameter.
         This in turn sets the Units Type enum to its corresponding Type, handled internally.
         @param unit : reference to string indicating the unit's definition.
     */
-    void setUnit(string& unit);
+    void setUnit(std::string& unit);
 
     /*
         Returns the string value of the Units object.
         @return : String value of this Units object.
     */
-    string getUnitStr() const;
+    std::string getUnitStr() const;
 
     /*
         Returns the Units enum value.
@@ -136,7 +134,7 @@ public:
         Returns the Units' Type string value of the Units object.
         @return : Units' Type string value of this Units object.
     */
-    string getTypeStr();
+    std::string getTypeStr();
 
     /*
         Returns the Units' Type enum value of the Units object.

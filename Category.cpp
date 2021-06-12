@@ -2,7 +2,10 @@
 	Category.cpp
 	Function definitions for Category.h
 */
+
 #include "Category.h"
+
+using namespace std;
 
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 

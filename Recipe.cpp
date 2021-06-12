@@ -4,6 +4,9 @@
 */
 
 #include"Recipe.h"
+
+using namespace std;
+
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
@@ -225,12 +228,9 @@ list<IngredientInRecipe>& Recipe::getAllIngredientsInRecipe()
 // Loads list<IngredientInRecipe> into referenced list<IngredientInRecipe> parameter.
 void Recipe::getAllIngredientsInRecipe(list<IngredientInRecipe>& lst)
 {
-	if (ingredientsList.size() > 0)
+	for (auto& i : ingredientsList)
 	{
-		for (auto& i : ingredientsList)
-		{
-			lst.push_back(i);
-		}
+		lst.push_back(i);
 	}
 }
 

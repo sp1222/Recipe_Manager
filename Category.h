@@ -11,8 +11,6 @@
 
 #include "Helpers.h"
 
-using namespace std;
-
 /*
 	Category class for instaces of Category objects.
 	This will be the user controlled ingredient category management system.
@@ -21,20 +19,20 @@ using namespace std;
 class Category
 {
 private:
-	string name;
+	std::string name;
 	int ingredientsUsingCategoryCount;
 public:
 	/*
 		Makes two Category objects comparable using name variable.
-        @param c : constant reference to Category object.
-        @return : If object matches this instance of a Category.
+		@param c : constant reference to Category object.
+		@return : If object matches this instance of a Category.
 	*/
 	bool operator == (const Category& c) const;
 
 	/*
 		Makes two Category objects comparable using name variable.
-        @param c : constant reference to Category object.
-        @return : If object does not match this instance of a Category.
+		@param c : constant reference to Category object.
+		@return : If object does not match this instance of a Category.
 	*/
 	bool operator != (const Category& c) const;
 
@@ -45,21 +43,21 @@ public:
 
 	/*
 		Initialize a Category object based on a valid string parameter.
-        @param name : reference to string to initialize the name of the Category object.
+		@param name : reference to string to initialize the name of the Category object.
 	*/
-	Category(string& name);
+	Category(std::string& name);
 
 	/*
 		Redefine the name of the Category.
-        @param name : reference to string to redefine the name of the Category object.
+		@param name : reference to string to redefine the name of the Category object.
 	*/
-	void setName(string& name);
+	void setName(std::string& name);
 
 	/*
 		Returns the name of the Category object.
 		@return : name of this Category object.
 	*/
-	string getName() const;
+	std::string getName() const;
 
 	/*
 		Increments a variable that tracks how many Ingredient objects are using this Category object.

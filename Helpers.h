@@ -10,19 +10,17 @@
 #include <list>
 #include <string>
 
-using namespace std;
-
 /*
 	Removes all commas from a string.
 	@param str : reference to string variable to remove comments from
 */
-void stringRemoveCommas(string& str);
+void stringRemoveCommas(std::string& str);
 
 /*
 	Converts all characters in a string to uppercase
 	@param str : reference to string variable to convert all characters to uppercase
 */
-void stringToUpperAll(string& str);
+void stringToUpperAll(std::string& str);
 /*
 	Standardizes float value to two decimal places.
 	@param flt : reference to float variable to make two decimal places
@@ -34,7 +32,7 @@ void float2Decimals(float& flt);
 	@param str : reference to string, is it a float?
 	@return boolean if str can be converted to float.
 */
-bool isFloat(string& str);
+bool isFloat(std::string& str);
 
 /* 
 	Template that checks if an object exists in a list based on object's getName().
@@ -43,7 +41,7 @@ bool isFloat(string& str);
 	@return if an object of type T exists in list<T> by name.
 */
 template<typename T>
-bool doesNamedItemExist(string& str, list<T>& lst)
+bool doesNamedItemExist(std::string& str, std::list<T>& lst)
 {
 	for (auto it = lst.begin(); it != lst.end(); ++it)
 	{

@@ -19,7 +19,7 @@
 	@param categoryObj : reference to Category object of the Ingredient object.
 	@param lst : list<Ingredient> that the Ingredient object is being added to.
 */
-bool addIngredient(string& name, string& description, Category& categoryObj, list<Ingredient>& lst);
+bool addIngredient(std::string& name, std::string& description, Category& categoryObj, std::list<Ingredient>& lst);
 
 /*
 	Add an Ingredient object to list<Ingredient>.
@@ -28,14 +28,14 @@ bool addIngredient(string& name, string& description, Category& categoryObj, lis
 	@param categoryObj : reference to Category object of the Ingredient object.
 	@param lst : list<Ingredient> that the Ingredient object is being added to.
 */
-void addIngredientFromLoad(string& name, string& description, Category& categoryObj, list<Ingredient>& lst);
+void addIngredientFromLoad(std::string& name, std::string& description, Category& categoryObj, std::list<Ingredient>& lst);
 
 /*
 	Remove an Ingredient object from list<Ingredient>.
 	@param name : name of the Ingredient object.
 	@param lst : list<Ingredient> that the Ingredient object is being removed from.
 */
-bool removeIngredient(string& name, list<Ingredient>& lst);
+bool removeIngredient(std::string& name, std::list<Ingredient>& lst);
 
 /*
 	Save existing list<Ingredient> to designated fileName.
@@ -44,7 +44,7 @@ bool removeIngredient(string& name, list<Ingredient>& lst);
 	@param lst : list<Ingredient> that the Ingredient object is being saved from.
 
 */
-void saveIngredientList(string& fileName, list<Ingredient>& lst);
+void saveIngredientList(std::string& fileName, std::list<Ingredient>& lst);
 
 /*
 	Load list<Ingredient> from designated fileName.
@@ -52,7 +52,7 @@ void saveIngredientList(string& fileName, list<Ingredient>& lst);
 	@param fileName : file name that the ingredient information will be loaded from.
 	@param lst : list<Ingredient> that the Ingredient objects are being loaded to.
 */
-void loadIngredientList(string& fileName, list<Ingredient>& ilst, list<Category>& clst);
+void loadIngredientList(std::string& fileName, std::list<Ingredient>& ilst, std::list<Category>& clst);
 
 /*
 	Sorts a list<Ingredient> by indicated column.
@@ -60,7 +60,7 @@ void loadIngredientList(string& fileName, list<Ingredient>& ilst, list<Category>
 	@param lst : list<Ingredient> that the Ingredient object is being sorted.
 
 */
-void sortIngredients(int byCol, list<Ingredient>& lst);
+void sortIngredients(int byCol, std::list<Ingredient>& lst);
 
 /*
 	Comparator by Name.
@@ -96,6 +96,6 @@ bool compareIngredientRecipeCount(const Ingredient& first, const Ingredient& sec
 	@param name : name of the Ingredient object.
 	@param lst : list<Ingredient> that the Ingredient object is being called from.
 */
-Ingredient& getIngredientInList(string& name, list<Ingredient>& lst);
+Ingredient& getIngredientInList(std::string& name, std::list<Ingredient>& lst);
 
 #endif

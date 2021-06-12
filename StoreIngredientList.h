@@ -3,13 +3,14 @@
 #define STOREINGREDIENTLIST_H
 
 #include <fstream>
+#include <list>
 #include <sstream>
 #include <vector>
 
 #include "StoreIngredient.h"
 
-void addStoreIngredient(string& n, string& d, string& c, string& pc, string& b, string& st, string& sk, float& p, string& u, float& mp, string& mu, string& h, list<StoreIngredient>& lst);
-void loadStoreIngredientList(string& file, list<StoreIngredient>& lst);
+void addStoreIngredient(std::string& n, std::string& d, std::string& c, std::string& pc, std::string& b, std::string& st, std::string& sk, float& p, std::string& u, float& mp, std::string& mu, std::string& h, std::list<StoreIngredient>& lst);
+void loadStoreIngredientList(std::string& file, std::list<StoreIngredient>& lst);
 //bool doesStoreIngredientExist(string& st, string& sk, list<StoreIngredient>& lst);
 
 #endif // !STOREINGREDIENTLIST_H

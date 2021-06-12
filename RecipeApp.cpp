@@ -1,4 +1,7 @@
 #include "RecipeApp.h"
+
+using namespace std;
+
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
@@ -1140,16 +1143,92 @@ MealPlannerFrame::MealPlannerFrame() : wxFrame(NULL, wxID_ANY, wxString("Meal Pl
     menuBar->Append(menuView, "View");
     SetMenuBar(menuBar);
 
-    selectedDate = wxDefaultDateTime;   // set selectedDate to current date which = wxDefaultDateTime.
+    selectedDate = wxDateTime::Today();   // set selectedDate to current date which = wxDefaultDateTime.
 
     mainPanel = new wxPanel(this, wxID_ANY);
-    rightPanel = new wxPanel(mainPanel, wxID_ANY);
     leftPanel = new wxPanel(mainPanel, wxID_ANY);
+    rightPanel = new wxPanel(mainPanel, wxID_ANY);
 
-    // set month display panel
+    // setup the left side calendar display.
+    sideCalendar = new wxCalendarCtrl(leftPanel, CALENDAR_SIDE_PANEL, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize);
+    wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
+    leftSizer->Add(sideCalendar);
+    leftPanel->SetSizer(leftSizer);
+
+    // setup the header of the right side display, starting with today's date
+    headerPanel = new wxPanel(rightPanel, wxID_ANY);
+    headerLabel = new wxTextCtrl(headerPanel, wxID_ANY, wxString(selectedDate.GetWeekDayName(selectedDate.GetWeekDay())) + wxString(",  ") + selectedDate.GetEnglishMonthName(selectedDate.GetCurrentMonth()) + wxString("  " + to_string(selectedDate.GetDay())) + wxString(",  " + to_string(selectedDate.GetCurrentYear())), wxDefaultPosition, wxSize(840, 30), wxTE_READONLY | wxTE_CENTRE);
+    
+    wxBoxSizer* headerSizer = new wxBoxSizer(wxVERTICAL);
+    headerSizer->Add(headerLabel);
+    headerPanel->SetSizer(headerSizer);
+
+    // setup the right side list box display for today's date.
+    calendarDisplayPanel = new wxPanel(rightPanel, wxID_ANY);
+    calendarTableDaily = new wxListBox(calendarDisplayPanel, wxID_ANY, wxDefaultPosition, wxSize(840, 750), wxArrayString(), wxLB_SINGLE | wxLB_NEEDED_SB);
+
+    wxBoxSizer* calDisSizer = new wxBoxSizer(wxVERTICAL);
+    calDisSizer->Add(calendarTableDaily);
+    calendarDisplayPanel->SetSizer(calDisSizer);
+
+    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
+    rightSizer->Add(headerPanel);
+    rightSizer->Add(calendarDisplayPanel);
+    rightPanel->SetSizer(rightSizer);
+
+
+    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
+    mainSizer->Add(leftPanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(rightPanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainPanel->SetSizer(mainSizer);
+
+
+    currentView = MEAL_PLANNER_CALENDAR_DAILY_VIEW;
+    RebuildCalendarView();
+    
+}
+
+//*************************************************************************************************
+
+// MealPlannerFrame function definition
+
+//*************************************************************************************************
+
+void MealPlannerFrame::SetParent(MainListCtrl* p)
+{
+    parent = p;
+}
+
+void MealPlannerFrame::SetupSideCalendar()
+{
+    // calendar object off to the side to handle some calendar events.
+    sideCalendar = new wxCalendarCtrl(leftPanel, CALENDAR_SIDE_PANEL, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize);
+
+    wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
+    leftSizer->Add(sideCalendar);
+    leftPanel->SetSizer(leftSizer);
+}
+
+void MealPlannerFrame::SetupDailyHeader()
+{
+    // we want Month day, year
+    headerPanel = new wxPanel(rightPanel, wxID_ANY);
+    headerLabel = new wxTextCtrl(headerPanel, wxID_ANY, wxString(selectedDate.GetWeekDayName(selectedDate.GetWeekDay())) + wxString(",  ") + selectedDate.GetEnglishMonthName(selectedDate.GetCurrentMonth()) + wxString("  " + to_string(selectedDate.GetDay())) + wxString(",  " + to_string(selectedDate.GetCurrentYear())), wxDefaultPosition, wxSize(840, 30), wxTE_READONLY | wxTE_CENTRE);
+}
+
+void MealPlannerFrame::SetupDailyView()
+{
+    calendarDisplayPanel = new wxPanel(rightPanel, wxID_ANY);
+    calendarTableDaily = new wxListBox(calendarDisplayPanel, wxID_ANY, wxDefaultPosition, wxSize(840, 750), wxArrayString(), wxLB_SINGLE | wxLB_NEEDED_SB);
+}
+
+/*
+void MealPlannerFrame::SetupWeekDayHeader()
+{
+    // set month display panel 
     monthPanel = new wxPanel(rightPanel, wxID_ANY);
     monthLabel = new wxTextCtrl(monthPanel, wxID_ANY, selectedDate.GetEnglishMonthName(selectedDate.GetCurrentMonth()) + wxString("  " + to_string(selectedDate.GetCurrentYear())), wxDefaultPosition, wxSize(840, 30), wxTE_READONLY | wxTE_CENTRE);
-    
+
     // set weekly header panel.
     calendarWeekDayHeaderPanel = new wxPanel(rightPanel, wxID_ANY);
     wxBoxSizer* calendarWeeklyHeaderSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -1169,65 +1248,65 @@ MealPlannerFrame::MealPlannerFrame() : wxFrame(NULL, wxID_ANY, wxString("Meal Pl
     calendarWeeklyHeaderSizer->Add(saturdayLabel);
     calendarWeekDayHeaderPanel->SetSizer(calendarWeeklyHeaderSizer);
 
-    // 6 by 7 grid of list controllers with day of the month as column labels.
+}*/
+
+/*
+void MealPlannerFrame::SetupMonthlyGrid()
+{
+
+    // 5 by 7 grid of list controllers with day of the month as column labels.
     // thought, make calendarMonthlyDisplayPanel a wxScrolledWindow ??  does not seem feasible at this point in time..
     calendarMonthlyDisplayPanel = new wxPanel(rightPanel, wxID_ANY);
-    for (int x = 0; x < 7; x++)
+    wxBoxSizer* calMonDisPanSizer = new wxBoxSizer(wxVERTICAL);
+
+    for (int y = 0; y < 5; y++)
     {
-        for (int y = 0; y < 5; y++)
+        vector<wxListBox*> vectorY;
+        for (int x = 0; x < 7; x++)
         {
-            
+            wxListBox* dayInMonth = new wxListBox(calendarMonthlyDisplayPanel, wxID_ANY, wxPoint((x - 1) * 120, (y - 1) * 120), wxSize(120, 150), wxArrayString(), wxLB_SINGLE | wxLB_NEEDED_SB);
+            vectorY.push_back(dayInMonth);
         }
+        calendarTableMonthly.push_back(vectorY);
     }
 
-
-    // calendar object off to the side to handle some calendar events.
-    sideCalendar = new wxCalendarCtrl(leftPanel, CALENDAR_SIDE_PANEL, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize);
-
-    wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
-    leftSizer->Add(sideCalendar);
-    leftPanel->SetSizer(leftSizer);
-
-    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
-    rightSizer->Add(monthPanel);
-    rightSizer->Add(calendarWeekDayHeaderPanel);
-    rightSizer->Add(calendarMonthlyDisplayPanel);
-    rightPanel->SetSizer(rightSizer);
-
-
-    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
-    mainSizer->Add(leftPanel, wxSizerFlags().Expand().Border(wxALL, 10));
-    mainSizer->Add(rightPanel, wxSizerFlags().Expand().Border(wxALL, 10));
-    mainPanel->SetSizer(mainSizer);
-
-
-    currentView = MEAL_PLANNER_CALENDAR_MONTHLY_VIEW;
-    RebuildCalendarView();
-    
-}
-
-//*************************************************************************************************
-
-// MealPlannerFrame function definition
-
-//*************************************************************************************************
-
-void MealPlannerFrame::SetParent(MainListCtrl* p)
-{
-    parent = p;
-}
+}*/
 
 void MealPlannerFrame::RebuildCalendarView()
 {
     switch (currentView)
     {
+    case MEAL_PLANNER_CALENDAR_DAILY_VIEW:
+        BuildDailyCalendarView();
+        break;
+
     case MEAL_PLANNER_CALENDAR_MONTHLY_VIEW:
+        break;
+
     default:
-        BuildMonthlyCalendarView();
+        BuildDailyCalendarView();
         break;
     }
 }
 
+void MealPlannerFrame::BuildDailyCalendarView()
+{
+    // first, change the monthLabel to current month using selectedDate object, then display
+    // second, setup calendarWeekDayHeaderPanel for Sunday through Saturday, then display
+    // third, setup grid for for month view with saved meal objects.
+//    rightPanel->SetSizer(NULL);
+//    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
+//    rightSizer->Add(headerPanel);
+//    rightSizer->Add(calendarTableDaily);
+//    rightPanel->SetSizer(rightSizer);
+
+    // since we are toggling to monthly view from another view, enable/disable appropriate items in menuView.
+    menuView->Enable(MEAL_PLANNER_CALENDAR_MONTHLY_VIEW, true);
+    menuView->Enable(MEAL_PLANNER_CALENDAR_WEEKLY_VIEW, true);
+    menuView->Enable(MEAL_PLANNER_CALENDAR_DAILY_VIEW, false);
+}
+
+/*
 void MealPlannerFrame::BuildMonthlyCalendarView()
 {
     // first, change the monthLabel to current month using selectedDate object, then display
@@ -1244,7 +1323,7 @@ void MealPlannerFrame::BuildMonthlyCalendarView()
     menuView->Enable(MEAL_PLANNER_CALENDAR_MONTHLY_VIEW, false);
     menuView->Enable(MEAL_PLANNER_CALENDAR_WEEKLY_VIEW, true);
     menuView->Enable(MEAL_PLANNER_CALENDAR_DAILY_VIEW, true);
-}
+}*/
 
 void MealPlannerFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 {
@@ -1856,7 +1935,7 @@ void ListMgrFrame::SetCategoryListOptions()
 
 void ListMgrFrame::OnAbout(wxCommandEvent& WXUNUSED(e))
 {
-    wxMessageDialog dialog(this, "Recipe Manager System\sp1222 (c) 2021", "About Recipe Manager");
+    wxMessageDialog dialog(this, "Recipe Manager System\nsp1222 (c) 2021", "About Recipe Manager");
     dialog.ShowModal();
 }
 

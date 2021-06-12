@@ -1,4 +1,5 @@
 #include "Helpers.h"
+using namespace std;
 
 void stringRemoveCommas(string& str)
 {

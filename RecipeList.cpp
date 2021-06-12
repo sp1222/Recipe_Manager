@@ -12,6 +12,8 @@
 #include "IngredientList.h"
 #include "RecipeList.h"
 
+using namespace std;
+
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
@@ -48,25 +50,8 @@ void addRecipe(Recipe& recipe, list<Recipe>& lst)
 	// second, locate the category that the ingredient is classified under in categoryList
 	// if the category does not exist, prompt to select existing category from list.
 	// third, create a new ingredient object to save to ingredientList.
-	string name = recipe.getName();
-	stringRemoveCommas(name);
-	recipe.setName(name);
-	string var = recipe.getCuisine();
-	stringRemoveCommas(var);
-	stringToUpperAll(var);
-	recipe.setCuisine(var);
-	var = recipe.getDescription();
-	stringRemoveCommas(var);
-	recipe.setDescription(var);
-	var = recipe.getDirection();
-	stringRemoveCommas(var);
-	recipe.setDirection(var);
-	var = recipe.getMealType();
-	stringRemoveCommas(var);
-	stringToUpperAll(var);
-	recipe.setMealType(var);
-
-	if (!doesNamedItemExist<Recipe>(name, lst))
+	
+	if (!doesNamedItemExist<Recipe>(recipe, lst))
 	{
 		lst.push_back(recipe);
 	}

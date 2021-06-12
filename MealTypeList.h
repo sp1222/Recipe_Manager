@@ -9,14 +9,12 @@
 #include<list>
 #include<string>
 
-using namespace std;
-
 /*
 	Adds a new MealType object to a list< pair<string, int> >.
 	@param name : Reference to string, the name of the MealType object being added to list< pair<string, int> >.
 	@param lst : The list<Category> that the Category object is being added to.
 */
-void addMealType(string& name, list<pair<string, int>>& lst);
+void addMealType(std::string& name, std::list<std::pair<std::string, int>>& lst);
 
 /*
 	Removes named MealType object from list< pair<string, int> >.
@@ -31,22 +29,22 @@ void addMealType(string& name, list<pair<string, int>>& lst);
 	@param name : Reference to string, the name of the MealType object searched for in list< pair<string, int> >.
 	@param lst : The list< pair<string, int> > that the MealType object is being removed from.
 */
-bool doesMealTypeExist(string& name, list<pair<string, int>>& lst);
+bool doesMealTypeExist(std::string& name, std::list< std::pair<std::string, int> >& lst);
 
 /*
 	Returns how many Recipe objects are using this MealType, pair<string, int>, object.
 	@return : number of Recipe objects using this MealType object.
 */
-int getRecipeUsingMealTypeCount(string& name, list<pair<string, int>>& lst);
+int getRecipeUsingMealTypeCount(std::string& name, std::list< std::pair<std::string, int> >& lst);
 
 /*
 	Increments a variable that tracks how many Recipe objects are using this MealType, pair<string, int>, object.
 */
-void incrementRecipeUsingMealTypeCount(string& name, list<pair<string, int>>& lst);
+void incrementRecipeUsingMealTypeCount(std::string& name, std::list< std::pair<std::string, int> >& lst);
 
 /*
 	Decrements a variable that tracks how many Recipe objects are using this MealType, pair<string, int>, object.
 */
-void decrementRecipeUsingMealTypeCount(string& name, list<pair<string, int>>& lst);
+void decrementRecipeUsingMealTypeCount(std::string& name, std::list< std::pair<std::string, int> >& lst);
 
 #endif // !MEALTYPELIST_H
