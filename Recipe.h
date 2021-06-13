@@ -8,7 +8,7 @@
 #define RECIPE_H
 
 #include "IngredientInRecipe.h"
-#include "MealTypeList.h"
+#include "RecipeTypeList.h"
 
 /*
 	Recipe class for instaces of Recipe objects.
@@ -27,7 +27,7 @@ private:
 	Units yieldUnit;					// DOZEN
 										// based on servingCount, yield, and yieldUnit, we will be able to determine the quantity of DOZEN makes up one serving 
 										// (8 DOZEN = 96 EACH => 96 EACH / 24 servings = 4 EACH per serving, or 1/3 DOZEN per serving)
-	std::string mealType;
+	std::string recipetype;
 	std::list<IngredientInRecipe> ingredientsList;	// list of ingredientsInRecipe, class made up of a reference to an ingredient from ingredientList,
 												// quantity of ingredient in recipe, and unit of measure for ingreident in recipe
 public:
@@ -60,10 +60,10 @@ public:
 		@param servingCount : number of servings produced from Recipe.
 		@param yield : number of yielded units of measure.
 		@param yieldUnit : yield units of measure.
-		@param mealtype : mealtype of Recipe.
-		@param lst : list of mealtypes in the form of pair<string, int>.
+		@param RecipeType : RecipeType of Recipe.
+		@param lst : list of RecipeTypes in the form of pair<string, int>.
 	*/
-	Recipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& mealtype, std::list<std::pair<std::string, int>>& lst);
+	Recipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& RecipeType, std::list<std::pair<std::string, int>>& lst);
 
 	/*
 		Set the name of the Recipe object.
@@ -109,10 +109,10 @@ public:
 
 	/*
 		Set the meal type of the Recipe object.
-		@param mealtype : meal type of Recipe object.
+		@param RecipeType : meal type of Recipe object.
 		@param lst : list< pair<string, int> > of meal types.
 	*/
-	void setMealType(std::string& mealtype, std::list<std::pair<std::string, int>>& lst);
+	void setRecipeType(std::string& RecipeType, std::list<std::pair<std::string, int>>& lst);
 
 	/*
 		Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.
@@ -182,9 +182,9 @@ public:
 
 	/*
 		Returns the name of the Recipe object.
-		@return the mealType string value of Recipe object.
+		@return the RecipeType string value of Recipe object.
 	*/
-	std::string getMealType() const;
+	std::string getRecipeType() const;
 
 	/*
 		Returns the number of IngredientInRecipe objects in the Recipe object.

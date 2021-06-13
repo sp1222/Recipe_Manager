@@ -881,7 +881,7 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
     mainPanel = new wxScrolledWindow(this, wxID_ANY);
 
     namePanel = new wxPanel(mainPanel, wxID_ANY);
-    cuisineMealtypePanel = new wxPanel(mainPanel, wxID_ANY);
+    cuisinerecipetypePanel = new wxPanel(mainPanel, wxID_ANY);
     servingsPanel = new wxPanel(mainPanel, wxID_ANY);
     yieldPanel = new wxPanel(mainPanel, wxID_ANY);
     descriptionPanel = new wxPanel(mainPanel, wxID_ANY);
@@ -896,20 +896,20 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
     nameSizer->Add(nameText, wxSizerFlags().Expand().Border(wxALL));
     namePanel->SetSizer(nameSizer);
 
-    cuisineLabel = new wxStaticText(cuisineMealtypePanel, LABEL, wxString("Cuisine Type:"), wxDefaultPosition, wxSize(100, 20));
-    cuisineText = new wxTextCtrl(cuisineMealtypePanel, RECIPE_CUISINE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(100, 20));
-    mealtypeLabel = new wxStaticText(cuisineMealtypePanel, LABEL, wxString("Meal Type:"), wxDefaultPosition, wxSize(100, 20));
-    mealtypeText = new wxTextCtrl(cuisineMealtypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
-//    mealtypeText = new wxStaticText(mealTypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
-//    mealtypeComboBox = new wxComboBox(mealTypePanel, RECIPE_MEALTYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxArrayString(), wxCB_READONLY);
+    cuisineLabel = new wxStaticText(cuisinerecipetypePanel, LABEL, wxString("Cuisine Type:"), wxDefaultPosition, wxSize(100, 20));
+    cuisineText = new wxTextCtrl(cuisinerecipetypePanel, RECIPE_CUISINE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(100, 20));
+    recipetypeLabel = new wxStaticText(cuisinerecipetypePanel, LABEL, wxString("Recipe Type:"), wxDefaultPosition, wxSize(100, 20));
+    recipetypeText = new wxTextCtrl(cuisinerecipetypePanel, RECIPE_RECIPETYPE_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
+//    recipetypeText = new wxStaticText(recipetypePanel, RECIPE_recipetype_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20));
+//    recipetypeComboBox = new wxComboBox(recipetypePanel, RECIPE_recipetype_TEXT_CTRL, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxArrayString(), wxCB_READONLY);
 
 
-    wxBoxSizer* const cuisineMealtypeSizer = new wxBoxSizer(wxHORIZONTAL);
-    cuisineMealtypeSizer->Add(cuisineLabel, wxSizerFlags().Expand().Border(wxALL));
-    cuisineMealtypeSizer->Add(cuisineText, wxSizerFlags().Expand().Border(wxALL));
-    cuisineMealtypeSizer->Add(mealtypeLabel, wxSizerFlags().Expand().Border(wxALL));
-    cuisineMealtypeSizer->Add(mealtypeText, wxSizerFlags().Expand().Border(wxALL));
-    cuisineMealtypePanel->SetSizer(cuisineMealtypeSizer);
+    wxBoxSizer* const cuisinerecipetypeSizer = new wxBoxSizer(wxHORIZONTAL);
+    cuisinerecipetypeSizer->Add(cuisineLabel, wxSizerFlags().Expand().Border(wxALL));
+    cuisinerecipetypeSizer->Add(cuisineText, wxSizerFlags().Expand().Border(wxALL));
+    cuisinerecipetypeSizer->Add(recipetypeLabel, wxSizerFlags().Expand().Border(wxALL));
+    cuisinerecipetypeSizer->Add(recipetypeText, wxSizerFlags().Expand().Border(wxALL));
+    cuisinerecipetypePanel->SetSizer(cuisinerecipetypeSizer);
 
 
     servingsLabel = new wxStaticText(servingsPanel, LABEL, wxString("Serves:"), wxDefaultPosition, wxSize(100, 20));
@@ -961,7 +961,7 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
 
     wxBoxSizer* const mainSizer = new wxBoxSizer(wxVERTICAL);
     mainSizer->Add(namePanel, wxSizerFlags().Expand().Border(wxALL, 10));
-    mainSizer->Add(cuisineMealtypePanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainSizer->Add(cuisinerecipetypePanel, wxSizerFlags().Expand().Border(wxALL, 10));
     mainSizer->Add(servingsPanel, wxSizerFlags().Expand().Border(wxALL, 10));
     mainSizer->Add(yieldPanel, wxSizerFlags().Expand().Border(wxALL, 10));
     mainSizer->Add(descriptionPanel, wxSizerFlags().Expand().Border(wxALL, 10));
@@ -985,7 +985,7 @@ void RecipeFrame::SetRecipe(Recipe& r, list<pair<string, int>>& tList, list<Ingr
     currentRecipe = &r;
     typeList = &tList;
 //    for (auto& t : *typeList)
-//        mealtypeComboBox->Append(wxString(t.first));
+//        recipetypeComboBox->Append(wxString(t.first));
     ingredList = &iList;
     list<string> unitList;
     GetUnitStringList(unitList);
@@ -1008,7 +1008,7 @@ void RecipeFrame::SetRecipe(list<pair<string, int>>& tList, list<Ingredient>& iL
     currentRecipe = &newRecipe;
     typeList = &tList;
     //    for (auto& t : *typeList)
-    //        mealtypeComboBox->Append(wxString(t.first));
+    //        recipetypeComboBox->Append(wxString(t.first));
     ingredList = &iList;
     list<string> unitList;
     GetUnitStringList(unitList);
@@ -1029,7 +1029,7 @@ void RecipeFrame::RebuildTextFields()
 {
     nameText->SetValue(currentRecipe->getName());
     cuisineText->SetValue(currentRecipe->getCuisine());
-    mealtypeText->SetValue(currentRecipe->getMealType());
+    recipetypeText->SetValue(currentRecipe->getRecipeType());
     servingsText->SetValue(wxString(to_string(currentRecipe->getServingCount())));
     yieldText->SetValue(wxString(to_string(currentRecipe->getYield())));
     yieldUnitCurrent->SetLabel(currentRecipe->getYieldUnitStr());
@@ -1060,9 +1060,9 @@ void RecipeFrame::OnUpdateRecipe(wxCommandEvent& WXUNUSED(e))
     currentRecipe->setName(nm);
     string cu = string(cuisineText->GetValue());
     currentRecipe->setCuisine(cu);
-    string mt = string(mealtypeText->GetValue());
-    currentRecipe->setMealType(mt, *typeList);
-//    string mt = string(mealtypeComboBox->GetStringSelection());
+    string mt = string(recipetypeText->GetValue());
+    currentRecipe->setRecipeType(mt, *typeList);
+//    string mt = string(recipetypeComboBox->GetStringSelection());
     int sc = stoi(string(servingsText->GetValue()));
     currentRecipe->setServingCount(sc);
     int yld = stoi(string(yieldText->GetValue()));
@@ -1368,7 +1368,7 @@ void MainListCtrl::InsertItemsInRecipeListReportDisplay(Recipe& r, int& i)
     str = wxString(r.getCuisine());
     SetItem(temp, 1, str);
 
-    str = wxString(r.getMealType());
+    str = wxString(r.getRecipeType());
     SetItem(temp, 2, str);
 
     str = wxString(to_string(r.getServingCount()));
@@ -1427,7 +1427,7 @@ void MainListCtrl::LoadLists()
     // load lists.
     loadCategoryList(categoryFile, categories);
     loadIngredientList(ingredFile, ingredients, categories);
-    loadRecipeList(recipeFile, recipes, ingredients, mealTypes);
+    loadRecipeList(recipeFile, recipes, ingredients, recipetypes);
 }
 
 void MainListCtrl::AddNewCategory(string& c)
@@ -1448,9 +1448,9 @@ void MainListCtrl::AddNewIngredient(string& name, string& desc, string& cat)
     }
 }
 
-void MainListCtrl::AddRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<IngredientInRecipe>& ingredients)
+void MainListCtrl::AddRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& recipetype, list<IngredientInRecipe>& ingredients)
 {
-    if (addRecipe(name, cuisine, description, direction, servingCount, yield, yieldUnit, mealtype, mealTypes, recipes))
+    if (addRecipe(name, cuisine, description, direction, servingCount, yield, yieldUnit, recipetype, recipetypes, recipes))
     {
         SaveRecipes();
         ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
@@ -1505,7 +1505,7 @@ void MainListCtrl::CreateNewIngredient()
 void MainListCtrl::CreateNewRecipe()
 {
     recipeFrame = new RecipeFrame("Create New Recipe");
-    recipeFrame->SetRecipe(mealTypes, ingredients);
+    recipeFrame->SetRecipe(recipetypes, ingredients);
     recipeFrame->SetParent(this);
     recipeFrame->Show(true);
 }
@@ -1617,7 +1617,7 @@ void MainListCtrl::BuildRecipeListReportDisplay()
     col.SetText("Cuisine");
     InsertColumn(1, col);
 
-    col.SetText("Meal Type");
+    col.SetText("Recipe Type");
     InsertColumn(2, col);
 
     col.SetText("Servings");
@@ -1718,7 +1718,7 @@ void MainListCtrl::OnActivated(wxListEvent& e)
         // here we open a recipe Frame, make it the primary window, and populate fields with the recipe we have clicked on.
 
         recipeFrame = new RecipeFrame(selectedRecipe->getName());
-        recipeFrame->SetRecipe(*selectedRecipe, mealTypes, ingredients);
+        recipeFrame->SetRecipe(*selectedRecipe, recipetypes, ingredients);
         recipeFrame->SetParent(this);
         recipeFrame->RebuildTextFields();
         recipeFrame->Show(true);

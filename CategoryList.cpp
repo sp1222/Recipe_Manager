@@ -1,6 +1,6 @@
 /*
-	MealList.cpp
-	Function definitions for MealList.h
+	CategoryList.cpp
+	Function definitions for CategoryList.h
 */
 
 #include <fstream>

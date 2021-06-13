@@ -19,7 +19,7 @@ using namespace std;
 #endif
 
 // Add a Recipe object to list<Recipe>.
-bool addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& mealtypelst, list<Recipe>& recipelst)
+bool addRecipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& recipetype, list<pair<string, int>>& recipetypelst, list<Recipe>& recipelst)
 {
 	// first, check to make sure the item with the same name (in the same category?) does not exist.
 	// second, locate the category that the ingredient is classified under in categoryList
@@ -31,11 +31,11 @@ bool addRecipe(string& name, string& cuisine, string& description, string& direc
 	stringToUpperAll(cuisine);
 	stringRemoveCommas(description);
 	stringRemoveCommas(direction);
-	stringRemoveCommas(mealtype);
-	stringToUpperAll(mealtype);
+	stringRemoveCommas(recipetype);
+	stringToUpperAll(recipetype);
 	if (!doesNamedItemExist<Recipe>(name, recipelst))
 	{
-		Recipe nRecipe(name, cuisine, description, direction, servingCount, yield, yieldUnit, mealtype, mealtypelst);
+		Recipe nRecipe(name, cuisine, description, direction, servingCount, yield, yieldUnit, recipetype, recipetypelst);
 		recipelst.push_back(nRecipe);
 		return true;
 	}
@@ -95,7 +95,7 @@ void saveRecipeList(string& fileName, list<Recipe>& lst)
 
 			fout << r.getName() << "," << r.getCuisine() << "," << r.getDescription() << "," << direct << ","
 				<< r.getServingCount() << "," << r.getYield() << "," << r.getYieldUnitStr() << ","
-				<< r.getMealType() << ",";
+				<< r.getRecipeType() << ",";
 
 			// next we output to file the details for each ingredient in the recipe.
 			for (int i = 0; i < r.getIngredientCount(); i++)
@@ -113,7 +113,7 @@ void saveRecipeList(string& fileName, list<Recipe>& lst)
 }
 
 // Comma separated values file to load list<Recipe> from.
-void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>& ingredientlst, list<pair<string, int>>& mealtypelst)
+void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>& ingredientlst, list<pair<string, int>>& recipetypelst)
 {
 	ifstream fin;
 	fin.open(fileName, ios::in);
@@ -130,13 +130,13 @@ void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>&
 
 			// consider a cleaner way to do this...
 
-			string name = row[0], cuis = row[1], desc = row[2], d = row[3], yieldUnit = row[6], meal = row[7];
+			string name = row[0], cuis = row[1], desc = row[2], d = row[3], yieldUnit = row[6], type = row[7];
 			int serv = stoi(row[4]), yield = stoi(row[5]);
 			row.erase(row.begin(), row.begin() + 8);
 			regex newlines_re("`");
 			string direct = regex_replace(d, newlines_re, "\n");
 
-			Recipe rec(name, cuis, desc, direct, serv, yield, yieldUnit, meal, mealtypelst);
+			Recipe rec(name, cuis, desc, direct, serv, yield, yieldUnit, type, recipetypelst);
 			while (row.size() > 0 && row[0] != "")
 			{
 				string ingredName = row[0];
@@ -163,7 +163,7 @@ void sortRecipes(int byCol, list<Recipe>& lst)
 		lst.sort(compareRecipeCuisines);
 		break;
 	case 2:
-		lst.sort(compareMealTypes);
+		lst.sort(compareRecipeTypes);
 		break;
 	case 3:
 		lst.sort(compareServingCounts);
@@ -203,19 +203,19 @@ bool compareRecipeCuisines(const Recipe& first, const Recipe& second)
 	return (first.getCuisine().length() < second.getCuisine().length());
 }
 
-// Comparator by mealtype for two Recipe objects.
-bool compareMealTypes(const Recipe& first, const Recipe& second)
+// Comparator by recipetype for two Recipe objects.
+bool compareRecipeTypes(const Recipe& first, const Recipe& second)
 {
 	unsigned int i = 0;
-	while ((i < first.getMealType().length()) && (i < second.getMealType().length()))
+	while ((i < first.getRecipeType().length()) && (i < second.getRecipeType().length()))
 	{
-		if (tolower(first.getMealType()[i]) < tolower(second.getMealType()[i]))
+		if (tolower(first.getRecipeType()[i]) < tolower(second.getRecipeType()[i]))
 			return true;
-		else if (tolower(first.getMealType()[i]) > tolower(second.getMealType()[i]))
+		else if (tolower(first.getRecipeType()[i]) > tolower(second.getRecipeType()[i]))
 			return false;
 		i++;
 	}
-	return (first.getMealType().length() < second.getMealType().length());
+	return (first.getRecipeType().length() < second.getRecipeType().length());
 }
 
 // Comparator by servingCount for two Recipe objects.

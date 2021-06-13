@@ -18,11 +18,11 @@
 	@param servingCount : the number of recipes produced by the Recipe object.	4 servings
 	@param yield : numerical value indicating the number of units of measure.	8
 	@param yieldUnit : the unit of measure produced by the Recipe.				POUND
-	@param mealtype : meal coinciding with time of day. (breakfast, lunch, dinner, etc..)
-	@param mealtypelst : list of mealtypes, pair<string, int>, to track number of different mealtypes.
+	@param recipetype : usage of the recipe (dressing, main, appetizer, snack, etc).
+	@param recipetypelst : list of recipetypes, pair<string, int>, to track number of different recipetypes.
 	@param recipelst : list<Recipe> object to add the new Recipe object to.
 */
-bool addRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& mealtype, std::list<std::pair<std::string, int>>& mealtypelst, std::list<Recipe>& recipelst);
+bool addRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& recipetype, std::list<std::pair<std::string, int>>& recipetypelst, std::list<Recipe>& recipelst);
 
 /*
 	Add a Recipe object to list<Recipe>.
@@ -53,9 +53,9 @@ void saveRecipeList(std::string& fileName, std::list<Recipe>& lst);
 	@param fileName : name of the file to load the list<Recipe> from.
 	@param recipelst : list<Recipe> object to be loaded.
 	@param ingredientlst : list<Recipe> object use as reference for list<IngredientInRecipe>.
-	@param mealtypelst : list of mealtypes, pair<string, int>, to track number of different mealtypes.
+	@param recipetypelst : list of recipetypes, pair<string, int>, to track number of different recipetypes.
 */
-void loadRecipeList(std::string& fileName, std::list<Recipe>& recipelst, std::list<Ingredient>& ingredientlst, std::list<std::pair<std::string, int>>& mealtypelst);
+void loadRecipeList(std::string& fileName, std::list<Recipe>& recipelst, std::list<Ingredient>& ingredientlst, std::list<std::pair<std::string, int>>& recipetypelst);
 
 /*
 	Sort the list<Recipe> by column indicated in front end.
@@ -81,12 +81,12 @@ bool compareRecipeNames(const Recipe& first, const Recipe& second);
 bool compareRecipeCuisines(const Recipe& first, const Recipe& second);
 
 /*
-	Comparator by mealtype for two Recipe objects.
+	Comparator by recipetype for two Recipe objects.
 	@param first : first Recipe object to be compared.
 	@param second : second Recipe object to be compared.
 	@return If first is less than second.
 */
-bool compareMealTypes(const Recipe& first, const Recipe& second);
+bool compareRecipeTypes(const Recipe& first, const Recipe& second);
 
 /*
 	Comparator by servingCount for two Recipe objects.

@@ -337,7 +337,7 @@ private:
     wxMenuBar* menuBar;
     wxScrolledWindow* mainPanel = nullptr;
     wxPanel* namePanel = nullptr;
-    wxPanel* cuisineMealtypePanel = nullptr;
+    wxPanel* cuisinerecipetypePanel = nullptr;
     wxPanel* servingsPanel = nullptr;
     wxPanel* yieldPanel = nullptr;
     wxPanel* descriptionPanel = nullptr;
@@ -345,7 +345,7 @@ private:
     wxPanel* ingredientsPanel = nullptr;
     wxStaticText* nameLabel = nullptr;
     wxStaticText* cuisineLabel = nullptr;
-    wxStaticText* mealtypeLabel = nullptr;
+    wxStaticText* recipetypeLabel = nullptr;
     wxStaticText* servingsLabel = nullptr;
     wxStaticText* yieldLabel = nullptr;
     wxStaticText* descriptionLabel = nullptr;
@@ -353,9 +353,9 @@ private:
     wxStaticText* ingredientsLabel = nullptr;
     wxTextCtrl* nameText = nullptr;
     wxTextCtrl* cuisineText = nullptr;            // change to combobox?
-    wxTextCtrl* mealtypeText = nullptr;
-//    wxStaticText* mealtypeText = nullptr;
-//    wxComboBox* mealtypeComboBox = nullptr;
+    wxTextCtrl* recipetypeText = nullptr;
+//    wxStaticText* recipetypeText = nullptr;
+//    wxComboBox* recipetypeComboBox = nullptr;
     wxTextCtrl* servingsText = nullptr;
     wxTextCtrl* yieldText = nullptr;
     wxStaticText* yieldUnitCurrent = nullptr;
@@ -469,7 +469,7 @@ public:
     void LoadLists();
     void AddNewCategory(std::string& c);
     void AddNewIngredient(std::string& name, std::string& desc, std::string& cat);
-    void AddRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& mealtype, std::list<IngredientInRecipe>& ingredients);
+    void AddRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& recipetype, std::list<IngredientInRecipe>& ingredients);
     void RemoveCategory();
     void RemoveIngredient();
     void RemoveRecipe();
@@ -507,7 +507,7 @@ private:
     MealPlannerFrame* mealPlannerFrame;
     std::list<Category> categories;
     std::list<Ingredient> ingredients;
-    std::list<std::pair<std::string, int>> mealTypes;
+    std::list<std::pair<std::string, int>> recipetypes;
     std::list<Recipe> recipes;
 
     // files storing list data.
@@ -621,7 +621,7 @@ enum
     RECIPE_ADD_NEW,
     RECIPE_REMOVE_SELECTED,
     RECIPE_NAME_TEXT_CTRL,
-    RECIPE_MEALTYPE_TEXT_CTRL,
+    RECIPE_RECIPETYPE_TEXT_CTRL,
     RECIPE_CUISINE_TEXT_CTRL,
     RECIPE_SERVINGS_TEXT_CTRL,
     RECIPE_YIELD_TEXT_CTRL,

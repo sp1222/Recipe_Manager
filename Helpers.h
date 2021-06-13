@@ -39,6 +39,7 @@ bool isFloat(std::string& str);
 	@param str : reference to string, name of the object to be searched for.
 	@param lst : list of objects being searched.
 	@return if an object of type T exists in list<T> by name.
+
 */
 template<typename T>
 bool doesNamedItemExist(std::string& str, std::list<T>& lst)
@@ -50,7 +51,6 @@ bool doesNamedItemExist(std::string& str, std::list<T>& lst)
 	}
 	return false;
 };
-
 /*
 // makes a comparison between two objects by their name
 template<class T>

@@ -22,6 +22,7 @@ private:
 	std::string name;
 	int ingredientsUsingCategoryCount;
 public:
+
 	/*
 		Makes two Category objects comparable using name variable.
 		@param c : constant reference to Category object.

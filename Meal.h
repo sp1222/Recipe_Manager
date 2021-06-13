@@ -4,8 +4,8 @@
 */
 
 #pragma once
-#ifndef CATEGORY_H
-#define CATEGORY_H
+#ifndef MEAL_H
+#define MEAL_H
 
 #include <wx/datetime.h>
 

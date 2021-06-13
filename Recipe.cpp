@@ -35,11 +35,11 @@ Recipe::Recipe()
 	string u = "NONE";
 	Units un(u);
 	yieldUnit = un;
-	mealType = "";
+	recipetype = "";
 }
 
 // Initialize an Recipe object with using valid arguments.
-Recipe::Recipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& mealtype, list<pair<string, int>>& lst)
+Recipe::Recipe(string& name, string& cuisine, string& description, string& direction, int& servingCount, int& yield, string& yieldUnit, string& recipetype, list<pair<string, int>>& lst)
 {
 	this->name = name;
 	this->cuisine = cuisine;
@@ -48,17 +48,17 @@ Recipe::Recipe(string& name, string& cuisine, string& description, string& direc
 	this->servingCount = servingCount;
 	this->yield = yield;
 	this->yieldUnit = yieldUnit;
-	if (mealtype != mealType && doesMealTypeExist(mealtype, lst))
+	if (doesRecipeTypeExist(recipetype, lst))
 	{
-		decrementRecipeUsingMealTypeCount(mealType, lst);
-		mealType = mealtype;
-		incrementRecipeUsingMealTypeCount(mealType, lst);
+		decrementRecipeUsingRecipeTypeCount(recipetype, lst);
+		this->recipetype = recipetype;
+		incrementRecipeUsingRecipeTypeCount(recipetype, lst);
 	}
 	else
 	{
-		addMealType(mealtype, lst);
-		mealType = mealtype;
-		incrementRecipeUsingMealTypeCount(mealType, lst);
+		addRecipeType(recipetype, lst);
+		this->recipetype = recipetype;
+		incrementRecipeUsingRecipeTypeCount(recipetype, lst);
 	}
 }
 
@@ -124,21 +124,21 @@ void Recipe::setYieldUnit(string& yieldUnit)
 }
 
 // Set the meal type of the Recipe object.
-void Recipe::setMealType(string& mealtype, list<pair<string, int>>& lst)
+void Recipe::setRecipeType(string& recipetype, list<pair<string, int>>& lst)
 {
-	stringRemoveCommas(mealtype);
-	stringToUpperAll(mealtype);
-	if (!mealtype.empty() && mealtype != mealType && doesMealTypeExist(mealtype, lst))
+	stringRemoveCommas(recipetype);
+	stringToUpperAll(recipetype);
+	if (doesRecipeTypeExist(recipetype, lst))
 	{
-		decrementRecipeUsingMealTypeCount(mealType, lst);
-		mealType = mealtype;
-		incrementRecipeUsingMealTypeCount(mealType, lst);
+		decrementRecipeUsingRecipeTypeCount(recipetype, lst);
+		this->recipetype = recipetype;
+		incrementRecipeUsingRecipeTypeCount(recipetype, lst);
 	}
 	else
 	{
-		addMealType(mealtype, lst);
-		mealType = mealtype;
-		incrementRecipeUsingMealTypeCount(mealType, lst);
+		addRecipeType(recipetype, lst);
+		this->recipetype = recipetype;
+		incrementRecipeUsingRecipeTypeCount(recipetype, lst);
 	}
 }
 
@@ -208,9 +208,9 @@ Units Recipe::getYieldUnit()
 }
 
 // Returns the name of the Recipe object.
-string Recipe::getMealType() const
+string Recipe::getRecipeType() const
 {
-	return mealType;
+	return recipetype;
 }
 
 // Returns the number of IngredientInRecipe objects in the Recipe object.
