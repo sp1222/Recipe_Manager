@@ -121,7 +121,7 @@ public:
 		@param unit : unit of measure for the IngredientInRecipe object.
 		@param lst : list<Ingredient> to get referenced Ingredient object from.
 	*/
-	void addIngredientInRecipe(std::string& ingredientName, float& quantity, std::string& unit, std::list<Ingredient>& lst);
+	bool addIngredientInRecipe(std::string& ingredientName, float& quantity, std::string& unit, std::list<Ingredient>& lst);
 
 	/*
 		Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.

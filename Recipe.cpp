@@ -143,13 +143,15 @@ void Recipe::setRecipeType(string& recipetype, list<pair<string, int>>& lst)
 }
 
 // Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.
-void Recipe::addIngredientInRecipe(string& ingredientName, float& quantity, string& unit, list<Ingredient>& lst)
+bool Recipe::addIngredientInRecipe(string& ingredientName, float& quantity, string& unit, list<Ingredient>& lst)
 {
 	if (!doesIngredientInRecipeExist(ingredientName) && doesNamedItemExist<Ingredient>(ingredientName, lst))
 	{
 		IngredientInRecipe recipeIngred(ingredientName, quantity, unit, lst);
 		ingredientsList.push_back(recipeIngred);
+		return true;
 	}
+	return false;
 }
 
 // Add an IngredientInRecipe object to a list<IngredientInRecipe> for the Recipe object.

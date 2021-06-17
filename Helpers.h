@@ -7,6 +7,7 @@
 #ifndef HELPERS_H
 #define HELPERS_H
 
+#include <algorithm>
 #include <list>
 #include <string>
 
@@ -21,11 +22,18 @@ void stringRemoveCommas(std::string& str);
 	@param str : reference to string variable to convert all characters to uppercase
 */
 void stringToUpperAll(std::string& str);
+
 /*
 	Standardizes float value to two decimal places.
 	@param flt : reference to float variable to make two decimal places
 */
 void float2Decimals(float& flt);
+
+/*
+	Check if string is all digits.
+	@param str : reference to string variable to make check.
+*/
+bool stringIsDigit(std::string& str);
 
 /*
 	Checks if a string can be converted to float.

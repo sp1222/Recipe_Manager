@@ -29,20 +29,23 @@ bool Meal::operator != (const Meal& m) const
 Meal::Meal()
 {
 	name = "";
+	id = -1;
 	description = "";
 	scheduled = wxDateTime::Today();	// consider means to default to the date currently highlighted in calendar.
 	numberOfServings = 0;
+	isArchived = false;
 }
 
 /*
 	Initialize a Meal object with valid parameter values.
 */
-Meal::Meal(string& name, string& description, wxDateTime& scheduled, int numberOfServings, list<Recipe>& recipes)
+Meal::Meal(string& name, string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, list<Recipe>& recipes)
 {
 	this->name = name;
 	this->description = description;
 	this->scheduled = scheduled;
 	this->numberOfServings = numberOfServings;
+	this->isArchived = isArchived;
 	for (auto& r : recipes)
 		this->recipes->push_back(r);
 }
@@ -54,6 +57,14 @@ void Meal::setName(string& name)
 {
 	stringRemoveCommas(name);
 	this->name = name;
+}
+
+/*
+	Set the ID of the Meal object.
+*/
+void Meal::setID(unsigned short id)
+{
+	this->id = id;
 }
 
 /*
@@ -82,11 +93,28 @@ void Meal::setNumberOfServings(int& numberOfServings)
 }
 
 /*
+	Set the Meal object to archived by default when its date and time is before current date and time.
+	Set the Meal object to not archived when copying an old Meal object for a future date.
+*/
+void Meal::setIsArchived(bool isArchived)
+{
+	this->isArchived = isArchived;
+}
+
+/*
 	Returns the name of Meal object.
 */
 string Meal::getName() const
 {
 	return name;
+}
+
+/*
+	Returns the ID of Meal object.
+*/
+unsigned short Meal::getID() const
+{
+	return id;
 }
 
 /*
@@ -114,17 +142,25 @@ int Meal::getNumberOfServings()
 }
 
 /*
-	Add a reference to a Recipe object to list<Recipes> for this Menu object.
+	Returns if this Meal object is an archived Meal object.
 */
-void Meal::addRecipeToMenu(string& name, list<Recipe>& lst)
+bool Meal::isMealArchived()
+{
+	return isArchived;
+}
+
+/*
+	Add a reference to a Recipe object to list<Recipes>* for this Menu object.
+*/
+void Meal::addRecipeToMeal(string& name, list<Recipe>& lst)
 {
 	recipes->push_back(getRecipeInList(name, lst));
 }
 
 /*
-	Remove a reference to a Recipe object from list<Recipes> for this Menu object.
+	Remove a reference to a Recipe object from list<Recipes>* for this Menu object.
 */
-void Meal::removeRecipeFromMenu(string& name)
+void Meal::removeRecipeFromMeal(string& name)
 {
 	for (auto& r : *recipes)
 	{
@@ -137,7 +173,7 @@ void Meal::removeRecipeFromMenu(string& name)
 }
 
 /*
-	Return a reference to a Recipe object from list<Recipe> for this Menu object.
+	Return a reference to a Recipe object from list<Recipe>* for this Menu object.
 */
 Recipe& Meal::getRecipeInMeal(string& name)
 {
@@ -149,4 +185,26 @@ Recipe& Meal::getRecipeInMeal(string& name)
 		}
 	}
 	return recipes->front();
+}
+
+/*
+	Return a reference to a Recipe object from list<Recipe>* for this Menu object.
+*/
+void Meal::getRecipeListInMeal(list<Recipe>& lst)
+{
+	if (recipes->size() > 0)
+	{
+		for (auto& r : *recipes)
+		{
+			lst.push_back(r);
+		}
+	}
+}
+
+/*
+	Return the number of Recipe objects in list<Recipe>* for this Menu object.
+*/
+int Meal::getRecipeCount() const
+{
+	return recipes->size();
 }

@@ -7,6 +7,7 @@
 #ifndef MEAL_H
 #define MEAL_H
 
+#include <list>
 #include <wx/datetime.h>
 
 #include "Recipe.h"
@@ -19,9 +20,11 @@ class Meal
 {
 private:
 	std::string name;
+	unsigned short id;
 	std::string description;
 	wxDateTime scheduled;	// consider howto save and load this information..
 	int numberOfServings;
+	bool isArchived;
 	std::list<Recipe>* recipes;
 public:
 	/*
@@ -51,13 +54,19 @@ public:
 		@param numberOfServings : reference to int to initialize the number of servings of the Meal object.
 		@param recipes : reference to list<Recipe> to initialize the list of recipes of the Meal object.
 	*/
-	Meal(std::string& name, std::string& description, wxDateTime& scheduled, int numberOfServings, std::list<Recipe>& recipes);
+	Meal(std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe>& recipes);
 
 	/*
 		Set the name of the Meal object.
-		@param name : reference to string to initialize the name of the Meal object.
+		@param name : reference to string to define the name of the Meal object.
 	*/
 	void setName(std::string& name);
+
+	/*
+		Set the ID of the Meal object.
+		@param id : int to define the ID of the Meal object.
+	*/
+	void setID(unsigned short id);
 
 	/*
 		Set the description of the Meal object.
@@ -78,10 +87,23 @@ public:
 	void setNumberOfServings(int& numberOfServings);
 
 	/*
+		Set the Meal object to archived by default when its date and time is before current date and time.
+		Set the Meal object to not archived when copying an old Meal object for a future date.
+		@param isArchived = false : boolean stating if this Meal object is to be archived.
+	*/
+	void setIsArchived(bool isArchived = false);
+
+	/*
 		Returns the name of Meal object.
 		@return the name of this Meal object.
 	*/
 	std::string getName() const;
+
+	/*
+		Returns the ID of Meal object.
+		@return the id of this Meal object.
+	*/
+	unsigned short getID() const;
 
 	/*
 		Returns the description of Meal object.
@@ -90,8 +112,8 @@ public:
 	std::string getDescription();
 
 	/*
-		Returns the wxDateTime object of this Menu object.
-		@return wxDateTime object of this Menu object.
+		Returns the wxDateTime object of this Meal object.
+		@return wxDateTime object of this Meal object.
 	*/
 	wxDateTime getScheduled();
 
@@ -103,24 +125,42 @@ public:
 	int getNumberOfServings();
 
 	/*
-		Add a reference to a Recipe object to list<Recipes> for this Menu object.
-		@param name : reference to string of Recipe object's name to add to this Menu object's list<Recipe>*.
-		@param lst : list<Recipe> master Recipe list to reference Recipe object from for adding to Menu object's list<Recipes>*
+		Returns if this Meal object is an archived Meal object.
+		@return If the Meal object is an archived Meal object.
 	*/
-	void addRecipeToMenu(std::string& name, std::list<Recipe>& lst);
+	bool isMealArchived();
 
 	/*
-		Remove a reference to a Recipe object from list<Recipes> for this Menu object.
-		@param recipeName : string of name of reference to Recipe object being removed from list<Recipe>* in this Menu object.
+		Add a reference to a Recipe object to list<Recipes> for this Meal object.
+		@param name : reference to string of Recipe object's name to add to this Meal object's list<Recipe>*.
+		@param lst : list<Recipe> master Recipe list to reference Recipe object from for adding to Meal object's list<Recipes>*
 	*/
-	void removeRecipeFromMenu(std::string& name);
+	void addRecipeToMeal(std::string& name, std::list<Recipe>& lst);
 
 	/*
-		Return a reference to a Recipe object from list<Recipe> for this Menu object.
-		@param recipeName : string containing name of reference to Recipe object in list<Recipe>* for this Menu object.
+		Remove a reference to a Recipe object from list<Recipes> for this Meal object.
+		@param recipeName : string of name of reference to Recipe object being removed from list<Recipe>* in this Meal object.
+	*/
+	void removeRecipeFromMeal(std::string& name);
+
+	/*
+		Return a reference to a Recipe object from list<Recipe> for this Meal object.
+		@param recipeName : string containing name of reference to Recipe object in list<Recipe>* for this Meal object.
 		@return reference to Recipe object.
 	*/
 	Recipe& getRecipeInMeal(std::string& name);
+
+	/*
+		Sets a reference to list<Recipe>* for this Meal object.
+		@param lst : reference to list<Recipe> to reference list<Recipe>* in this Meal object.
+	*/
+	void getRecipeListInMeal(std::list<Recipe>& lst);
+
+	/*
+		Return the number of Recipe objects in list<Recipe>* for this Meal object.
+		@return count of Recipe objects in list<Recipe>*.
+	*/
+	int getRecipeCount() const;
 };
 
 #endif

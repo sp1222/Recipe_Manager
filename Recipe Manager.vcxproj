@@ -26,10 +26,11 @@
     <ClCompile Include="IngredientInRecipe.cpp" />
     <ClCompile Include="IngredientList.cpp" />
     <ClCompile Include="Meal.cpp" />
-    <ClCompile Include="MealTypeList.cpp" />
+    <ClCompile Include="MealList.cpp" />
     <ClCompile Include="Recipe.cpp" />
     <ClCompile Include="RecipeApp.cpp" />
     <ClCompile Include="RecipeList.cpp" />
+    <ClCompile Include="RecipeTypeList.cpp" />
     <ClCompile Include="StoreIngredient.cpp" />
     <ClCompile Include="StoreIngredientList.cpp" />
     <ClCompile Include="Units.cpp" />
@@ -42,10 +43,11 @@
     <ClInclude Include="IngredientInRecipe.h" />
     <ClInclude Include="IngredientList.h" />
     <ClInclude Include="Meal.h" />
-    <ClInclude Include="MealTypeList.h" />
+    <ClInclude Include="MealList.h" />
     <ClInclude Include="Recipe.h" />
     <ClInclude Include="RecipeApp.h" />
     <ClInclude Include="RecipeList.h" />
+    <ClInclude Include="RecipeTypeList.h" />
     <ClInclude Include="StoreIngredient.h" />
     <ClInclude Include="StoreIngredientList.h" />
     <ClInclude Include="Units.h" />

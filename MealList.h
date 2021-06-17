@@ -5,9 +5,13 @@
 
 #include "Meal.h"
 
-bool addMeal(std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, std::list<Recipe>& mealRecipesLst, std::list<Meal>& lst);
+bool addMeal(unsigned short id, std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe>& mealRecipesLst, std::list<Meal>& lst);
 
 bool removeMeal(std::string& name, std::list<Meal>& lst);
+
+Meal& getMealInList(unsigned short& id, std::list<Meal>& lst);
+
+unsigned short getHighestID(std::list<Meal>& lst);
 
 void saveMealList(std::string& fileName, std::list<Meal>& lst);
 

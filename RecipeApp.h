@@ -4,13 +4,15 @@
 
 #include<wx/calctrl.h>
 #include<wx/combo.h>
+#include<wx/datectrl.h>
 #include<wx/datetime.h>
 #include<wx/grid.h>
 #include<wx/listctrl.h>
 #include<wx/scrolbar.h>
+#include<wx/timectrl.h>
 #include<wx/wxprec.h>
 
-#include "RecipeList.h"
+#include "MealList.h"
 
 #ifndef WX_PRECOMP
 #include<wx/wx.h>
@@ -43,8 +45,9 @@ class AddCategoryFrame : public wxFrame
 public:
     AddCategoryFrame();
     void SetParent(MainListCtrl* p);
+    void SetFieldsToBlank();
 protected:
-    void OnFinalize(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 
 private:
@@ -108,8 +111,10 @@ class AddIngredientFrame : public wxFrame
 public:
     AddIngredientFrame();
     void SetParent(MainListCtrl* p);
+    void SetCategoryComboBox(std::list<std::string> nms);
+    void SetFieldsToBlank();
 protected:
-    void OnFinalize(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 
 private:
@@ -143,8 +148,10 @@ class IngredientFrame : public wxFrame
 {
 public:
     IngredientFrame(const wxString& title);
-    void SetIngredient(Ingredient& i, std::list<Category>& cat);
+    void SetIngredient(Ingredient& i);  
     void SetParent(MainListCtrl* p);
+    void PassCategoryList(std::list<Category>& cat);  
+    void SetCategoryComboBox();  
     void RebuildTextFields();
 protected:
 
@@ -192,12 +199,16 @@ class IngredientInRecipeFrame : public wxFrame
 {
 public:
     IngredientInRecipeFrame(const wxString& title);
-    void SetIngredientInRecipe(IngredientInRecipe& ir, std::list<Ingredient>& iList);
+    void SetIngredientInRecipe(IngredientInRecipe& ir);
+    void PassIngredientList_SetComboBoxes(std::list<Ingredient>& iList);
+    void SetIngredientComboBox();
+    void SetUnitComboBox();
+    void SetFieldsToBlank();
     void RebuildTextFields();
     void SetParents(IngredientsInRecipeListCtrl* p, RecipeFrame* rf);
     void SetStringArrays(std::list<std::string>& ingredNames);
 protected:
-    void OnUpdateIngredientInRecipe(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 private:
     wxMenu* menuOptions;
@@ -279,9 +290,11 @@ class AddIngredientToRecipeFrame : public wxFrame
 public:
     AddIngredientToRecipeFrame();
     void SetParent(RecipeFrame* p);
-    void SetComboBoxLists(std::list<Ingredient>& iList);
+    void PassIngredientList(std::list<Ingredient>& iList);
+    void SetIngredientComboBox();
+    void SetUnitComboBox();
 protected:
-    void OnFinalize(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 private:
     wxMenu* menuOptions;
@@ -316,9 +329,12 @@ class RecipeFrame : public wxFrame
 {
 public:
     RecipeFrame(const wxString& title);
-    void SetRecipe(Recipe& r, std::list<std::pair<std::string, int>>& tList, std::list<Ingredient>& iList);
-    void SetRecipe(std::list<std::pair<std::string, int>>& tList, std::list<Ingredient>& iList);
+    void SetRecipe();
     void SetRecipe(Recipe& r);
+    void PassTypeList(std::list<std::pair< std::string, int > > & tList); 
+    void PassIngredientList(std::list<Ingredient>& iList); 
+    void SetUnitComboBox(); 
+    void SetIngredientsInRecipeListCtrl();
     void RebuildTextFields();
     void SetParent(MainListCtrl* p);
     void UpdateIngredientInRecipe();
@@ -326,7 +342,7 @@ public:
 protected:
 
     // edit drop down menu
-    void OnUpdateRecipe(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
     void OnAddIngredient(wxCommandEvent& e);
     void OnRemoveIngredient(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
@@ -374,6 +390,67 @@ private:
     wxDECLARE_EVENT_TABLE();
 };
 
+//*************************************************************************************************
+
+// MealFrame class
+
+//*************************************************************************************************
+
+class MealPlannerFrame; // forward.
+class MealFrame : public wxFrame
+{
+public:
+
+    MealFrame(wxString title, const wxDateTime& dt);
+    void SetParent(MealPlannerFrame* p);
+    void SetMeal(Meal& currentMeal);
+    void SetMeal();
+    void PassRecipes(std::list<Recipe>* lst);
+    void ResetTextFields();
+    void RebuildList();
+
+protected:
+    void OnAddRecipe(wxCommandEvent& e);
+    void OnUpdate(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
+private:
+
+    wxMenu* menuOptions = nullptr;
+    wxMenuBar* menuBar = nullptr;
+
+    wxPanel* mainPanel = nullptr;
+    wxPanel* namePanel = nullptr;
+    wxPanel* scheduledPanel = nullptr;
+    wxPanel* descriptionPanel = nullptr;
+    wxPanel* numberOfServingsIsArchivedPanel = nullptr;
+    wxPanel* recipesListCtrlPanel = nullptr;
+    wxStaticText* nameLabel = nullptr;
+    wxStaticText* dateLabel = nullptr;
+    wxStaticText* timeLabel = nullptr;
+    wxStaticText* descriptionLabel = nullptr;
+    wxStaticText* numberOfServingsLabel = nullptr;
+    wxStaticText* isArchivedLabel = nullptr;
+    wxStaticText* recipesListLabel = nullptr;
+    wxTextCtrl* nameText = nullptr;
+    wxDatePickerCtrl* datePicker = nullptr;
+    wxTimePickerCtrl* timePicker = nullptr;
+    wxTextCtrl* descriptionText = nullptr;
+    wxTextCtrl* numberOfServingsText = nullptr;
+    wxTextCtrl* isArchivedText = nullptr;
+    wxListCtrl* recipesListCtrl;
+
+
+    MealPlannerFrame* parent = nullptr;
+    Meal newMeal = Meal();
+    Meal* currentMeal = nullptr;
+    std::list<Recipe>* recipes;
+    bool isnew = true;
+
+    wxDECLARE_NO_COPY_CLASS(MealFrame);
+    wxDECLARE_EVENT_TABLE();
+
+};
+
 
 //*************************************************************************************************
 
@@ -386,6 +463,8 @@ class MealPlannerFrame : public wxFrame
 public:
     MealPlannerFrame();
     void SetParent(MainListCtrl* p);
+    void SetMealList(std::list<Meal>* lst);
+    void SetRecipeList(std::list<Recipe>* lst);
     void SetupSideCalendar();
     void SetupDailyHeader();
     void SetupDailyView();
@@ -394,8 +473,13 @@ public:
     void RebuildCalendarView();
     void BuildDailyCalendarView();
     void BuildMonthlyCalendarView();
+    void MealUpdated();
+    void AddMealToList(std::string& nm, std::string& ds, wxDateTime& sch, int& noSer, bool& isArc, std::list<Recipe>& reclist);
 
 protected:
+    void OnChangeDate(wxCalendarEvent& e);
+    void OnAddMeal(wxCommandEvent& e);
+    void OnEditMeal(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
 
 private:
@@ -435,9 +519,14 @@ private:
     wxCalendarCtrl* sideCalendar = nullptr;
 
     MainListCtrl* parent = nullptr;
+    MealFrame* mealFrame = nullptr;
 
     long currentView;
     wxDateTime selectedDate;
+
+    std::list<Meal>* meals;
+    std::list<Recipe>* recipeList;
+    Meal selectedMeal;
 
     wxDECLARE_NO_COPY_CLASS(MealPlannerFrame);
     wxDECLARE_EVENT_TABLE();
@@ -466,6 +555,7 @@ public:
     void SaveCategories();
     void SaveIngredients();
     void SaveRecipes();
+    void SaveMeals();
     void LoadLists();
     void AddNewCategory(std::string& c);
     void AddNewIngredient(std::string& name, std::string& desc, std::string& cat);
@@ -505,15 +595,19 @@ private:
     AddIngredientFrame* addIngredientFrame = nullptr;
     RecipeFrame* recipeFrame = nullptr;
     MealPlannerFrame* mealPlannerFrame;
+
+    // lists being managed.
     std::list<Category> categories;
     std::list<Ingredient> ingredients;
     std::list<std::pair<std::string, int>> recipetypes;
     std::list<Recipe> recipes;
+    std::list<Meal> meals;
 
     // files storing list data.
     std::string categoryFile = "testCategoryFile.csv";
     std::string ingredFile = "testIngredientFile.csv";
     std::string recipeFile = "testRecipeFile.csv";
+    std::string mealFile = "testMealFile.csv";
 
     long currentList = 0;       // tracker for which list we are currently viewing, used to open approrpiate windows to display details on the item selected
 
@@ -538,6 +632,8 @@ class ListMgrFrame: public wxFrame
 public:
     ListMgrFrame(const wxString& title);
     void SetParent(RecipeApp* p);
+    void MessageSuccess(wxString itemType, std::string name);
+    void MessageFailure(wxString itemType, std::string name);
 
 protected:
     void SetRecipeListOptions();
@@ -642,6 +738,17 @@ enum
     MEAL_PLANNER_CALENDAR_MONTHLY_VIEW,
     MEAL_PLANNER_CALENDAR_WEEKLY_VIEW,
     MEAL_PLANNER_CALENDAR_DAILY_VIEW,
+    MEAL_PLANNER_ADD_MEAL,
+    MEAL_PLANNER_EDIT_MEAL,
+    MEAL_PLANNER_CHANGE_DATE,
+    MEAL_NAME_TEXT_CTRL,
+    MEAL_DATE_PICKER,
+    MEAL_TIME_PICKER,
+    MEAL_DESCRIPTION_TEXT_CTRL,
+    MEAL_NO_OF_SERVINGS,
+    MEAL_RECIPE_LIST_CTRL,
+    MEAL_ADD_RECIPE,
+    MEAL_UPDATE,
     CALENDAR_SIDE_PANEL,
 
 };

@@ -89,11 +89,12 @@ void saveRecipeList(string& fileName, list<Recipe>& lst)
 		for (auto& r : lst)
 		{
 			// first we output to file general recipe details.
-			string d = r.getDirection();
+			string dr = r.getDirection(), ds = r.getDescription();
 			regex newlines_re("\n+");
-			string direct = regex_replace(d, newlines_re, "`");
+			string direct = regex_replace(dr, newlines_re, "`");
+			string desc = regex_replace(ds, newlines_re, "`");
 
-			fout << r.getName() << "," << r.getCuisine() << "," << r.getDescription() << "," << direct << ","
+			fout << r.getName() << "," << r.getCuisine() << "," << desc << "," << direct << ","
 				<< r.getServingCount() << "," << r.getYield() << "," << r.getYieldUnitStr() << ","
 				<< r.getRecipeType() << ",";
 
@@ -130,11 +131,12 @@ void loadRecipeList(string& fileName, list<Recipe>& recipelst, list<Ingredient>&
 
 			// consider a cleaner way to do this...
 
-			string name = row[0], cuis = row[1], desc = row[2], d = row[3], yieldUnit = row[6], type = row[7];
+			string name = row[0], cuis = row[1], ds = row[2], dr = row[3], yieldUnit = row[6], type = row[7];
 			int serv = stoi(row[4]), yield = stoi(row[5]);
 			row.erase(row.begin(), row.begin() + 8);
 			regex newlines_re("`");
-			string direct = regex_replace(d, newlines_re, "\n");
+			string direct = regex_replace(dr, newlines_re, "\n");
+			string desc = regex_replace(dr, newlines_re, "\n");
 
 			Recipe rec(name, cuis, desc, direct, serv, yield, yieldUnit, type, recipetypelst);
 			while (row.size() > 0 && row[0] != "")

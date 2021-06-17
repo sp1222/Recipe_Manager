@@ -174,6 +174,8 @@ bool doesNamedIngredientExist(string& name, list<Ingredient>& lst)
 Ingredient& getIngredientInList(string& name, list<Ingredient>& lst)
 {
 	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST? No.
+	// in the very unlikely event that the item by name is not found, return the first item in the list.
+	// consider a solution for unlikely scenario?
 
 	for (auto& i : lst)
 	{

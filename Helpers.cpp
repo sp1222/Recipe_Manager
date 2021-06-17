@@ -18,6 +18,11 @@ void stringToUpperAll(string& str)
 		s = toupper(s);
 }
 
+bool stringIsDigit(string& str)
+{
+	return all_of(str.begin(), str.end(), ::isdigit);
+}
+
 void float2Decimals(float& flt)
 {
 	flt = int(flt * 100 / 0.5f);
