@@ -51,8 +51,9 @@ public:
 	/*
 		Redefine the name of the Category.
 		@param name : reference to string to redefine the name of the Category object.
+		@return If the name has successfully changed.
 	*/
-	void setName(std::string& name);
+	bool setName(std::string& name);
 
 	/*
 		Returns the name of the Category object.

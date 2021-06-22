@@ -55,8 +55,9 @@ public:
 	/*
 		Set the name of the Ingredient object.
 		@param name : reference to string to initialize the name of the Ingredient object.
+		@return If the name has successfully changed.
 	*/
-	void setName(std::string& name);
+	bool setName(std::string& name);
 
 	/*
 		Set the description of the Ingredient object.
@@ -67,7 +68,6 @@ public:
 	/*
 		Set the reference to Category object from list<Category> object.
 		@param categoryObj : reference to Category object (from list<Category>) to initialize the pointer to Category object in this Ingredient.
-
 	*/
 	void setCategory(Category& categoryObj);
 

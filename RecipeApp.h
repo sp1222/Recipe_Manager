@@ -205,8 +205,7 @@ public:
     void SetUnitComboBox();
     void SetFieldsToBlank();
     void RebuildTextFields();
-    void SetParents(IngredientsInRecipeListCtrl* p, RecipeFrame* rf);
-    void SetStringArrays(std::list<std::string>& ingredNames);
+    void SetParents(IngredientsInRecipeListCtrl* p);
 protected:
     void OnUpdate(wxCommandEvent& e);
     void OnExit(wxCloseEvent& e);
@@ -228,7 +227,6 @@ private:
 
     IngredientInRecipe* currentIngredientInRecipe = nullptr;
     IngredientsInRecipeListCtrl* parent = nullptr;
-    RecipeFrame* parentRF = nullptr;
     std::list<Ingredient>* ingredList = nullptr;
     std::list<std::string> unitList;
     wxDECLARE_NO_COPY_CLASS(IngredientInRecipeFrame);
@@ -259,7 +257,7 @@ public:
     void SetSelectedItem(std::string name);
     void ResetListView(long wxFlags = wxLC_REPORT, bool withText = true);
     void BuildIngredientsInRecipeListReportDisplay();
-    void UpdateModifiedIngredient();
+    void UpdateIngredientInRecipe();
     std::string GetSelectedIngredient();
 protected:
     void OnActivated(wxListEvent& e);
@@ -401,7 +399,7 @@ class MealFrame : public wxFrame
 {
 public:
 
-    MealFrame(wxString title, const wxDateTime& dt);
+    MealFrame(const wxDateTime& dt);
     void SetParent(MealPlannerFrame* p);
     void SetMeal(Meal& currentMeal);
     void SetMeal();
@@ -470,7 +468,10 @@ public:
     void SetupDailyView();
     void SetupWeekDayHeader();
     void SetupMonthlyGrid();
-    void RebuildCalendarView();
+    void ToggleMenuToCalendarDailyOptions();
+    void RebuildCalendarView(); 
+    void InitializeCalendarTableDaily();
+    void InsertItemsInDailyListDisplay(Meal& m, int& i);
     void BuildDailyCalendarView();
     void BuildMonthlyCalendarView();
     void MealUpdated();
@@ -512,7 +513,7 @@ private:
     wxPanel* calendarDailyHeaderPanel = nullptr;
     wxPanel* headerPanel = nullptr;
     wxTextCtrl* headerLabel = nullptr;
-    wxListBox* calendarTableDaily;
+    wxListCtrl* calendarTableDaily;
 
     // Left panel will be the mini calendar to the side.
     wxPanel* leftPanel = nullptr;
@@ -539,6 +540,7 @@ private:
 
 //*************************************************************************************************
 
+class ListMgrFrame;   // forward
 class MainListCtrl : public wxListCtrl
 {
 public:
@@ -551,6 +553,7 @@ public:
     void InsertItemsInIngredientListReportDisplay(Ingredient& ingred, int& i);
     void InsertItemsInCategoryListReportDisplay(Category& n, int& i);
 
+    void SetParent(ListMgrFrame* p);
     void SaveAllLists();
     void SaveCategories();
     void SaveIngredients();
@@ -559,19 +562,16 @@ public:
     void LoadLists();
     void AddNewCategory(std::string& c);
     void AddNewIngredient(std::string& name, std::string& desc, std::string& cat);
-    void AddRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& recipetype, std::list<IngredientInRecipe>& ingredients);
+    void AddNewRecipe(std::string& name, std::string& cuisine, std::string& description, std::string& direction, int& servingCount, int& yield, std::string& yieldUnit, std::string& recipetype, std::list<IngredientInRecipe>& ingredients);
     void RemoveCategory();
     void RemoveIngredient();
     void RemoveRecipe();
     void CreateNewCategory();
     void CreateNewIngredient();
     void CreateNewRecipe();
-    void GetCategoryNamesList(std::list<std::string>& names);
     std::string GetSelectedCategoryName();
     std::string GetSelectedIngredientName();
     std::string GetSelectedRecipeName();
-
-    void GetIngredientsList(std::list<std::string>& list);
 
     void SetCurrentList(long c);
     long GetCurrentList();   
@@ -588,6 +588,7 @@ protected:
     void OnSelected(wxListEvent& e);
     void OnColumnHeaderClick(wxListEvent& e);
 private:
+    ListMgrFrame* parent;
     // data.
     CategoryFrame* categoryFrame = nullptr;
     AddCategoryFrame* addCategoryFrame = nullptr;
@@ -632,8 +633,8 @@ class ListMgrFrame: public wxFrame
 public:
     ListMgrFrame(const wxString& title);
     void SetParent(RecipeApp* p);
-    void MessageSuccess(wxString itemType, std::string name);
-    void MessageFailure(wxString itemType, std::string name);
+    void MessageSuccess(std::string msg);
+    void MessageFailure(std::string msg);
 
 protected:
     void SetRecipeListOptions();

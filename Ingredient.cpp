@@ -44,11 +44,15 @@ Ingredient::Ingredient(string& name, string& description, Category& categoryObj)
 }
 
 // Set the name of the Ingredient object
-void Ingredient::setName(string& name)
+bool Ingredient::setName(string& name)
 {
 	stringRemoveCommas(name);
-	if(!name.empty())
+	if (!name.empty())
+	{
 		this->name = name;
+		return true;
+	}
+	return false;
 }
 
 // Set the description of the Ingredient object

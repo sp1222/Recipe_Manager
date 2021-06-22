@@ -38,12 +38,16 @@ Category::Category(string& name)
 }
 
 // Redefine the name of the Category
-void Category::setName(string& name)
+bool Category::setName(string& name)
 {
 	stringRemoveCommas(name);
 	stringToUpperAll(name);
-	if(!name.empty())
+	if (!name.empty())
+	{
 		this->name = name;
+		return true;
+	}
+	return false;
 }
 
 // Returns the name of the Category object
