@@ -403,6 +403,7 @@ public:
     void SetParent(MealPlannerFrame* p);
     void SetMeal(Meal& currentMeal);
     void SetMeal();
+    void SetFrameTitle(wxString str);
     void PassRecipes(std::list<Recipe>* lst);
     void ResetTextFields();
     void RebuildList();
@@ -476,11 +477,13 @@ public:
     void BuildMonthlyCalendarView();
     void MealUpdated();
     void AddMealToList(std::string& nm, std::string& ds, wxDateTime& sch, int& noSer, bool& isArc, std::list<Recipe>& reclist);
+    void MoveMealInList(unsigned short id);
 
 protected:
     void OnChangeDate(wxCalendarEvent& e);
     void OnAddMeal(wxCommandEvent& e);
     void OnEditMeal(wxCommandEvent& e);
+    void OnSelected(wxListEvent& e);
     void OnExit(wxCloseEvent& e);
 
 private:
@@ -527,7 +530,7 @@ private:
 
     std::list<Meal>* meals;
     std::list<Recipe>* recipeList;
-    Meal selectedMeal;
+    Meal selectedMeal = Meal();
 
     wxDECLARE_NO_COPY_CLASS(MealPlannerFrame);
     wxDECLARE_EVENT_TABLE();
@@ -736,6 +739,7 @@ enum
     RECIPE_INGREDIENTS_LIST_CTRL,
 
     MEAL_PLANNER_DISPLAY,
+    MEAL_PLANNER_CALENDAR_DAY,
     MEAL_PLANNER_CALENDAR_MONTHLY_VIEW,
     MEAL_PLANNER_CALENDAR_WEEKLY_VIEW,
     MEAL_PLANNER_CALENDAR_DAILY_VIEW,

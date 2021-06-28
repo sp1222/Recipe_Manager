@@ -28,14 +28,14 @@ private:
 	std::list<Recipe>* recipes;
 public:
 	/*
-		Makes two Meal objects comparable using name variable.
+		Makes two Meal objects comparable using id variable.
 		@param m : constant reference to Meal object.
 		@return : If object matches this instance of a Meal.
 	*/
 	bool operator == (const Meal& m) const;
 
 	/*
-		Makes two Meal objects comparable using name variable.
+		Makes two Meal objects comparable using id variable.
 		@param m : constant reference to Meal object.
 		@return : If object does not match this instance of a Meal.
 	*/
@@ -115,7 +115,7 @@ public:
 		Returns the wxDateTime object of this Meal object.
 		@return wxDateTime object of this Meal object.
 	*/
-	wxDateTime getScheduled();
+	wxDateTime getScheduled() const;
 
 	/*
 		Returns the number of servings for this Meal object.

@@ -19,35 +19,41 @@ bool addMeal(unsigned short id, string& name, string& description, wxDateTime& s
 //  duplicate menus should technically be allowed..
 	Meal meal(name, description, scheduled, numberOfServings, isArchived, mealRecipesLst);
 	meal.setID(id);
-	if (lst.size() == 0)
-		lst.push_back(meal);
-	else
+	// need to insert meal object in list sorted by scheduled date and time.
+	list<Meal>::iterator iter;
+	for (iter = lst.begin(); iter != lst.end(); iter++)
 	{
-		// need to insert meal object in list sorted by scheduled date and time.
-		list<Meal>::iterator iter;
-		for (iter = lst.begin(); iter != lst.end(); iter++)
+		if (!scheduled.IsLaterThan(iter->getScheduled()))
 		{
-			if (!scheduled.IsLaterThan(iter->getScheduled()))
-			{
-				lst.insert(iter, meal);
-				break;
-			}
+			lst.insert(iter, meal);
+			return true;
 		}
 	}
+	lst.push_back(meal);
 	return true;
 }
 
-bool removeMeal(string& name, list<Meal>& lst)
+bool removeMeal(unsigned short id, list<Meal>& lst)
 {
 	for (auto& meal : lst)
 	{
-		if (meal.getName() == name)
+		if (meal.getID() == id)
 		{
 			lst.remove(meal);
 			return true;
 		}
 	}
 	return false;
+}
+
+void moveMeal(unsigned short id, std::list<Meal>& lst)
+{
+	lst.sort(compareSchedule);
+}
+
+bool compareSchedule(const Meal& first, const Meal& second)
+{
+	return first.getScheduled().IsEarlierThan(second.getScheduled());
 }
 
 Meal& getMealInList(unsigned short& id, list<Meal>& lst)

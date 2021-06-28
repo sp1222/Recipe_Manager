@@ -1316,7 +1316,6 @@ void MealFrame::SetParent(MealPlannerFrame* p)
 void MealFrame::SetMeal(Meal& currentMeal)
 {
     this->currentMeal = &currentMeal;
-    this->SetTitle(wxString(currentMeal.getScheduled().FormatDate() + "  " + currentMeal.getName() + "  " + to_string(currentMeal.getID())));
 }
 
 void MealFrame::SetMeal()
@@ -1325,6 +1324,11 @@ void MealFrame::SetMeal()
     isnew = true;
     newMeal = Meal();
     currentMeal = &newMeal;
+}
+
+void MealFrame::SetFrameTitle(wxString str)
+{
+    this->SetTitle(str);
 }
 
 void MealFrame::PassRecipes(list<Recipe>* lst)
@@ -1365,6 +1369,10 @@ void MealFrame::OnUpdate(wxCommandEvent& WXUNUSED(e))
     tmp.SetMonth(dtp.GetMonth());
     tmp.SetDay(dtp.GetDay());
 
+    bool moveMeal = false;  // determines if meal should be moved in list<Meals> in parent due to time change.
+    if (!tmp.IsEqualTo(currentMeal->getScheduled()))
+        moveMeal = true;
+
     currentMeal->setScheduled(tmp);
     string ds = string(descriptionText->GetValue());
     currentMeal->setDescription(ds);
@@ -1381,6 +1389,12 @@ void MealFrame::OnUpdate(wxCommandEvent& WXUNUSED(e))
         ResetTextFields();
         isnew = false;
     }
+    else    // move to appropriate place in list if needed.
+    {
+        if (moveMeal)
+            parent->MoveMealInList(currentMeal->getID());
+    }
+    SetFrameTitle(wxString(currentMeal->getScheduled().FormatDate() + "  " + currentMeal->getName() + "  " + to_string(currentMeal->getID())));
     parent->MealUpdated();
 }
 
@@ -1398,6 +1412,8 @@ void MealFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 wxBEGIN_EVENT_TABLE(MealPlannerFrame, wxFrame)
 EVT_MENU(MEAL_PLANNER_ADD_MEAL, MealPlannerFrame::OnAddMeal)
 EVT_MENU(MEAL_PLANNER_EDIT_MEAL, MealPlannerFrame::OnEditMeal)
+//EVT_LIST_ITEM_ACTIVATED(MAIN_LIST_CTRL, MainListCtrl::OnActivated)
+EVT_LIST_ITEM_SELECTED(MEAL_PLANNER_CALENDAR_DAY, MealPlannerFrame::OnSelected)
 EVT_CALENDAR_SEL_CHANGED(CALENDAR_SIDE_PANEL, MealPlannerFrame::OnChangeDate)
 EVT_CLOSE(MealPlannerFrame::OnExit)
 wxEND_EVENT_TABLE()
@@ -1450,7 +1466,7 @@ MealPlannerFrame::MealPlannerFrame() : wxFrame(NULL, wxID_ANY, wxString("Meal Pl
 
     // setup the right side list box display for today's date.
     calendarDisplayPanel = new wxPanel(rightPanel, wxID_ANY);
-    calendarTableDaily = new wxListCtrl(calendarDisplayPanel, wxID_ANY, wxDefaultPosition, wxSize(840, 750), wxLC_REPORT);
+    calendarTableDaily = new wxListCtrl(calendarDisplayPanel, MEAL_PLANNER_CALENDAR_DAY, wxDefaultPosition, wxSize(840, 750), wxLC_REPORT);
     InitializeCalendarTableDaily();
     ToggleMenuToCalendarDailyOptions();
 
@@ -1516,7 +1532,7 @@ void MealPlannerFrame::SetupDailyHeader()
 void MealPlannerFrame::SetupDailyView()
 {
     calendarDisplayPanel = new wxPanel(rightPanel, wxID_ANY);
-    calendarTableDaily = new wxListCtrl(calendarDisplayPanel, wxID_ANY, wxDefaultPosition, wxSize(840, 750), wxLC_REPORT);
+    calendarTableDaily = new wxListCtrl(calendarDisplayPanel, MEAL_PLANNER_CALENDAR_DAY, wxDefaultPosition, wxSize(840, 750), wxLC_REPORT);
 }
 
 /*
@@ -1600,10 +1616,12 @@ void MealPlannerFrame::InitializeCalendarTableDaily()
     col.SetText("Meal Time");
     col.SetImage(-1);
     calendarTableDaily->InsertColumn(0, col);
-    col.SetText("Meal Name");
+    col.SetText("Meal ID");
     calendarTableDaily->InsertColumn(1, col);
-    col.SetText("Servings");
+    col.SetText("Meal Name");
     calendarTableDaily->InsertColumn(2, col);
+    col.SetText("Servings");
+    calendarTableDaily->InsertColumn(3, col);
 }
 
 
@@ -1614,11 +1632,14 @@ void MealPlannerFrame::InsertItemsInDailyListDisplay(Meal& m, int& i)
     long temp = calendarTableDaily->InsertItem(i, str);
     calendarTableDaily->SetItemData(temp, i);
 
-    str = wxString(m.getName());
+    str = wxString(to_string(m.getID()));
     calendarTableDaily->SetItem(temp, 1, str);
 
-    str = wxString(to_string(m.getNumberOfServings()));
+    str = wxString(m.getName());
     calendarTableDaily->SetItem(temp, 2, str);
+
+    str = wxString(to_string(m.getNumberOfServings()));
+    calendarTableDaily->SetItem(temp, 3, str);
 }
 
 void MealPlannerFrame::BuildDailyCalendarView()
@@ -1698,12 +1719,20 @@ void MealPlannerFrame::AddMealToList(string& nm, string& ds, wxDateTime& sch, in
     }
 }
 
+
+void MealPlannerFrame::MoveMealInList(unsigned short id)
+{
+    moveMeal(id, *meals);
+}
+
+
 void MealPlannerFrame::OnChangeDate(wxCalendarEvent& WXUNUSED(e))
 {   
     wxDateTime temp = sideCalendar->GetDate();
     selectedDate.SetYear(temp.GetYear());
     selectedDate.SetMonth(temp.GetMonth());
     selectedDate.SetDay(temp.GetDay());
+    selectedMeal = Meal();
     RebuildCalendarView();
 }
 
@@ -1725,15 +1754,8 @@ void MealPlannerFrame::OnEditMeal(wxCommandEvent& WXUNUSED(e))
     mealFrame->Show();
 }
 
-void MealPlannerFrame::OnExit(wxCloseEvent& WXUNUSED(e))
-{
-    Destroy();
-}
-
 /*
-
-
-void MainListCtrl::OnActivated(wxListEvent& e)
+void MealPlannerFrame::OnActivated(wxListEvent& e)
 {
     wxListItem info;
     info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
@@ -1792,52 +1814,31 @@ void MainListCtrl::OnActivated(wxListEvent& e)
     }
 
 }
+*/
 
-void MainListCtrl::OnSelected(wxListEvent& e)
+void MealPlannerFrame::OnSelected(wxListEvent& e)
 {
     wxListItem info;
     info.m_itemId = e.m_itemIndex;  // getting the index of the selected item.
-    info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
-                                    // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.
+    info.m_col = 1;                 // get the second column information, or the id of the meal                                    
     info.m_mask = wxLIST_MASK_TEXT;
-    if (GetItem(info))
+    if (calendarTableDaily->GetItem(info))
     {
-        SetSelectedItem(string(info.m_text));
+
+
+//        unsigned int id = (unsigned)strtoul(string(info.m_text).c_str(), NULL, 0);
+//        unsigned short id = (unsigned short)stoi(string(info.m_text));
+//        selectedMeal = getMealInList(id, *meals);
     }
     else
         wxFAIL_MSG("wxListCtrl::GetItem() failed");
 }
 
-void MainListCtrl::OnColumnHeaderClick(wxListEvent& e)
+void MealPlannerFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 {
-    // this is where we sort the lists by the column clicked.
-    // first, we need to determine which list we are sorting.
-    int col = e.GetColumn();
-
-    switch (GetCurrentList())
-    {
-        // if current list is recipes
-    case RECIPE_LIST_REPORT_DISPLAY:
-        sortRecipes(col, recipes);
-        ResetListView(RECIPE_LIST_REPORT_DISPLAY, wxLC_REPORT);
-        break;
-        // if current list is ingredients
-    case INGREDIENT_LIST_REPORT_DISPLAY:
-        sortIngredients(col, ingredients);
-        ResetListView(INGREDIENT_LIST_REPORT_DISPLAY, wxLC_REPORT);
-        break;
-        // if current list is categories
-    case CATEGORY_LIST_REPORT_DISPLAY:
-        sortCategories(col, categories);
-        ResetListView(CATEGORY_LIST_REPORT_DISPLAY, wxLC_REPORT);
-        break;
-    default:
-        wxMessageDialog d(this, "List to sort does not exist!", "Sort Error");
-        d.ShowModal();
-        break;
-    }
+    Destroy();
 }
-*/
+
 
 //*************************************************************************************************
 

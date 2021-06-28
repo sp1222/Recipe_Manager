@@ -7,7 +7,11 @@
 
 bool addMeal(unsigned short id, std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe>& mealRecipesLst, std::list<Meal>& lst);
 
-bool removeMeal(std::string& name, std::list<Meal>& lst);
+bool removeMeal(unsigned short id, std::list<Meal>& lst);
+
+void moveMeal(unsigned short id, std::list<Meal>& lst);
+
+bool compareSchedule(const Meal& first, const Meal& second);
 
 Meal& getMealInList(unsigned short& id, std::list<Meal>& lst);
 

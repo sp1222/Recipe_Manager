@@ -8,15 +8,15 @@
 using namespace std;
 
 /*
-	Makes two Meal objects comparable using name variable.
+	Makes two Meal objects comparable using id variable.
 */
 bool Meal::operator == (const Meal& m) const
 {
-	return name == m.getName();
+	return id == m.getID();
 }
 
 /*
-	Makes two Meal objects comparable using name variable.
+	Makes two Meal objects comparable using id variable.
 */
 bool Meal::operator != (const Meal& m) const
 {
@@ -128,7 +128,7 @@ string Meal::getDescription()
 /*
 	Returns the wxDateTime object of this Menu object.
 */
-wxDateTime Meal::getScheduled()
+wxDateTime Meal::getScheduled() const
 {
 	return scheduled;
 }
