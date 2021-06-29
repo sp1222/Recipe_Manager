@@ -403,7 +403,7 @@ public:
     void SetParent(MealPlannerFrame* p);
     void SetMeal(Meal& currentMeal);
     void SetMeal();
-    void SetFrameTitle(wxString str);
+    void SetFrameTitle(wxString date, wxString nm, unsigned short id);
     void PassRecipes(std::list<Recipe>* lst);
     void ResetTextFields();
     void RebuildList();
@@ -483,6 +483,7 @@ protected:
     void OnChangeDate(wxCalendarEvent& e);
     void OnAddMeal(wxCommandEvent& e);
     void OnEditMeal(wxCommandEvent& e);
+    void OnActivated(wxListEvent& e);
     void OnSelected(wxListEvent& e);
     void OnExit(wxCloseEvent& e);
 

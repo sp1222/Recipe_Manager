@@ -1315,7 +1315,9 @@ void MealFrame::SetParent(MealPlannerFrame* p)
 
 void MealFrame::SetMeal(Meal& currentMeal)
 {
-    this->currentMeal = &currentMeal;
+    this->currentMeal = &currentMeal;    
+    SetFrameTitle(this->currentMeal->getScheduled().FormatDate(), this->currentMeal->getName(), this->currentMeal->getID());
+
 }
 
 void MealFrame::SetMeal()
@@ -1326,9 +1328,9 @@ void MealFrame::SetMeal()
     currentMeal = &newMeal;
 }
 
-void MealFrame::SetFrameTitle(wxString str)
+void MealFrame::SetFrameTitle(wxString date, wxString nm, unsigned short id)
 {
-    this->SetTitle(str);
+    this->SetTitle(date + "  ::  " + nm + "  ::  Meal# " + wxString(to_string(id)));
 }
 
 void MealFrame::PassRecipes(list<Recipe>* lst)
@@ -1394,7 +1396,7 @@ void MealFrame::OnUpdate(wxCommandEvent& WXUNUSED(e))
         if (moveMeal)
             parent->MoveMealInList(currentMeal->getID());
     }
-    SetFrameTitle(wxString(currentMeal->getScheduled().FormatDate() + "  " + currentMeal->getName() + "  " + to_string(currentMeal->getID())));
+    SetFrameTitle(currentMeal->getScheduled().FormatDate(), currentMeal->getName(), currentMeal->getID());
     parent->MealUpdated();
 }
 
@@ -1412,7 +1414,7 @@ void MealFrame::OnExit(wxCloseEvent& WXUNUSED(e))
 wxBEGIN_EVENT_TABLE(MealPlannerFrame, wxFrame)
 EVT_MENU(MEAL_PLANNER_ADD_MEAL, MealPlannerFrame::OnAddMeal)
 EVT_MENU(MEAL_PLANNER_EDIT_MEAL, MealPlannerFrame::OnEditMeal)
-//EVT_LIST_ITEM_ACTIVATED(MAIN_LIST_CTRL, MainListCtrl::OnActivated)
+EVT_LIST_ITEM_ACTIVATED(MEAL_PLANNER_CALENDAR_DAY, MealPlannerFrame::OnActivated)
 EVT_LIST_ITEM_SELECTED(MEAL_PLANNER_CALENDAR_DAY, MealPlannerFrame::OnSelected)
 EVT_CALENDAR_SEL_CHANGED(CALENDAR_SIDE_PANEL, MealPlannerFrame::OnChangeDate)
 EVT_CLOSE(MealPlannerFrame::OnExit)
@@ -1750,11 +1752,12 @@ void MealPlannerFrame::OnEditMeal(wxCommandEvent& WXUNUSED(e))
     mealFrame = new MealFrame(selectedDate);
     mealFrame->SetParent(this);
     mealFrame->SetMeal(selectedMeal);
+    mealFrame->ResetTextFields();
     mealFrame->PassRecipes(recipeList);
     mealFrame->Show();
 }
 
-/*
+
 void MealPlannerFrame::OnActivated(wxListEvent& e)
 {
     wxListItem info;
@@ -1762,59 +1765,21 @@ void MealPlannerFrame::OnActivated(wxListEvent& e)
     info.m_col = 0;                 // get the first column information, or the name of the recipe/ingredient/category
                                     // designed to be unduplicated values and to not be reliant on indexing when lists are sorted.
 
-    selectedItem = info;
-
     info.m_mask = wxLIST_MASK_TEXT;
-    if (GetItem(info))
+    if (calendarTableDaily->GetItem(info))
     {
-        SetSelectedItem(string(info.m_text));
+        unsigned short id = (unsigned short)strtoul(string(info.m_text).c_str(), nullptr, 0);
+        selectedMeal = getMealInList(id, *meals);
     }
 
-    // here we open a window to the activated item, depending on the currentList we are in.
-    switch (GetCurrentList())
-    {
-    case RECIPE_LIST_REPORT_DISPLAY:
-        // here we open a recipe Frame, make it the primary window, and populate fields with the recipe we have clicked on.
-
-        recipeFrame = new RecipeFrame(selectedRecipe->getName());
-        recipeFrame->SetRecipe(*selectedRecipe);
-        recipeFrame->SetParent(this);
-        recipeFrame->PassTypeList(recipetypes);
-        recipeFrame->PassIngredientList(ingredients);
-        recipeFrame->SetIngredientsInRecipeListCtrl();
-        recipeFrame->SetUnitComboBox();
-        recipeFrame->RebuildTextFields();
-        recipeFrame->Show(true);
-
-        break;
-    case INGREDIENT_LIST_REPORT_DISPLAY:
-        // here we open an ingredient Frame, make it the primary window, and populate fields with the ingredient information we have clicked on.
-
-        ingredientFrame = new IngredientFrame(selectedIngredient->getName());
-        ingredientFrame->SetIngredient(*selectedIngredient);
-        ingredientFrame->SetParent(this);
-        ingredientFrame->PassCategoryList(categories);
-        ingredientFrame->RebuildTextFields();
-        ingredientFrame->Show(true);
-
-        break;
-    case CATEGORY_LIST_REPORT_DISPLAY:
-        // here we open a category Frame, make it the primary window, and populate fields with the category we have clicked on.
-
-        categoryFrame = new CategoryFrame(selectedCategory->getName());
-        categoryFrame->SetCategory(*selectedCategory);
-        categoryFrame->SetParent(this);
-        categoryFrame->RebuildTextFields();
-        categoryFrame->Show(true);
-
-        break;
-    default:
-        wxFAIL_MSG("Currently not in an updatable list.");
-        break;
-    }
-
+    mealFrame = new MealFrame(selectedDate);
+    mealFrame->SetParent(this);
+    mealFrame->SetMeal(selectedMeal);
+    mealFrame->ResetTextFields();
+    mealFrame->PassRecipes(recipeList);
+    mealFrame->Show();
 }
-*/
+
 
 void MealPlannerFrame::OnSelected(wxListEvent& e)
 {
@@ -1824,11 +1789,8 @@ void MealPlannerFrame::OnSelected(wxListEvent& e)
     info.m_mask = wxLIST_MASK_TEXT;
     if (calendarTableDaily->GetItem(info))
     {
-
-
-//        unsigned int id = (unsigned)strtoul(string(info.m_text).c_str(), NULL, 0);
-//        unsigned short id = (unsigned short)stoi(string(info.m_text));
-//        selectedMeal = getMealInList(id, *meals);
+        unsigned short id = (unsigned short)strtoul(string(info.m_text).c_str(), nullptr, 0);
+        selectedMeal = getMealInList(id, *meals);
     }
     else
         wxFAIL_MSG("wxListCtrl::GetItem() failed");
@@ -1948,7 +1910,7 @@ void MainListCtrl::LoadLists()
     loadCategoryList(categoryFile, categories);
     loadIngredientList(ingredFile, ingredients, categories);
     loadRecipeList(recipeFile, recipes, ingredients, recipetypes);
-    // ADD LOAD MEALS HERE WHEN READY.
+    loadMealList(mealFile, meals, recipes);
 }
 
 void MainListCtrl::AddNewCategory(string& name)
