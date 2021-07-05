@@ -39,15 +39,16 @@ Meal::Meal()
 /*
 	Initialize a Meal object with valid parameter values.
 */
-Meal::Meal(string& name, string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, list<Recipe>& recipes)
+Meal::Meal(string& name, string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, list<Recipe*>& recipes)
 {
 	this->name = name;
 	this->description = description;
 	this->scheduled = scheduled;
 	this->numberOfServings = numberOfServings;
 	this->isArchived = isArchived;
-	for (auto& r : recipes)
-		this->recipes->push_back(r);
+	this->recipes = recipes;
+//	for (auto& r : recipes)
+//		this->recipes->push_back(r);
 }
 
 /*
@@ -154,7 +155,7 @@ bool Meal::isMealArchived()
 */
 void Meal::addRecipeToMeal(string& name, list<Recipe>& lst)
 {
-	recipes->push_back(getRecipeInList(name, lst));
+	recipes.push_back(&getRecipeInList(name, lst));
 }
 
 /*
@@ -162,11 +163,11 @@ void Meal::addRecipeToMeal(string& name, list<Recipe>& lst)
 */
 void Meal::removeRecipeFromMeal(string& name)
 {
-	for (auto& r : *recipes)
+	for (auto& r : recipes)
 	{
-		if (r.getName() == name)
+		if (r->getName() == name)
 		{
-			recipes->remove(r);
+			recipes.remove(r);
 			break;
 		}
 	}
@@ -177,27 +178,24 @@ void Meal::removeRecipeFromMeal(string& name)
 */
 Recipe& Meal::getRecipeInMeal(string& name)
 {
-	for (auto& r : *recipes)
+	for (auto& r : recipes)
 	{
-		if (r.getName() == name)
+		if (r->getName() == name)
 		{
-			return r;
+			return *r;
 		}
 	}
-	return recipes->front();
+	return *recipes.front();
 }
 
 /*
 	Return a reference to a Recipe object from list<Recipe>* for this Menu object.
 */
-void Meal::getRecipeListInMeal(list<Recipe>& lst)
+void Meal::getRecipeListInMeal(list<Recipe*>& lst)
 {
-	if (recipes->size() > 0)
+	for (auto& r : recipes)
 	{
-		for (auto& r : *recipes)
-		{
-			lst.push_back(r);
-		}
+		lst.push_back(r);
 	}
 }
 
@@ -206,5 +204,5 @@ void Meal::getRecipeListInMeal(list<Recipe>& lst)
 */
 int Meal::getRecipeCount() const
 {
-	return recipes->size();
+	return recipes.size();
 }

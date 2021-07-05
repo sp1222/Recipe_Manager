@@ -25,7 +25,7 @@ private:
 	wxDateTime scheduled;	// consider howto save and load this information..
 	int numberOfServings;
 	bool isArchived;
-	std::list<Recipe>* recipes;
+	std::list<Recipe*> recipes;
 public:
 	/*
 		Makes two Meal objects comparable using id variable.
@@ -54,7 +54,7 @@ public:
 		@param numberOfServings : reference to int to initialize the number of servings of the Meal object.
 		@param recipes : reference to list<Recipe> to initialize the list of recipes of the Meal object.
 	*/
-	Meal(std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe>& recipes);
+	Meal(std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe*>& recipes);
 
 	/*
 		Set the name of the Meal object.
@@ -144,20 +144,20 @@ public:
 	void removeRecipeFromMeal(std::string& name);
 
 	/*
-		Return a reference to a Recipe object from list<Recipe> for this Meal object.
-		@param recipeName : string containing name of reference to Recipe object in list<Recipe>* for this Meal object.
+		Return a reference to a Recipe object from list<Recipe*> for this Meal object.
+		@param recipeName : string containing name of reference to Recipe object in list<Recipe*> for this Meal object.
 		@return reference to Recipe object.
 	*/
 	Recipe& getRecipeInMeal(std::string& name);
 
 	/*
-		Sets a reference to list<Recipe>* for this Meal object.
+		Sets a reference to list<Recipe*> for this Meal object.
 		@param lst : reference to list<Recipe> to reference list<Recipe>* in this Meal object.
 	*/
-	void getRecipeListInMeal(std::list<Recipe>& lst);
+	void getRecipeListInMeal(std::list<Recipe*>& lst);
 
 	/*
-		Return the number of Recipe objects in list<Recipe>* for this Meal object.
+		Return the number of Recipe objects in list<Recipe*> for this Meal object.
 		@return count of Recipe objects in list<Recipe>*.
 	*/
 	int getRecipeCount() const;

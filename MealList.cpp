@@ -14,7 +14,7 @@
 
 using namespace std;
 
-bool addMeal(unsigned short id, string& name, string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, list<Recipe>& mealRecipesLst, std::list<Meal>& lst)
+bool addMeal(unsigned short id, string& name, string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, list<Recipe*>& mealRecipesLst, std::list<Meal>& lst)
 {
 //  duplicate menus should technically be allowed..
 	Meal meal(name, description, scheduled, numberOfServings, isArchived, mealRecipesLst);
@@ -32,13 +32,6 @@ bool addMeal(unsigned short id, string& name, string& description, wxDateTime& s
 	lst.push_back(meal);
 	return true;
 }
-
-/*
-void addMealFromLoad(unsigned short id, std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe>& mealRecipesLst, std::list<Meal>& lst)
-{
-
-}
-/*/
 
 bool removeMeal(unsigned short id, list<Meal>& lst)
 {
@@ -97,10 +90,6 @@ void saveMealList(string& fileName, list<Meal>& lst)
 			regex newlines_re("\n+");
 			string desc = regex_replace(ds, newlines_re, "`");
 
-			// note, need to add one to month when saving. 
-			// I am assuming that numerically months are represented in terms of indices (0 to 11 instead of 1 to 12)
-//			fout << m.getName() << "," << desc << "," << m.getNumberOfServings() << "," << m.isMealArchived() << "," << sched.GetYear() << ","
-//				<< sched.GetMonth() + 1 << "," << sched.GetDay() << "," << sched.GetHour() << "," << sched.GetMinute() << "," << string(sched.FormatTime()) << ",";
 			fout << m.getID() << ',' << m.getName() << "," << desc << "," << m.getNumberOfServings() << "," << m.isMealArchived() << "," << string(sched.FormatISODate()) << "," << string(sched.FormatISOTime()) << ",";
 
 			list<Recipe> recs;
@@ -151,40 +140,11 @@ void loadMealList(string& fileName, list<Meal>& mealLst, list<Recipe>& recipeLst
 			sch.ParseDate(wxdt);
 			sch.ParseTime(wxtm);
 
-			/*
-			// parse dt and tm, then set Y, M, D, H, M, S
-
-			stringstream sdt(dt);
-			string val = "";
-			vector<string> dttm;
-			while (getline(sdt, val, '/'))
-				dttm.push_back(val);
-
-			sch.Set((unsigned)stoi(dttm[1]), static_cast<wxDateTime::Month>(stoi(dttm[0]) - 1), stoi(dttm[2]));
-
-//			sch.SetMonth(static_cast<wxDateTime::Month>(stoi(dttm[0]) - 1));
-//			sch.SetDay(stoi(dttm[1]));
-//			sch.SetYear(stoi(dttm[2]));
-
-//			dttm.clear();
-
-			stringstream stm(tm);
-			val = "";
-			while (getline(stm, val, ':'))
-				dttm.push_back(val);
-
-//			sch.SetHour(stoi(dttm[0]));
-//			sch.SetMinute(stoi(dttm[1]));
-//			sch.SetSecond(stoi(dttm[2]));
-
-//			sch.Set((unsigned int)stoi(dttm[1]), static_cast<wxDateTime::Month>(stoi(dttm[0]) - 1), stoi(dttm[2]));
-*/
-
 			// get references to recipes in list<Recipe> for this meal based on recipe names.
-			list<Recipe> reclst;
+			list<Recipe*> reclst;
 			while (row.size() > 0 && row[0] != "")
 			{
-				reclst.push_back(getRecipeInList(row[0], recipeLst));
+				reclst.push_back(&getRecipeInList(row[0], recipeLst));
 				row.erase(row.begin());
 			}
 

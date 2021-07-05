@@ -5,7 +5,7 @@
 
 #include "Meal.h"
 
-bool addMeal(unsigned short id, std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe>& mealRecipesLst, std::list<Meal>& lst);
+bool addMeal(unsigned short id, std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe*>& mealRecipesLst, std::list<Meal>& lst);
 
 //void addMealFromLoad(unsigned short id, std::string& name, std::string& description, wxDateTime& scheduled, int& numberOfServings, bool& isArchived, std::list<Recipe>& mealRecipesLst, std::list<Meal>& lst);
 

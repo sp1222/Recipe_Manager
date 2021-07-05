@@ -366,7 +366,7 @@ private:
     wxStaticText* directionLabel = nullptr;
     wxStaticText* ingredientsLabel = nullptr;
     wxTextCtrl* nameText = nullptr;
-    wxTextCtrl* cuisineText = nullptr;            // change to combobox?
+    wxTextCtrl* cuisineText = nullptr;            // change to ComboBox?
     wxTextCtrl* recipetypeText = nullptr;
 //    wxStaticText* recipetypeText = nullptr;
 //    wxComboBox* recipetypeComboBox = nullptr;
@@ -390,6 +390,37 @@ private:
 
 //*************************************************************************************************
 
+// AddRecipeToMealFrame class
+
+//*************************************************************************************************
+
+class MealFrame;
+class AddRecipeToMealFrame : public wxFrame
+{
+public:
+    AddRecipeToMealFrame();
+    void SetParent(MealFrame* p);
+    void SetComboBox(std::list<Recipe>& recipes);
+
+protected:
+    void OnUpdate(wxCommandEvent& e);
+    void OnExit(wxCloseEvent& e);
+
+private:
+    wxMenu* menuOptions = nullptr;
+    wxPanel* mainPanel = nullptr;
+    wxPanel* recipePanel = nullptr;
+    wxStaticText* recipeText = nullptr;
+    wxComboBox* recipeComboBox = nullptr;
+    MealFrame* parent = nullptr;
+
+
+    wxDECLARE_EVENT_TABLE();
+    wxDECLARE_NO_COPY_CLASS(AddRecipeToMealFrame);
+};
+
+//*************************************************************************************************
+
 // MealFrame class
 
 //*************************************************************************************************
@@ -407,6 +438,7 @@ public:
     void PassRecipes(std::list<Recipe>* lst);
     void ResetTextFields();
     void RebuildList();
+    void AddRecipe(std::string name);
 
 protected:
     void OnAddRecipe(wxCommandEvent& e);
@@ -438,7 +470,7 @@ private:
     wxTextCtrl* isArchivedText = nullptr;
     wxListCtrl* recipesListCtrl;
 
-
+    AddRecipeToMealFrame* addRecipeToMealFrame = nullptr;
     MealPlannerFrame* parent = nullptr;
     Meal newMeal = Meal();
     Meal* currentMeal = nullptr;
@@ -476,7 +508,7 @@ public:
     void BuildDailyCalendarView();
     void BuildMonthlyCalendarView();
     void MealUpdated();
-    void AddMealToList(std::string& nm, std::string& ds, wxDateTime& sch, int& noSer, bool& isArc, std::list<Recipe>& reclist);
+    void AddMealToList(std::string& nm, std::string& ds, wxDateTime& sch, int& noSer, bool& isArc, std::list<Recipe*>& reclist);
     void MoveMealInList(unsigned short id);
 
 protected:
@@ -754,6 +786,7 @@ enum
     MEAL_NO_OF_SERVINGS,
     MEAL_RECIPE_LIST_CTRL,
     MEAL_ADD_RECIPE,
+    MEAL_RECIPE_COMBO_BOX,
     MEAL_UPDATE,
     CALENDAR_SIDE_PANEL,
 

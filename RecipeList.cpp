@@ -286,7 +286,7 @@ bool compareIngredientInRecipeUnits(const IngredientInRecipe& first, const Ingre
 // Determines if a Recipe object exists in list<Recipe> by name.
 bool doesRecipeExist(string& name, list<Recipe>& lst)
 {
-	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?
+	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?  no
 
 	for (auto& r : lst)
 	{
@@ -299,7 +299,7 @@ bool doesRecipeExist(string& name, list<Recipe>& lst)
 // Returns the reference to Recipe object by name in list<Recipe>.
 Recipe& getRecipeInList(string& name, list<Recipe>& lst)
 {
-	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?
+	// WILL I NEED REMOVE COMMAS WHEN GETTING NAME FROM THE LIST?  no
 
 	for (auto& r : lst)
 	{

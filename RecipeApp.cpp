@@ -7,7 +7,7 @@ using namespace std;
 #endif
 //*************************************************************************************************
 
-// RecipeApp definition
+// RecipeApp Definitions
 
 //*************************************************************************************************
 
@@ -36,7 +36,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// AddCategoryFrame definition
+// AddCategoryFrame Definitions
 
 //*************************************************************************************************
 
@@ -72,7 +72,7 @@ AddCategoryFrame::AddCategoryFrame() : wxFrame(NULL, wxID_ANY, wxString("New Cat
 
 //*************************************************************************************************
 
-// AddCategoryFrame function definition
+// AddCategoryFrame Method Definitions
 
 //*************************************************************************************************
 
@@ -117,7 +117,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// CategoryFrame definition
+// CategoryFrame Definitions
 
 //*************************************************************************************************
 
@@ -164,7 +164,7 @@ CategoryFrame::CategoryFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, ti
 
 //*************************************************************************************************
 
-// CategoryFrame function definition
+// CategoryFrame Method Definitions
 
 //*************************************************************************************************
 
@@ -228,7 +228,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// AddIngredientFrame definition
+// AddIngredientFrame Definitions
 
 //*************************************************************************************************
 
@@ -283,7 +283,7 @@ AddIngredientFrame::AddIngredientFrame() : wxFrame(NULL, wxID_ANY, wxString("New
 
 //*************************************************************************************************
 
-// AddIngredientFrame function definition
+// AddIngredientFrame Method Definitions
 
 //*************************************************************************************************
 
@@ -338,7 +338,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// IngredientFrame definition
+// IngredientFrame Definitions
 
 //*************************************************************************************************
 
@@ -407,7 +407,7 @@ IngredientFrame::IngredientFrame(const wxString& title) : wxFrame(NULL, wxID_ANY
 
 //*************************************************************************************************
 
-// IngredientFrame function definition
+// IngredientFrame Method Definitions
 
 //*************************************************************************************************
 
@@ -487,7 +487,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// IngredientInRecipeFrame definition
+// IngredientInRecipeFrame Definitions
 
 //*************************************************************************************************
 
@@ -551,7 +551,7 @@ IngredientInRecipeFrame::IngredientInRecipeFrame(const wxString& title) : wxFram
 
 //*************************************************************************************************
 
-// IngredientInRecipeFrame function definitions
+// IngredientInRecipeFrame Method Definitionss
 
 //*************************************************************************************************
 
@@ -637,7 +637,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// IngredientsInRecipeListCtrl definition
+// IngredientsInRecipeListCtrl Definitions
 
 //*************************************************************************************************
 
@@ -645,7 +645,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// IngredientsInRecipeListCtrl function definitions
+// IngredientsInRecipeListCtrl Method Definitionss
 
 //*************************************************************************************************
 
@@ -810,7 +810,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// AddIngredientToRecipeFrame definition
+// AddIngredientToRecipeFrame Definitions
 
 //*************************************************************************************************
 
@@ -864,7 +864,7 @@ AddIngredientToRecipeFrame::AddIngredientToRecipeFrame() : wxFrame(NULL, wxID_AN
 
 //*************************************************************************************************
 
-// AddIngredientToRecipeFrame function definitions
+// AddIngredientToRecipeFrame Method Definitionss
 
 //*************************************************************************************************
 
@@ -937,7 +937,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// RecipeFrame definition
+// RecipeFrame Definitions
 
 //*************************************************************************************************
 
@@ -1052,7 +1052,7 @@ RecipeFrame::RecipeFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title, 
 
 //*************************************************************************************************
 
-// RecipeFrame function definition
+// RecipeFrame Method Definitions
 
 //*************************************************************************************************
 
@@ -1201,6 +1201,79 @@ void RecipeFrame::OnExit(wxCloseEvent& WXUNUSED(e))
     Destroy();
 }
 
+//*************************************************************************************************
+
+// AddRecipeToMealFrame Event Table
+
+//*************************************************************************************************
+
+wxBEGIN_EVENT_TABLE(AddRecipeToMealFrame, wxFrame)
+EVT_MENU(MEAL_ADD_RECIPE, AddRecipeToMealFrame::OnUpdate)
+EVT_CLOSE(AddRecipeToMealFrame::OnExit)
+wxEND_EVENT_TABLE()
+
+//*************************************************************************************************
+
+// AddRecipeToMealFrame Definitions
+
+//*************************************************************************************************
+
+AddRecipeToMealFrame::AddRecipeToMealFrame() : wxFrame(NULL, wxID_ANY, wxString("Add Recipe"), wxDefaultPosition, wxSize(400, 300), wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCAPTION | wxCLOSE_BOX | wxCLIP_CHILDREN)
+{
+    menuOptions = new wxMenu;
+    menuOptions->Append(MEAL_ADD_RECIPE, "Add Recipe");
+
+    wxMenuBar* menuBar = new wxMenuBar;
+    menuBar->Append(menuOptions, "Options");
+    SetMenuBar(menuBar);
+
+    mainPanel = new wxPanel(this, wxID_ANY);
+    recipePanel = new wxPanel(mainPanel, wxID_ANY);
+
+    recipeText = new wxStaticText(recipePanel, LABEL, wxString("Recipes:"), wxDefaultPosition, wxSize(120, 20));
+    recipeComboBox = new wxComboBox(recipePanel, MEAL_RECIPE_COMBO_BOX, wxEmptyString, wxDefaultPosition, wxSize(200, 20), wxArrayString(), wxCB_READONLY);
+
+    wxBoxSizer* recipeSizer = new wxBoxSizer(wxHORIZONTAL);
+    recipeSizer->Add(recipeText, wxSizerFlags().Expand().Border(wxALL));
+    recipeSizer->Add(recipeComboBox, wxSizerFlags().Expand().Border(wxALL));
+    recipePanel->SetSizer(recipeSizer);
+
+    wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+    mainSizer->Add(recipePanel, wxSizerFlags().Expand().Border(wxALL, 10));
+    mainPanel->SetSizer(mainSizer);
+
+    SetClientSize(mainPanel->GetMaxSize());
+}
+
+
+//*************************************************************************************************
+
+// AddRecipeToMealFrame Method Definitions
+
+//*************************************************************************************************
+
+
+void AddRecipeToMealFrame::SetParent(MealFrame* p)
+{
+    parent = p;
+}
+
+void AddRecipeToMealFrame::SetComboBox(list<Recipe>& recipes)
+{
+    for (auto& r : recipes)
+        recipeComboBox->Append(wxString(r.getName()));
+}
+
+void AddRecipeToMealFrame::OnUpdate(wxCommandEvent& WXUNUSED(e))
+{
+
+}
+
+void AddRecipeToMealFrame::OnExit(wxCloseEvent& WXUNUSED(e))
+{
+    Destroy();
+}
+
 
 //*************************************************************************************************
 
@@ -1217,7 +1290,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// MealFrame definition
+// MealFrame Definitions
 
 //*************************************************************************************************
 
@@ -1303,7 +1376,7 @@ MealFrame::MealFrame(const wxDateTime& dt) : wxFrame(NULL, wxID_ANY, wxEmptyStri
 
 //*************************************************************************************************
 
-// MealFrame function definition
+// MealFrame Method Definitions
 
 //*************************************************************************************************
 
@@ -1351,11 +1424,24 @@ void MealFrame::ResetTextFields()
 void MealFrame::RebuildList()
 {
     // rebuild the list of recipes associated with this meal object.
+    // LEFT OFF HERE
+}
+
+void MealFrame::AddRecipe(string name)
+{
+    currentMeal->addRecipeToMeal(name, *recipes);
+    RebuildList();
 }
 
 void MealFrame::OnAddRecipe(wxCommandEvent& WXUNUSED(e))
 {
-
+    // open an AddRecipeFrame object as a child of this MealFrame.
+    // with drop down menu of the list of all recipes.
+    // so that the user can select which recipe to add to the menu.
+    addRecipeToMealFrame = new AddRecipeToMealFrame();
+    addRecipeToMealFrame->SetParent(this);
+    addRecipeToMealFrame->SetComboBox(*recipes);
+    addRecipeToMealFrame->Show();
 }
 
 void MealFrame::OnUpdate(wxCommandEvent& WXUNUSED(e))
@@ -1383,8 +1469,8 @@ void MealFrame::OnUpdate(wxCommandEvent& WXUNUSED(e))
     bool ia;
     (string(isArchivedText->GetValue()) == "True" ? ia = true : ia = false);
     currentMeal->setIsArchived(ia);
-    list<Recipe> rec;
-//    currentMeal->getRecipeListInMeal(rec);
+    list<Recipe*> rec;
+    currentMeal->getRecipeListInMeal(rec);
     if (isnew == true)
     {
         parent->AddMealToList(nm, ds, tmp, ns, ia, rec);
@@ -1422,7 +1508,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// MealPlannerFrame definition
+// MealPlannerFrame Definitions
 
 //*************************************************************************************************
 
@@ -1495,7 +1581,7 @@ MealPlannerFrame::MealPlannerFrame() : wxFrame(NULL, wxID_ANY, wxString("Meal Pl
 
 //*************************************************************************************************
 
-// MealPlannerFrame function definition
+// MealPlannerFrame Method Definitions
 
 //*************************************************************************************************
 
@@ -1708,7 +1794,7 @@ void MealPlannerFrame::MealUpdated()
     RebuildCalendarView();
 }
 
-void MealPlannerFrame::AddMealToList(string& nm, string& ds, wxDateTime& sch, int& noSer, bool& isArc, list<Recipe>& reclist)
+void MealPlannerFrame::AddMealToList(string& nm, string& ds, wxDateTime& sch, int& noSer, bool& isArc, list<Recipe*>& reclist)
 {
     unsigned short newID = getHighestID(*meals) + 1;
     if (addMeal(newID, nm, ds, sch, noSer, isArc, reclist, *meals))
@@ -1817,7 +1903,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// MainListCtrl definition
+// MainListCtrl Definitions
 
 //*************************************************************************************************
 
@@ -1826,7 +1912,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// MainListCtrl function definitions
+// MainListCtrl Method Definitionss
 
 //*************************************************************************************************
 
@@ -2319,7 +2405,7 @@ wxEND_EVENT_TABLE()
 
 //*************************************************************************************************
 
-// ListMgrFrame definition
+// ListMgrFrame Definitions
 
 //*************************************************************************************************
 
@@ -2379,7 +2465,7 @@ ListMgrFrame::ListMgrFrame(const wxString& title): wxFrame(NULL, wxID_ANY, title
 
 //*************************************************************************************************
 
-// ListMgrFrame function definitions
+// ListMgrFrame Method Definitionss
 
 //*************************************************************************************************
 
