@@ -429,7 +429,6 @@ class MealPlannerFrame; // forward.
 class MealFrame : public wxFrame
 {
 public:
-
     MealFrame(const wxDateTime& dt);
     void SetParent(MealPlannerFrame* p);
     void SetMeal(Meal& currentMeal);
@@ -437,15 +436,22 @@ public:
     void SetFrameTitle(wxString date, wxString nm, unsigned short id);
     void PassRecipes(std::list<Recipe>* lst);
     void ResetTextFields();
-    void RebuildList();
+    void InsertItemsInRecipeListReportDisplay(Recipe& r, int& i); 
+    void InitializeRecipeColumns();
+    
+    void BuildMealRecipeListReportDisplay();
+    void ResetListView(long wxFlags, bool withText);
     void AddRecipe(std::string name);
 
 protected:
     void OnAddRecipe(wxCommandEvent& e);
+    void OnRemoveRecipe(wxCommandEvent& e);
     void OnUpdate(wxCommandEvent& e);
+    void OnActivated(wxListEvent& e);
+    void OnSelected(wxListEvent& e);
     void OnExit(wxCloseEvent& e);
-private:
 
+private:
     wxMenu* menuOptions = nullptr;
     wxMenuBar* menuBar = nullptr;
 
@@ -474,6 +480,7 @@ private:
     MealPlannerFrame* parent = nullptr;
     Meal newMeal = Meal();
     Meal* currentMeal = nullptr;
+    Recipe* selectedRecipe = nullptr;
     std::list<Recipe>* recipes;
     bool isnew = true;
 
@@ -563,7 +570,7 @@ private:
 
     std::list<Meal>* meals;
     std::list<Recipe>* recipeList;
-    Meal selectedMeal = Meal();
+    Meal* selectedMeal = nullptr;
 
     wxDECLARE_NO_COPY_CLASS(MealPlannerFrame);
     wxDECLARE_EVENT_TABLE();
@@ -786,6 +793,7 @@ enum
     MEAL_NO_OF_SERVINGS,
     MEAL_RECIPE_LIST_CTRL,
     MEAL_ADD_RECIPE,
+    MEAL_REMOVE_RECIPE,
     MEAL_RECIPE_COMBO_BOX,
     MEAL_UPDATE,
     CALENDAR_SIDE_PANEL,
