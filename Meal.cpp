@@ -153,24 +153,31 @@ bool Meal::isMealArchived()
 /*
 	Add a reference to a Recipe object to list<Recipes>* for this Menu object.
 */
-void Meal::addRecipeToMeal(string& name, list<Recipe>& lst)
+bool Meal::addRecipeToMeal(string& name, list<Recipe>& lst)
 {
+	for (auto& r : recipes)
+	{
+		if (r->getName() == name)
+			return false;
+	}
 	recipes.push_back(&getRecipeInList(name, lst));
+	return true;
 }
 
 /*
 	Remove a reference to a Recipe object from list<Recipes>* for this Menu object.
 */
-void Meal::removeRecipeFromMeal(string& name)
+bool Meal::removeRecipeFromMeal(string& name)
 {
 	for (auto& r : recipes)
 	{
 		if (r->getName() == name)
 		{
 			recipes.remove(r);
-			break;
+			return true;
 		}
 	}
+	return false;
 }
 
 /*

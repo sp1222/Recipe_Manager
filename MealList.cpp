@@ -92,11 +92,11 @@ void saveMealList(string& fileName, list<Meal>& lst)
 
 			fout << m.getID() << ',' << m.getName() << "," << desc << "," << m.getNumberOfServings() << "," << m.isMealArchived() << "," << string(sched.FormatISODate()) << "," << string(sched.FormatISOTime()) << ",";
 
-			list<Recipe> recs;
-//			m.getRecipeListInMeal(recs);
+			list<Recipe*> recs;
+			m.getRecipeListInMeal(recs);
 			for (auto& rec : recs)
 			{
-				fout << rec.getName() << ",";
+				fout << rec->getName() << ",";
 			}
 
 			// indicates the end of a meal being outputted.

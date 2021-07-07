@@ -134,14 +134,16 @@ public:
 		Add a reference to a Recipe object to list<Recipes> for this Meal object.
 		@param name : reference to string of Recipe object's name to add to this Meal object's list<Recipe>*.
 		@param lst : list<Recipe> master Recipe list to reference Recipe object from for adding to Meal object's list<Recipes>*
+		@return if recipe was added to meal successfully.
 	*/
-	void addRecipeToMeal(std::string& name, std::list<Recipe>& lst);
+	bool addRecipeToMeal(std::string& name, std::list<Recipe>& lst);
 
 	/*
 		Remove a reference to a Recipe object from list<Recipes> for this Meal object.
 		@param recipeName : string of name of reference to Recipe object being removed from list<Recipe>* in this Meal object.
+		@return if recipe was removed from meal successfully.
 	*/
-	void removeRecipeFromMeal(std::string& name);
+	bool removeRecipeFromMeal(std::string& name);
 
 	/*
 		Return a reference to a Recipe object from list<Recipe*> for this Meal object.
